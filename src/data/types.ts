@@ -13,6 +13,9 @@ export interface QuizQuestion {
   q: string
   accent: string
   stage: number
+  // Smooth difficulty ramp 0 (easy/soft) → 1 (hard/deep). Drives the visual
+  // intensity of the bubble, progress accent and roadmap consistently.
+  difficulty: number
   opts: Option[]
 }
 

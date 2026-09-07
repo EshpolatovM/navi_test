@@ -35,13 +35,23 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
           {STAGES.map((s, i) => (
             <div
               key={s.key}
-              className="animate-slide-up flex items-center gap-1.5 rounded-full px-3 py-1.5 ring-1 ring-slate-200"
-              style={{ animationDelay: `${150 + i * 80}ms` }}
+              className="animate-slide-up flex items-center gap-1.5 rounded-full py-1.5 pr-3 pl-1.5 ring-1"
+              style={{
+                background: `${s.accent}0d`,
+                borderColor: `${s.accent}33`,
+                animationDelay: `${150 + i * 80}ms`,
+              }}
             >
-              <span className="text-[11px] font-bold tracking-[0.08em] text-blue-600">
+              <span
+                className="grid size-5 place-items-center rounded-full text-white"
+                style={{ background: s.accent }}
+              >
+                <s.icon style={{ width: 11, height: 11 }} strokeWidth={2.4} />
+              </span>
+              <span className="text-[11px] font-bold tracking-[0.08em]" style={{ color: s.accent }}>
                 {String(s.from).padStart(2, '0')}
               </span>
-              <span className="text-[11px] font-bold tracking-[0.08em] text-slate-500">{s.key}</span>
+              <span className="text-[11px] font-bold tracking-[0.08em] text-slate-600">{s.key}</span>
             </div>
           ))}
         </div>

@@ -1,4 +1,5 @@
 import type { Option, QuizQuestion, Riaset } from './types'
+import { STAGES, PER_STAGE } from './stages'
 
 // Weight vectors in RIASEC order: [R, I, A, S, E, C]
 // Primary dimension = 2, optional secondary = 1.
@@ -751,8 +752,6 @@ const RAW: RawQuestion[] = [
   },
 ]
 
-const ACCENTS = ['#2563EB', '#EA580C', '#16A34A', '#DB2777', '#7C3AED', '#0891B2']
-
 // O*NET-style assessment structure: item response sets vary naturally.
 // Each question probes a subset of the six interest dimensions (4, 5 or 6
 // options). The dimension start shifts diagonaally so the whole 60-item
@@ -761,8 +760,6 @@ const OPTION_COUNTS = [4, 5, 6, 5, 4, 6]
 
 // Default dimension order; each question rotates which dimension begins the set.
 const DIM_ORDER = [0, 1, 2, 3, 4, 5]
-
-const PER_STAGE = 15
 
 // Rotate each question's option order so the "A" position is never the same
 // dimension twice in a row — keeps answers from feeling like a pattern.
@@ -778,10 +775,14 @@ export const QUESTIONS: QuizQuestion[] = RAW.map((item, i) => {
   const start = (i % 6 + Math.floor(i / 6)) % 6
   const order = DIM_ORDER.slice(start).concat(DIM_ORDER.slice(0, start))
   const opts = order.slice(0, count).map((d) => item.opts[d])
+  const stage = Math.floor(i / PER_STAGE)
   return {
     ...item,
-    stage: Math.floor(i / PER_STAGE),
-    accent: ACCENTS[i % ACCENTS.length],
+    stage,
+    accent: STAGES[stage].accent,
+    // Within a stage, difficulty ramps smoothly easy → hard so the accent
+    // deepens gradually instead of snapping between unrelated colors.
+    difficulty: (i % PER_STAGE) / (PER_STAGE - 1),
     opts: rotate(opts, i % count),
   }
 })

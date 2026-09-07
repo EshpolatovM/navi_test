@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import { STAGES, PER_STAGE, stageAt, type QuizQuestion } from '../data'
+import { toneFor } from '../lib/tone'
 import AnswerNode, { type NodePosition } from './AnswerNode'
 import JourneyProgress from './JourneyProgress'
 
@@ -85,6 +86,8 @@ function QuestionScene({
   }, [selected, onAnswer])
 
   const accent = question.accent
+  // Difficulty-tuned tone: easy → soft & airy, hard → rich & defined.
+  const t = toneFor(accent, question.difficulty)
 
 // --- Symmetric constellation around the centered bubble -------------------
 // Node count follows each O*NET-style item's option count (4/5/6), so the
@@ -144,7 +147,7 @@ const { w, h } = geo
             width: '100%',
             background:
               'radial-gradient(120% 120% at 20% 0%, #ffffff 0%, rgba(255,255,255,0.82) 55%, rgba(255,255,255,0.55) 100%)',
-            borderColor: `${accent}2b`,
+            borderColor: t.ring,
             boxShadow: `0 26px 60px -22px rgba(28,25,23,0.3), 0 0 0 1px rgba(255,255,255,0.8) inset`,
             transform: `scale(${bubbleScale})`,
             transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
@@ -153,17 +156,17 @@ const { w, h } = geo
           <span
             aria-hidden
             className="absolute left-5 top-4 font-display text-[10px] font-semibold uppercase tracking-[0.28em]"
-            style={{ color: accent }}
+            style={{ color: t.deep }}
           >
             {STAGES[stageAt(index)].key}
           </span>
           <Sparkles
             aria-hidden
             className="absolute right-5 top-4 mark-float"
-            style={{ width: 15, height: 15, color: `${accent}88` }}
+            style={{ width: 15, height: 15, color: t.soft }}
             strokeWidth={2.2}
           />
-          <p className="pt-5 font-display text-lg leading-snug font-semibold text-slate-800 md:text-[1.4rem] max-md:pt-4">
+          <p className="pt-5 font-display text-[1.3rem] leading-snug font-bold text-slate-800 md:text-[1.5rem] max-md:pt-4">
             {question.q}
           </p>
           <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 max-md:mt-2 max-[359px]:hidden">
@@ -177,8 +180,8 @@ const { w, h } = geo
           style={{
             transform: 'rotate(45deg)',
             background: 'rgba(255,255,255,0.85)',
-            borderRight: `1.5px solid ${accent}2b`,
-            borderBottom: `1.5px solid ${accent}2b`,
+            borderRight: `1.5px solid ${t.ring}`,
+            borderBottom: `1.5px solid ${t.ring}`,
           }}
         />
       </div>
@@ -197,7 +200,7 @@ const { w, h } = geo
           width: Math.max(260, bubbleSize.bw * 1.5),
           height: Math.max(260, bubbleSize.bh * 1.5),
           transform: 'translate(-50%, -50%)',
-          background: `radial-gradient(circle, ${accent}1f 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${t.glow} 0%, transparent 70%)`,
           opacity: hovered !== null ? 1 : 0.75,
         }}
       />
@@ -219,7 +222,7 @@ const { w, h } = geo
           <AnswerNode
             key={i}
             option={opt}
-            accent={accent}
+            accent={t.main}
             index={i}
             letter={String(i + 1)}
             style={p}
@@ -286,7 +289,7 @@ const { w, h } = geo
                 >
                   <AnswerNode
                     option={opt}
-                    accent={accent}
+                    accent={t.main}
                     index={i}
                     letter={String(i + 1)}
                     style={{ x: 50, y: 46 }}
@@ -317,6 +320,7 @@ const { w, h } = geo
         current={index + 1}
         total={total}
         accent={accent}
+        difficulty={question.difficulty}
         stageKey={STAGES[stageAt(index)].key}
         stageCurrent={(index % PER_STAGE) + 1}
         stageTotal={PER_STAGE}

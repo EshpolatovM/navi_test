@@ -6,6 +6,7 @@ import Roadmap from './components/Roadmap'
 import SplashScreen from './components/SplashScreen'
 import { useGyroParallax } from './hooks/useGyroParallax'
 import { QUESTIONS } from './data'
+import { toneFor } from './lib/tone'
 
 function App() {
   const [started, setStarted] = useState(false)
@@ -15,8 +16,8 @@ function App() {
   const [cheated, setCheated] = useState(false)
 
   // Accent crossfade for atmospheric background (updated from events only)
-  const [accentOld, setAccentOld] = useState('#2563EB')
-  const [accentCurrent, setAccentCurrent] = useState('#2563EB')
+  const [accentOld, setAccentOld] = useState('#4F46E5')
+  const [accentCurrent, setAccentCurrent] = useState('#4F46E5')
 
   const total = QUESTIONS.length
   const gyro = useGyroParallax()
@@ -42,13 +43,13 @@ function App() {
     const next = [...answers]
     next[index] = optionIndex
     setAnswers(next)
-    const oldValue = QUESTIONS[index]?.accent ?? '#2563EB'
+    const oldValue = QUESTIONS[index]?.accent ?? '#4F46E5'
     if (isLast) {
       setFinished(true)
       setAccentOld(oldValue)
-      setAccentCurrent('#7C3AED')
+      setAccentCurrent('#8B5CF6')
     } else {
-      const nextValue = QUESTIONS[index + 1]?.accent ?? '#2563EB'
+      const nextValue = QUESTIONS[index + 1]?.accent ?? '#4F46E5'
       setAccentOld(oldValue)
       setAccentCurrent(nextValue)
       setIndex((i) => i + 1)
@@ -61,8 +62,8 @@ function App() {
     setFinished(false)
     setStarted(true)
     setCheated(false)
-    setAccentOld('#2563EB')
-    setAccentCurrent(QUESTIONS[0]?.accent ?? '#2563EB')
+    setAccentOld('#4F46E5')
+    setAccentCurrent(QUESTIONS[0]?.accent ?? '#4F46E5')
   }
 
   return (
@@ -85,12 +86,12 @@ function App() {
             <div
               key={`old-${accentOld}`}
               className="animate-bg-blob-out absolute left-1/2 top-[44%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-              style={{ background: `radial-gradient(circle, ${accentOld}30 0%, transparent 70%)` }}
+              style={{ background: `radial-gradient(circle, ${toneFor(accentOld, current.difficulty).glow} 0%, transparent 70%)` }}
             />
             <div
               key={`cur-${accentCurrent}`}
               className="animate-bg-blob-in absolute left-1/2 top-[44%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-              style={{ background: `radial-gradient(circle, ${accentCurrent}30 0%, transparent 70%)` }}
+              style={{ background: `radial-gradient(circle, ${toneFor(accentCurrent, current.difficulty).glow} 0%, transparent 70%)` }}
             />
           </div>
         )}
@@ -110,7 +111,7 @@ function App() {
             <SplashScreen
               onStart={() => {
                 setStarted(true)
-                const first = QUESTIONS[0]?.accent ?? '#2563EB'
+                const first = QUESTIONS[0]?.accent ?? '#4F46E5'
                 setAccentOld(first)
                 setAccentCurrent(first)
                 void gyro.enable()
@@ -132,7 +133,11 @@ function App() {
                   onAnswer={handleAnswer}
                 />
               </div>
-              <Roadmap index={index} total={total} accent={current?.accent ?? '#2563EB'} />
+              <Roadmap
+                index={index}
+                total={total}
+                accent={current ? toneFor(current.accent, current.difficulty).main : '#4F46E5'}
+              />
             </div>
           )}
         </div>

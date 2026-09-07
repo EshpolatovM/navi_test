@@ -1,5 +1,5 @@
 export { QUESTIONS } from './questions'
-export { STAGES, PER_STAGE, stageAt, type StageDef } from './stages'
+export { STAGES, RESULT_STAGE, PER_STAGE, stageAt, type StageDef } from './stages'
 export { CAREERS, type CareerProfile, type Riaset } from './careers'
 export { computeResult, type CareerMatch } from './engine'
 export { DIMS, type DimensionMeta } from './riasec'
