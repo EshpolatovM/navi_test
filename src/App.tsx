@@ -4,6 +4,7 @@ import QuestionScene from './components/QuestionScene'
 import ResultCard from './components/ResultCard'
 import Roadmap from './components/Roadmap'
 import SplashScreen from './components/SplashScreen'
+import { useGyroParallax } from './hooks/useGyroParallax'
 import { QUESTIONS } from './data'
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
   const [accentCurrent, setAccentCurrent] = useState('#2563EB')
 
   const total = QUESTIONS.length
+  const gyro = useGyroParallax()
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -71,9 +73,15 @@ function App() {
         <div className="animate-blob absolute top-[28%] -right-44 h-[30rem] w-[30rem] rounded-full bg-[#f3e6f0]/50 blur-3xl [animation-delay:-6s]" />
         <div className="animate-blob absolute -bottom-32 left-[30%] h-[26rem] w-[26rem] rounded-full bg-white/70 blur-3xl [animation-delay:-12s]" />
 
-        {/* Crossfading accent glows behind the scene */}
+        {/* Crossfading accent glows behind the scene (gyro parallax layer) */}
         {started && !finished && (
-          <>
+          <div
+            className="absolute inset-0"
+            style={{
+              transform: 'translate3d(calc(var(--gy-x) * 18px), calc(var(--gy-y) * 11px), 0)',
+              willChange: 'transform',
+            }}
+          >
             <div
               key={`old-${accentOld}`}
               className="animate-bg-blob-out absolute left-1/2 top-[44%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
@@ -84,7 +92,7 @@ function App() {
               className="animate-bg-blob-in absolute left-1/2 top-[44%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
               style={{ background: `radial-gradient(circle, ${accentCurrent}30 0%, transparent 70%)` }}
             />
-          </>
+          </div>
         )}
       </div>
 
@@ -105,6 +113,7 @@ function App() {
                 const first = QUESTIONS[0]?.accent ?? '#2563EB'
                 setAccentOld(first)
                 setAccentCurrent(first)
+                void gyro.enable()
               }}
             />
           ) : finished ? (
@@ -128,7 +137,6 @@ function App() {
           )}
         </div>
       </main>
-      <span></span>
     </div>
   )
 }

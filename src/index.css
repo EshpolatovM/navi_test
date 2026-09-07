@@ -316,6 +316,26 @@ h3 {
   }
 }
 
+/* Shake "to'kilib ketish": options scatter out, then settle back in place */
+@keyframes tumble-out {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  32% {
+    opacity: 0.55;
+    transform: translate(var(--tx, 0px), var(--ty, 26px)) rotate(var(--tr, 0deg)) scale(0.9);
+  }
+  68% {
+    opacity: 1;
+    transform: translate(calc(var(--tx, 0px) * -0.4), -12px) rotate(calc(var(--tr, 0deg) * -0.5)) scale(1.05);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+}
+
 /* Progress journey */
 @keyframes progress-glow {
   0%,
@@ -434,6 +454,14 @@ h3 {
 
 .animate-ring-pulse {
   animation: ring-pulse 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
