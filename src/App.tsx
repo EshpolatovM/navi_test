@@ -133,11 +133,7 @@ function App() {
                   onAnswer={handleAnswer}
                 />
               </div>
-              <Roadmap
-                index={index}
-                total={total}
-                accent={current ? toneFor(current.accent, current.difficulty).main : '#4F46E5'}
-              />
+              <Roadmap index={index} difficulty={current?.difficulty ?? 0.5} total={total} />
             </div>
           )}
         </div>

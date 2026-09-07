@@ -1,20 +1,29 @@
-import { Check, Compass, Flag } from 'lucide-react'
-import { STAGES, PER_STAGE } from '../data'
+import { Check, Compass } from 'lucide-react'
+import { STAGES, RESULT_STAGE, PER_STAGE, type StageDef } from '../data'
+import { mix, rgba, toneFor } from '../lib/tone'
 
 type Status = 'done' | 'active' | 'upcoming'
 
-interface Step {
-  key: string
-  range?: string
+interface Step extends StageDef {
+  status: Status
+  meta?: string
 }
 
-function Roadmap({ index, total, accent }: { index: number; total: number; accent: string }) {
+function Roadmap({ index, difficulty, total }: { index: number; difficulty: number; total: number }) {
   const stageIndex = Math.min(Math.floor(index / PER_STAGE), STAGES.length - 1)
   const local = (index % PER_STAGE) + 1
 
-  const steps: Array<Step & { status: Status; meta?: string }> = [
+  const tone = toneFor(STAGES[stageIndex].accent, difficulty)
+
+  const startStep: StageDef = {
+    ...STAGES[0],
+    key: 'BOSHLASH',
+    label: 'Boshlash',
+  }
+
+  const steps: Step[] = [
     {
-      key: 'BOSHLASH',
+      ...startStep,
       status: index === 0 ? 'active' : 'done',
       meta: `${total} savol`,
     },
@@ -22,28 +31,23 @@ function Roadmap({ index, total, accent }: { index: number; total: number; accen
       const range = `${String(s.from).padStart(2, '0')}\u2013${s.to} / ${total}`
       const status: Status = si < stageIndex ? 'done' : si === stageIndex ? 'active' : 'upcoming'
       return {
-        key: s.key,
-        range,
+        ...s,
         status,
         meta: status === 'active' ? `${range} \u00b7 savol ${local}/${PER_STAGE}` : range,
       }
     }),
     {
-      key: 'NATIJA',
+      ...RESULT_STAGE,
       status: 'upcoming' as Status,
       meta: 'Karyera signalingiz',
     },
   ]
 
-  const dotColor = (st: Status) =>
-    st === 'done'
-      ? { background: accent, boxShadow: `0 0 8px ${accent}77` }
-      : st === 'active'
-        ? {
-            background: accent,
-            boxShadow: `0 0 0 3.5px ${accent}29, 0 0 10px ${accent}88`,
-          }
-        : { background: '#cbd5e1' }
+  const labelColor = (s: Step) => {
+    if (s.status === 'active') return tone.deep
+    if (s.status === 'done') return mix(s.accent, '#0f172a', 0.3)
+    return '#94a3b8'
+  }
 
   return (
     <aside className="hidden w-[176px] shrink-0 xl:block" aria-label="Bosqichlar">
@@ -55,6 +59,7 @@ function Roadmap({ index, total, accent }: { index: number; total: number; accen
         <ol>
           {steps.map((s, i) => {
             const isLast = i === steps.length - 1
+            const Icon = s.icon
             return (
               <li key={s.key} className="relative flex items-start gap-2.5 px-0.5 py-[5px]">
                 {!isLast && (
@@ -62,39 +67,43 @@ function Roadmap({ index, total, accent }: { index: number; total: number; accen
                     aria-hidden
                     className="absolute left-[7px] top-6 h-[calc(100%-9px)] w-px"
                     style={{
-                      background: s.status === 'done' ? `${accent}55` : '#e2e8f0',
+                      background: s.status === 'done' ? rgba(s.accent, 0.45) : '#e2e8f0',
                     }}
                   />
                 )}
 
                 <span
-                  className={`relative z-10 mt-0.5 flex size-[14px] shrink-0 items-center justify-center rounded-full ${
-                    s.status === 'done' ? 'text-white' : ''
-                  }`}
-                  style={s.status === 'done' ? dotColor('done') : {}}
+                  className="relative z-10 mt-0.5 grid size-[14px] shrink-0 place-items-center rounded-full text-white"
+                  style={
+                    s.status === 'done'
+                      ? { background: s.accent, boxShadow: `0 2px 6px ${rgba(s.accent, 0.45)}` }
+                      : s.status === 'active'
+                        ? {
+                            background: tone.main,
+                            boxShadow: `0 0 0 3.5px ${rgba(s.accent, 0.18)}, 0 2px 8px ${rgba(s.accent, 0.4)}`,
+                          }
+                        : { background: rgba(s.accent, 0.14), color: rgba(s.accent, 0.85) }
+                  }
                 >
                   {s.status === 'done' ? (
                     <Check style={{ width: 11, height: 11 }} strokeWidth={3.5} />
+                  ) : s.status === 'active' && s.key === 'BOSHLASH' ? (
+                    <Compass style={{ width: 10, height: 10 }} strokeWidth={2.4} />
+                  ) : s.status === 'active' ? (
+                    <Icon style={{ width: 10, height: 10 }} strokeWidth={2.4} />
                   ) : (
-                    <span className="block size-[14px] rounded-full" style={dotColor(s.status)} />
+                    <Icon style={{ width: 10, height: 10 }} strokeWidth={2.2} />
                   )}
                 </span>
 
                 <span className="min-w-0">
                   <span
                     className={`flex items-center gap-1 font-display text-[11px] font-bold uppercase tracking-[0.13em] ${
-                      s.status === 'active'
-                        ? 'text-slate-800'
-                        : s.status === 'done'
-                          ? 'text-slate-500'
-                          : 'text-slate-400'
+                      s.status === 'upcoming' ? 'text-slate-400' : ''
                     }`}
+                    style={s.status === 'upcoming' ? undefined : { color: labelColor(s) }}
                   >
                     {s.key}
-                    {s.key === 'NATIJA' && <Flag style={{ width: 11, height: 11 }} className="shrink-0" />}
-                    {s.key === 'BOSHLASH' && (
-                      <Compass style={{ width: 11, height: 11 }} className="shrink-0" />
-                    )}
                   </span>
                   <span className="block text-[10px] font-medium tabular-nums text-slate-400">
                     {s.meta}

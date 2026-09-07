@@ -30,7 +30,10 @@ function StepBadge({ step, state, tone }: { step: StageDef; state: StepState; to
     )
   }
   return (
-    <span className="relative z-10 grid size-6 place-items-center rounded-full border border-slate-200 bg-slate-100 text-slate-400">
+    <span
+      className="relative z-10 grid size-6 place-items-center rounded-full transition-all duration-300"
+      style={{ background: rgba(step.accent, 0.12), color: rgba(step.accent, 0.85) }}
+    >
       <Icon className="size-3" strokeWidth={2.2} />
     </span>
   )
@@ -103,7 +106,7 @@ function JourneyProgress({
                     ? step.accent
                     : st === 'active'
                       ? `linear-gradient(90deg, ${segTone.tint}, ${segTone.main})`
-                      : '#e2e8f0'
+                      : rgba(step.accent, 0.16)
                 return (
                   <div
                     key={`seg-${i}`}

@@ -776,13 +776,17 @@ export const QUESTIONS: QuizQuestion[] = RAW.map((item, i) => {
   const order = DIM_ORDER.slice(start).concat(DIM_ORDER.slice(0, start))
   const opts = order.slice(0, count).map((d) => item.opts[d])
   const stage = Math.floor(i / PER_STAGE)
+  // Difficulty per question: a gentle wave that drifts from light to dark over
+  // the whole quiz — so consecutive answers visibly alternate to'q/och while
+  // the overall difficulty still ramps up over time.
+  const wave = 0.5 + 0.5 * Math.sin(i * 0.7)
+  const trend = i / (RAW.length - 1)
+  const difficulty = Math.min(1, Math.max(0, 0.55 * wave + 0.5 * trend))
   return {
     ...item,
     stage,
     accent: STAGES[stage].accent,
-    // Within a stage, difficulty ramps smoothly easy → hard so the accent
-    // deepens gradually instead of snapping between unrelated colors.
-    difficulty: (i % PER_STAGE) / (PER_STAGE - 1),
+    difficulty,
     opts: rotate(opts, i % count),
   }
 })
