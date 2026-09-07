@@ -3,7 +3,6 @@ import { Sparkles } from 'lucide-react'
 import { STAGES, PER_STAGE, stageAt, type QuizQuestion } from '../data'
 import AnswerNode, { type NodePosition } from './AnswerNode'
 import JourneyProgress from './JourneyProgress'
-import OptionCarousel from './OptionCarousel'
 
 // Constellation geometry constants.
 // N / NH are generous half-sizes for an answer chip (includes hover growth),
@@ -243,8 +242,8 @@ const { w, h } = geo
 
   const tileNodes = (
     <>
-      {/* Phones (<768): bubble + horizontal drag carousel */}
-      <div className="flex flex-col items-center gap-3 md:hidden max-md:gap-2.5">
+      {/* Phones + tablets (<1024): bubble + 2-column grid */}
+      <div className="flex flex-col items-center gap-3 lg:hidden max-md:gap-2.5">
         <div className="flex w-full justify-center">
           <div
             className="w-[min(440px,calc(100vw-2rem))]"
@@ -254,24 +253,28 @@ const { w, h } = geo
           </div>
         </div>
 
-        <OptionCarousel>
+        <div
+          className="mt-2 grid w-full grid-cols-2 gap-2.5 max-md:gap-2"
+          style={{ maxWidth: 440, animation: 'scene-in 0.5s cubic-bezier(0.22,1,0.36,1) both' }}
+        >
           {question.opts.map((opt, i) => {
+            const c = question.opts.length
             const rot = (i % 2 === 0 ? 1 : -1) * (1 + (i % 3))
-            // Per-card gyro parallax depth (layered, subtle): 7/10/13 → 4/6/8 px
+            // Per-tile gyro parallax depth (layered, subtle): 7/10/13 → 4/6/8 px
             const gx = 7 + (i % 3) * 3
             const gy = 4 + (i % 3) * 2
-            const tx = (i % 2 === 0 ? -1 : 1) * (10 + (i % 3) * 6)
-            const tr = (i % 2 === 0 ? -1 : 1) * (6 + (i % 3) * 3)
+            const tx = (i % 2 === 0 ? -1 : 1) * (8 + (i % 3) * 5)
+            const tr = (i % 2 === 0 ? -1 : 1) * (5 + (i % 3) * 2.5)
             return (
               <div
                 key={i}
-                className="w-[80%] shrink-0 snap-center"
+                className={`w-full ${c % 2 === 1 && i === c - 1 ? 'col-span-2' : ''}`}
                 style={{
                   animation: tumbling
                     ? `tumble-out 0.95s cubic-bezier(0.36,0.07,0.19,0.97) ${i * 55}ms both`
-                    : 'scene-in 0.5s cubic-bezier(0.22,1,0.36,1) both',
+                    : undefined,
                   '--tx': `${tx}px`,
-                  '--ty': '30px',
+                  '--ty': '26px',
                   '--tr': `${tr}deg`,
                 } as React.CSSProperties}
               >
@@ -300,63 +303,6 @@ const { w, h } = geo
                     onSelect={tumbling ? () => {} : setSelected}
                   />
                 </div>
-              </div>
-            )
-          })}
-        </OptionCarousel>
-      </div>
-
-      {/* Tablet (768–1023): bubble + 2-column grid */}
-      <div className="hidden flex-col items-center gap-3 md:flex lg:hidden">
-        <div className="flex w-full justify-center">
-          <div
-            className="w-[min(440px,96%)]"
-            style={{ transform: 'translate3d(calc(var(--gy-x) * 3px), calc(var(--gy-y) * 2px), 0)' }}
-          >
-            <div style={{ animation: 'bubble-pop 0.6s cubic-bezier(0.22,1,0.36,1) both' }}>{bubbleEl}</div>
-          </div>
-        </div>
-
-        <div
-          className="mt-2 grid w-full grid-cols-2 gap-2.5"
-          style={{ maxWidth: 440, animation: 'scene-in 0.5s cubic-bezier(0.22,1,0.36,1) both' }}
-        >
-          {question.opts.map((opt, i) => {
-            const c = question.opts.length
-            const rot = (i % 2 === 0 ? 1 : -1) * (1 + (i % 3))
-            const tx = (i % 2 === 0 ? -1 : 1) * (8 + (i % 3) * 5)
-            const tr = (i % 2 === 0 ? -1 : 1) * (5 + (i % 3) * 2.5)
-            return (
-              <div
-                key={i}
-                className={`w-full ${c % 2 === 1 && i === c - 1 ? 'col-span-2' : ''}`}
-                style={{
-                  animation: tumbling
-                    ? `tumble-out 0.95s cubic-bezier(0.36,0.07,0.19,0.97) ${i * 55}ms both`
-                    : undefined,
-                  '--tx': `${tx}px`,
-                  '--ty': '26px',
-                  '--tr': `${tr}deg`,
-                } as React.CSSProperties}
-              >
-                <AnswerNode
-                  option={opt}
-                  accent={accent}
-                  index={i}
-                  letter={String(i + 1)}
-                  style={{ x: 50, y: 46 }}
-                  center={{ x: 50, y: 42 }}
-                  rotation={rot}
-                  flyX="0px"
-                  flyY="12px"
-                  floatY="0px"
-                  delay={140 + i * 60}
-                  hovered={hovered}
-                  selected={selected}
-                  variant="tile"
-                  onHover={setHovered}
-                  onSelect={tumbling ? () => {} : setSelected}
-                />
               </div>
             )
           })}
