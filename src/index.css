@@ -43,23 +43,14 @@
 @theme {
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
+  --font-display: "Fredoka", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
-  --bg: #0d0f13;
-  --bg-elevated: #151821;
-  --surface: #1b1f2a;
-  --surface-hover: #212635;
-  --text-primary: #f7f5f0;
-  --text-secondary: #9aa0ad;
-  --accent: #f5c542;
-  --accent-dark: #c89b1f;
-  --accent-soft: rgba(245, 197, 66, 0.12);
-  --success: #4caf6d;
-  --danger: #ef6a5a;
-  --border: rgba(255, 255, 255, 0.08);
-
-  --grain-opacity: 0.035;
+  --bg: #faf8f4;
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --accent: #2563eb;
 
   font-family: var(--font-sans);
   color: var(--text-primary);
@@ -77,34 +68,6 @@ body {
   font-family: var(--font-sans);
   line-height: 1.6;
   background-color: var(--bg);
-  background-image:
-    radial-gradient(
-      52rem 40rem at 82% -18%,
-      rgba(245, 197, 66, 0.09),
-      transparent 62%
-    ),
-    radial-gradient(
-      48rem 36rem at -14% 108%,
-      rgba(120, 134, 165, 0.07),
-      transparent 60%
-    ),
-    radial-gradient(
-      30rem 24rem at 108% 82%,
-      rgba(245, 197, 66, 0.04),
-      transparent 58%
-    );
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
-  opacity: var(--grain-opacity);
 }
 
 #root {
@@ -117,6 +80,10 @@ h2,
 h3 {
   font-family: var(--font-sans);
   letter-spacing: -0.02em;
+}
+
+.font-display {
+  font-family: var(--font-display);
 }
 
 /* ---------- Animations ---------- */
@@ -165,17 +132,234 @@ h3 {
   }
 }
 
-@keyframes answer-ring {
+@keyframes blob {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(3rem, -2.5rem) scale(1.08);
+  }
+  66% {
+    transform: translate(-2.5rem, 2rem) scale(0.94);
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(4rem, 3rem);
+  }
+}
+
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes mark-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(var(--mr, 0deg));
+  }
+  50% {
+    transform: translateY(-7px) rotate(var(--mr, 0deg));
+  }
+}
+
+@keyframes question-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes layout-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes grow-x {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Scene: question + answer constellation */
+@keyframes scene-in {
   0% {
-    box-shadow: 0 0 0 0 var(--ring-color, var(--accent));
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
   }
   100% {
-    box-shadow: 0 0 0 14px transparent;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes scene-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-16px) scale(0.98);
+  }
+}
+
+/* Question bubble */
+@keyframes bubble-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.86) rotate(-1.5deg);
+  }
+  60% {
+    transform: translateY(0) scale(1.04);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes bubble-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(-9px);
+  }
+}
+
+/* Floating answer nodes. Entrance uses --nx/--ny (fly-in offset);
+   then continuous float bobs in place using only translateY. */
+@keyframes node-in {
+  0% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--nx, 0px)), calc(-50% + var(--ny, 0px))) scale(0.4);
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+@keyframes node-float {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(calc(var(--fy, 0px) * -1));
+  }
+}
+
+/* Accent background blob cross-fade */
+@keyframes bg-blob-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bg-blob-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.15);
+  }
+}
+
+/* Progress journey */
+@keyframes progress-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1.35);
+  }
+}
+
+@keyframes ring-pulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Result screen */
+@keyframes donut-fill {
+  from {
+    stroke-dashoffset: var(--donut-start, 1000);
+  }
+  to {
+    stroke-dashoffset: var(--donut-end, 0);
   }
 }
 
 .animate-card-in {
   animation: card-in 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-question-in {
+  animation: question-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-layout-in {
+  animation: layout-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .animate-shake {
@@ -186,15 +370,94 @@ h3 {
   animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-.animate-answer-ring {
-  animation: answer-ring 0.45s ease-out both;
+.animate-blob {
+  animation: blob 18s ease-in-out infinite;
+}
+
+.animate-drift {
+  animation: drift 14s ease-in-out infinite;
+}
+
+.animate-bubble-in {
+  animation: bubble-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.mark-float {
+  animation: mark-float 5s ease-in-out infinite;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-grow-x {
+  animation: grow-x 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: left;
+}
+
+/* Scene helpers */
+.animate-scene-in {
+  animation: scene-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-scene-out {
+  animation: scene-out 0.28s cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+.animate-bubble-pop {
+  animation: bubble-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-bubble-float {
+  animation: bubble-float 7s ease-in-out 0.9s infinite backwards;
+}
+
+.animate-node-in {
+  animation: node-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-node-float {
+  animation: node-float 6s ease-in-out infinite;
+}
+
+.animate-bg-blob-in {
+  animation: bg-blob-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-bg-blob-out {
+  animation: bg-blob-out 0.9s ease-out both;
+}
+
+.animate-progress-glow {
+  animation: progress-glow 2.4s ease-in-out infinite;
+}
+
+.animate-ring-pulse {
+  animation: ring-pulse 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
   .animate-card-in,
+  .animate-question-in,
+  .animate-option-in,
   .animate-shake,
   .animate-pop-in,
-  .animate-answer-ring {
+  .animate-blob,
+  .animate-drift,
+  .animate-bubble-in,
+  .animate-slide-up,
+  .animate-grow-x,
+  .mark-float,
+  .animate-scene-in,
+  .animate-scene-out,
+  .animate-bubble-pop,
+  .animate-bubble-float,
+  .animate-node-in,
+  .animate-node-float,
+  .animate-bg-blob-in,
+  .animate-bg-blob-out,
+  .animate-progress-glow,
+  .animate-ring-pulse {
     animation: none;
   }
 }
