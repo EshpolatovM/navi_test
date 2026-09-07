@@ -247,7 +247,7 @@ const { w, h } = geo
         <div className="flex w-full justify-center">
           <div
             className="w-[min(440px,calc(100vw-2rem))]"
-            style={{ transform: 'translate3d(calc(var(--gy-x) * 3px), calc(var(--gy-y) * 2px), 0)' }}
+            style={{ transform: 'translate3d(calc(var(--gy-x) * 8px), calc(var(--gy-y) * 5px), 0)' }}
           >
             <div style={{ animation: 'bubble-pop 0.6s cubic-bezier(0.22,1,0.36,1) both' }}>{bubbleEl}</div>
           </div>
@@ -260,9 +260,9 @@ const { w, h } = geo
           {question.opts.map((opt, i) => {
             const c = question.opts.length
             const rot = (i % 2 === 0 ? 1 : -1) * (1 + (i % 3))
-            // Per-tile gyro parallax depth (layered, subtle): 7/10/13 → 4/6/8 px
-            const gx = 7 + (i % 3) * 3
-            const gy = 4 + (i % 3) * 2
+            // Per-tile gyro parallax depth (visible, layered): 16/24/32 → 9/13/18 px
+            const gx = 16 + (i % 3) * 8
+            const gy = 9 + (i % 3) * 4.5
             const tx = (i % 2 === 0 ? -1 : 1) * (8 + (i % 3) * 5)
             const tr = (i % 2 === 0 ? -1 : 1) * (5 + (i % 3) * 2.5)
             return (

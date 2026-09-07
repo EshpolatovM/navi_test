@@ -78,7 +78,7 @@ function App() {
           <div
             className="absolute inset-0"
             style={{
-              transform: 'translate3d(calc(var(--gy-x) * 18px), calc(var(--gy-y) * 11px), 0)',
+              transform: 'translate3d(calc(var(--gy-x) * 44px), calc(var(--gy-y) * 24px), 0)',
               willChange: 'transform',
             }}
           >

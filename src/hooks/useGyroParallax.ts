@@ -48,7 +48,7 @@ export function useGyroParallax() {
     const s = st.current
     const dt = now - s.last > 0 ? now - s.last : 16.7
     s.last = now
-    const k = 1 - Math.exp(-dt / 140)
+    const k = 1 - Math.exp(-dt / 95)
     const x = s.smooth.x + (s.target.x - s.smooth.x) * k
     const y = s.smooth.y + (s.target.y - s.smooth.y) * k
     s.smooth.x = x
@@ -67,10 +67,10 @@ export function useGyroParallax() {
 
   const onOrient = (e: DeviceOrientationEvent) => {
     if (e.gamma === null || e.beta === null) return
-    const x = clamp(e.gamma / 45, -1, 1)
-    const y = clamp((e.beta - 90) / 35, -1, 1)
-    st.current.target.x = Math.abs(x) < 0.06 ? 0 : x
-    st.current.target.y = Math.abs(y) < 0.06 ? 0 : y
+    const x = clamp(e.gamma / 28, -1, 1)
+    const y = clamp((e.beta - 90) / 24, -1, 1)
+    st.current.target.x = Math.abs(x) < 0.02 ? 0 : x
+    st.current.target.y = Math.abs(y) < 0.02 ? 0 : y
     ensureLoop()
   }
 
