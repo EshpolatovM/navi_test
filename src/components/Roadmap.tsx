@@ -1,5 +1,5 @@
 import { Check, Compass } from 'lucide-react'
-import { STAGES, RESULT_STAGE, PER_STAGE, type StageDef } from '../data'
+import { RESULT_STAGE, type StageBoundary, type StageDef } from '../data'
 import { mix, rgba, toneFor } from '../lib/tone'
 
 type Status = 'done' | 'active' | 'upcoming'
@@ -9,14 +9,29 @@ interface Step extends StageDef {
   meta?: string
 }
 
-function Roadmap({ index, difficulty, total }: { index: number; difficulty: number; total: number }) {
-  const stageIndex = Math.min(Math.floor(index / PER_STAGE), STAGES.length - 1)
-  const local = (index % PER_STAGE) + 1
+function Roadmap({
+  index,
+  difficulty,
+  total,
+  boundaries,
+}: {
+  index: number
+  difficulty: number
+  total: number
+  boundaries: StageBoundary[]
+}) {
+  const stageIndex =
+    boundaries.findIndex((b) => index + 1 >= b.from && index + 1 <= b.to) < 0
+      ? boundaries.length - 1
+      : boundaries.findIndex((b) => index + 1 >= b.from && index + 1 <= b.to)
+  const activeBoundary = boundaries[stageIndex]
+  const local = (index + 1) - activeBoundary.from + 1
+  const stageTotal = activeBoundary.to - activeBoundary.from + 1
 
-  const tone = toneFor(STAGES[stageIndex].accent, difficulty)
+  const tone = toneFor(activeBoundary.def.accent, difficulty)
 
   const startStep: StageDef = {
-    ...STAGES[0],
+    ...activeBoundary.def,
     key: 'BOSHLASH',
     label: 'Boshlash',
   }
@@ -27,13 +42,13 @@ function Roadmap({ index, difficulty, total }: { index: number; difficulty: numb
       status: index === 0 ? 'active' : 'done',
       meta: `${total} savol`,
     },
-    ...STAGES.map((s, si) => {
-      const range = `${String(s.from).padStart(2, '0')}\u2013${s.to} / ${total}`
+    ...boundaries.map((b, si) => {
+      const range = `${String(b.from).padStart(2, '0')}\u2013${b.to} / ${total}`
       const status: Status = si < stageIndex ? 'done' : si === stageIndex ? 'active' : 'upcoming'
       return {
-        ...s,
+        ...b.def,
         status,
-        meta: status === 'active' ? `${range} \u00b7 savol ${local}/${PER_STAGE}` : range,
+        meta: status === 'active' ? `${range} \u00b7 savol ${local}/${stageTotal}` : range,
       }
     }),
     {

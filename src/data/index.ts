@@ -1,12 +1,20 @@
 export { QUESTIONS } from './questions'
-export { STAGES, RESULT_STAGE, PER_STAGE, stageAt, type StageDef } from './stages'
+export {
+  STAGES,
+  RESULT_STAGE,
+  PER_STAGE,
+  stageAt,
+  buildStageModel,
+  type StageDef,
+  type StageBoundary,
+  type StageModel,
+} from './stages'
 export { CAREERS, type CareerProfile, type Riaset } from './careers'
 export { computeResult, type CareerMatch } from './engine'
 export {
   INTEREST_ITEMS,
   INTEREST_COUNT,
   INTEREST_QUESTIONS,
-  INTEREST_LEVELS,
   ITEMS_PER_DIM,
   computeInterestProfile,
   type InterestItem,

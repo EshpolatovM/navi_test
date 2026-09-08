@@ -7,7 +7,7 @@ import InterestResult from './components/InterestResult'
 import Roadmap from './components/Roadmap'
 import SplashScreen, { type AssessmentMode } from './components/SplashScreen'
 import { useGyroParallax } from './hooks/useGyroParallax'
-import { DIMS, INTEREST_COUNT, INTEREST_QUESTIONS, QUESTIONS, computeInterestProfile } from './data'
+import { DIMS, INTEREST_COUNT, INTEREST_QUESTIONS, QUESTIONS, buildStageModel, computeInterestProfile } from './data'
 import { toneFor } from './lib/tone'
 
 function App() {
@@ -29,6 +29,8 @@ function App() {
   const [accentCurrent, setAccentCurrent] = useState('#4F46E5')
 
   const careerTotal = QUESTIONS.length
+  const careerStageModel = buildStageModel(QUESTIONS)
+  const interestStageModel = buildStageModel(INTEREST_QUESTIONS)
   const gyro = useGyroParallax()
 
   useEffect(() => {
@@ -203,10 +205,16 @@ function App() {
                     question={careerCurrent}
                     index={careerIndex}
                     total={careerTotal}
+                    stageModel={careerStageModel}
                     onAnswer={handleCareerAnswer}
                   />
                 </div>
-                <Roadmap index={careerIndex} difficulty={careerCurrent?.difficulty ?? 0.5} total={careerTotal} />
+                <Roadmap
+                  index={careerIndex}
+                  difficulty={careerCurrent?.difficulty ?? 0.5}
+                  total={careerTotal}
+                  boundaries={careerStageModel.boundaries}
+                />
               </div>
             )
           ) : interestFinished ? (
@@ -226,10 +234,16 @@ function App() {
                   question={interestQ!}
                   index={interestIndex}
                   total={INTEREST_COUNT}
+                  stageModel={interestStageModel}
                   onAnswer={handleInterestAnswer}
                 />
               </div>
-              <Roadmap index={interestIndex} difficulty={interestQ?.difficulty ?? 0.55} total={INTEREST_COUNT} />
+              <Roadmap
+                index={interestIndex}
+                difficulty={interestQ?.difficulty ?? 0.55}
+                total={INTEREST_COUNT}
+                boundaries={interestStageModel.boundaries}
+              />
             </div>
           )}
         </div>

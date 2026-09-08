@@ -1,5 +1,5 @@
 import { Check } from 'lucide-react'
-import { STAGES, RESULT_STAGE, type StageDef } from '../data'
+import { RESULT_STAGE, type StageDef } from '../data'
 import { mix, rgba, toneFor, type Tone } from '../lib/tone'
 
 type StepState = 'done' | 'active' | 'next'
@@ -44,6 +44,7 @@ function JourneyProgress({
   total,
   accent,
   difficulty,
+  stages,
   stageKey,
   stageCurrent,
   stageTotal,
@@ -52,6 +53,7 @@ function JourneyProgress({
   total: number
   accent: string
   difficulty: number
+  stages: StageDef[]
   stageKey: string
   stageCurrent: number
   stageTotal: number
@@ -59,8 +61,9 @@ function JourneyProgress({
   const pct = Math.round((current / total) * 100)
   const pad = String(current).padStart(2, '0')
   const padTotal = String(total).padStart(2, '0')
-  const activeIdx = Math.max(0, STAGES.findIndex((s) => s.key === stageKey))
-  const steps: StageDef[] = [...STAGES, RESULT_STAGE]
+  const activeIdx = Math.max(0, stages.findIndex((s) => s.key === stageKey))
+  const steps: StageDef[] = [...stages, RESULT_STAGE]
+  const stepW = 100 / steps.length
   const tone = toneFor(accent, difficulty)
   const ActiveIcon = steps[activeIdx]?.icon ?? RESULT_STAGE.icon
 
@@ -111,7 +114,7 @@ function JourneyProgress({
                   <div
                     key={`seg-${i}`}
                     className="absolute h-full rounded-full transition-[background-color,width] duration-500"
-                    style={{ left: `${20 * i}%`, width: '20%', background: bg }}
+                    style={{ left: `${stepW * i}%`, width: `${stepW}%`, background: bg }}
                   />
                 )
               })}
@@ -121,7 +124,7 @@ function JourneyProgress({
               {steps.map((step, i) => {
                 const state: StepState = i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'next'
                 return (
-                  <div key={step.key} className="flex w-[20%] flex-col items-center gap-[5px]">
+                  <div key={step.key} className="flex flex-col items-center gap-[5px]" style={{ width: `${stepW}%` }}>
                     <StepBadge step={step} state={state} tone={tone} />
                     <span
                       className="w-full whitespace-nowrap text-center font-display text-[9px] leading-[1.25] uppercase transition-all duration-300"

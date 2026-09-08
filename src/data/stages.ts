@@ -63,3 +63,35 @@ export const RESULT_STAGE: StageDef = {
 
 export const stageAt = (index: number): number =>
   Math.max(0, Math.min(3, Math.floor(index / PER_STAGE)))
+
+// ── Dynamic stage model ──────────────────────────────────────────────────
+// Roadmap / progress are derived from the actual question array instead of
+// hardcoded "01–15 / 16–30 / ..." ranges. Each question's `stage` field says
+// which stage it belongs to (REAL KASB splits into 4×15, QIZIQISH uses a
+// single stage covering all its questions), so ranges and totals can never
+// exceed the real question count.
+export interface StageBoundary {
+  stage: number
+  from: number // 1-based inclusive
+  to: number // 1-based inclusive
+  def: StageDef
+}
+
+export interface StageModel {
+  total: number
+  boundaries: StageBoundary[]
+}
+
+export function buildStageModel(questions: { stage: number }[]): StageModel {
+  const total = questions.length
+  const groups = new Map<number, { from: number; to: number }>()
+  questions.forEach((q, i) => {
+    const g = groups.get(q.stage)
+    if (g) g.to = i + 1
+    else groups.set(q.stage, { from: i + 1, to: i + 1 })
+  })
+  const boundaries: StageBoundary[] = [...groups.entries()]
+    .sort((a, b) => a[0] - b[0])
+    .map(([stage, r]) => ({ stage, from: r.from, to: r.to, def: STAGES[stage] ?? STAGES[0] }))
+  return { total, boundaries }
+}

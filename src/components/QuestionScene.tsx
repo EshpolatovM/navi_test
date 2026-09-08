@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Sparkles } from 'lucide-react'
-import { STAGES, PER_STAGE, stageAt, type QuizQuestion } from '../data'
+import type { QuizQuestion, StageModel } from '../data'
 import { toneFor } from '../lib/tone'
 import AnswerNode, { type NodePosition } from './AnswerNode'
 import JourneyProgress from './JourneyProgress'
@@ -16,11 +16,13 @@ function QuestionScene({
   question,
   index,
   total,
+  stageModel,
   onAnswer,
 }: {
   question: QuizQuestion
   index: number
   total: number
+  stageModel: StageModel
   onAnswer: (optionIndex: number) => void
 }) {
   const [selected, setSelected] = useState<number | null>(null)
@@ -88,6 +90,13 @@ function QuestionScene({
   const accent = question.accent
   // Difficulty-tuned tone: easy → soft & airy, hard → rich & defined.
   const t = toneFor(accent, question.difficulty)
+
+  // Stage for this question, derived from the actual question array.
+  const boundary =
+    stageModel.boundaries.find((s) => index + 1 >= s.from && index + 1 <= s.to) ??
+    stageModel.boundaries[stageModel.boundaries.length - 1]
+  const stageCurrent = index - boundary.from + 2
+  const stageTotal = boundary.to - boundary.from + 1
 
 // --- Symmetric constellation around the centered bubble -------------------
 // Node count follows each O*NET-style item's option count (4/5/6), so the
@@ -158,7 +167,7 @@ const { w, h } = geo
             className="absolute left-5 top-4 font-display text-[10px] font-semibold uppercase tracking-[0.28em]"
             style={{ color: t.deep }}
           >
-            {STAGES[stageAt(index)].key}
+            {boundary.def.key}
           </span>
           <Sparkles
             aria-hidden
@@ -321,9 +330,10 @@ const { w, h } = geo
         total={total}
         accent={accent}
         difficulty={question.difficulty}
-        stageKey={STAGES[stageAt(index)].key}
-        stageCurrent={(index % PER_STAGE) + 1}
-        stageTotal={PER_STAGE}
+        stages={stageModel.boundaries.map((s) => s.def)}
+        stageKey={boundary.def.key}
+        stageCurrent={stageCurrent}
+        stageTotal={stageTotal}
       />
 
       <div className={phase === 'out' ? 'animate-scene-out' : 'animate-scene-in'}>
