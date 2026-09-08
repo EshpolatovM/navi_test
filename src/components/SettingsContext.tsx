@@ -25,7 +25,7 @@ const K = {
   onboarded: 'onboardingCompleted',
 }
 
-const DEFAULT_ACCENT = '#6366F1'
+const DEFAULT_ACCENT = '#3B7BEC'
 
 function read<T>(key: string, fallback: T): T {
   try {

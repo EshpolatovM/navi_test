@@ -10,18 +10,18 @@ type Step = (typeof STEPS)[number]
 function ThemePreview({ dark }: { dark: boolean }) {
   const vars = dark
     ? {
-        '--surface': '#0e131a',
-        '--surface-elevated': '#161d27',
-        '--text-primary': '#e7edf3',
-        '--text-secondary': '#9aa7b4',
-        '--border': 'rgba(255,255,255,0.1)',
+        '--surface': '#141820',
+        '--surface-elevated': '#1b2130',
+        '--text-primary': '#ececf2',
+        '--text-secondary': '#a6adbc',
+        '--border': 'rgba(255,255,255,0.09)',
       }
     : {
-        '--surface': '#faf8f4',
-        '--surface-elevated': '#ffffff',
-        '--text-primary': '#1c1917',
-        '--text-secondary': '#57534e',
-        '--border': 'rgba(28,25,23,0.09)',
+        '--surface': '#f4f3ef',
+        '--surface-elevated': '#fdfdfa',
+        '--text-primary': '#20232b',
+        '--text-secondary': '#565b66',
+        '--border': 'rgba(30,34,43,0.1)',
       }
   return (
     <div
@@ -201,7 +201,7 @@ function Onboarding() {
               </div>
             </div>
 
-            <div className="grid grid-cols-4 justify-items-center gap-4">
+            <div className="grid grid-cols-5 justify-items-center gap-3">
               {ACCENT_PALETTE.map((p) => {
                 const active = pickedColor === p.hex || (pickedColor === null && accent === p.hex)
                 return (

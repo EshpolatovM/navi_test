@@ -1,16 +1,18 @@
 import { Check } from 'lucide-react'
 import { RESULT_STAGE, type StageDef } from '../data'
+import { stageVar } from '../lib/theme'
 import { useSettings } from './SettingsContext'
 
 type StepState = 'done' | 'active' | 'next'
 
 function StepBadge({ step, state }: { step: StageDef; state: StepState }) {
   const Icon = step.icon
+  const sv = stageVar(step.key)
   if (state === 'done') {
     return (
       <span
-        className="relative z-10 grid size-6 place-items-center rounded-full text-white shadow-[0_4px_10px_-3px_rgba(15,23,42,0.35)] transition-all duration-300"
-        style={{ background: 'var(--accent-dark)' }}
+        className="relative z-10 grid size-6 place-items-center rounded-full text-white transition-all duration-300"
+        style={{ background: sv, boxShadow: `0 4px 10px -3px color-mix(in srgb, ${sv} 45%, transparent)` }}
       >
         <Check className="size-3.5" strokeWidth={3.5} />
       </span>
@@ -19,9 +21,9 @@ function StepBadge({ step, state }: { step: StageDef; state: StepState }) {
   if (state === 'active') {
     return (
       <span
-        className="relative z-10 grid size-6 place-items-center rounded-full text-[var(--accent-contrast)] transition-all duration-300"
+        className="relative z-10 grid size-6 place-items-center rounded-full text-white transition-all duration-300"
         style={{
-          background: 'var(--accent)',
+          background: `linear-gradient(135deg, ${sv}, color-mix(in srgb, ${sv} 45%, var(--accent)))`,
           boxShadow: '0 0 0 3px var(--accent-ring), 0 5px 14px -4px var(--accent-shadow)',
         }}
       >
@@ -32,7 +34,7 @@ function StepBadge({ step, state }: { step: StageDef; state: StepState }) {
   return (
     <span
       className="relative z-10 grid size-6 place-items-center rounded-full transition-all duration-300"
-      style={{ background: 'var(--accent-soft)', color: 'var(--text-muted)' }}
+      style={{ background: `color-mix(in srgb, ${sv} 24%, transparent)`, color: 'var(--text-muted)' }}
     >
       <Icon className="size-3" strokeWidth={2.2} />
     </span>
@@ -69,13 +71,13 @@ function JourneyProgress({
       <div className="hidden items-end justify-between lg:flex">
         <div className="flex flex-col gap-1">
           <span
-            className="flex items-center gap-1.5 font-display text-[10px] font-bold uppercase tracking-[0.24em]"
+            className="flex items-center gap-1.5 font-display text-[11px] font-bold uppercase tracking-[0.2em]"
             style={{ color: 'var(--accent)' }}
           >
             <ActiveIcon style={{ width: 13, height: 13 }} strokeWidth={2.4} />
             {t(`stage.${stageKey}`)}
           </span>
-          <span className="font-display text-[13px] font-semibold tracking-[0.16em] text-slate-500">
+          <span className="font-display text-[14px] font-semibold tracking-[0.12em] text-slate-500">
             {t('prog.savol')} <span className="text-slate-800">{pad}</span>
             <span className="mx-1.5 text-slate-300">·</span>
             <span className="text-slate-400">{padTotal}</span>
@@ -99,12 +101,13 @@ function JourneyProgress({
             <div aria-hidden className="absolute top-[10px] right-[10%] left-[10%] h-[3px]">
               {steps.slice(0, -1).map((step, i) => {
                 const st: StepState = i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'next'
+                const sv = stageVar(step.key)
                 const bg =
                   st === 'done'
-                    ? 'var(--accent-dark)'
+                    ? sv
                     : st === 'active'
-                      ? 'linear-gradient(90deg, var(--accent-soft), var(--accent))'
-                      : 'var(--accent-tint)'
+                      ? `linear-gradient(90deg, color-mix(in srgb, ${sv} 30%, transparent), var(--accent))`
+                      : `color-mix(in srgb, ${sv} 16%, transparent)`
                 return (
                   <div
                     key={`seg-${i}`}
@@ -122,12 +125,12 @@ function JourneyProgress({
                   <div key={step.key} className="flex flex-col items-center gap-[5px]" style={{ width: `${stepW}%` }}>
                     <StepBadge step={step} state={state} />
                     <span
-                      className="w-full whitespace-nowrap text-center font-display text-[9px] leading-[1.25] uppercase transition-all duration-300"
+                      className="w-full max-w-full overflow-hidden whitespace-nowrap text-center font-display text-[10px] leading-[1.25] uppercase transition-all duration-300"
                       style={
                         state === 'active'
-                          ? { color: 'var(--accent)', fontWeight: 800, letterSpacing: '0.03em' }
+                          ? { color: 'var(--accent)', fontWeight: 800, letterSpacing: '0.02em' }
                           : state === 'done'
-                            ? { color: 'var(--accent-dark)', fontWeight: 700, letterSpacing: '0.02em' }
+                            ? { color: stageVar(step.key), fontWeight: 700, letterSpacing: '0.02em' }
                             : { color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.02em' }
                       }
                     >
@@ -140,7 +143,7 @@ function JourneyProgress({
           </div>
 
           <div className="mt-2 flex items-center justify-between border-t border-slate-100 px-2 pt-1.5">
-            <span className="font-display text-[10px] font-bold tracking-[0.14em] text-slate-500">
+            <span className="font-display text-[11px] font-bold tracking-[0.12em] text-slate-500">
               {t('prog.savol')} <span className="text-slate-800">{pad}</span>
               <span className="mx-1 text-slate-300">/</span>
               <span className="text-slate-400">{padTotal}</span>
@@ -149,7 +152,7 @@ function JourneyProgress({
                 {stageCurrent}/{stageTotal}
               </span>
             </span>
-            <span className="font-display text-[12px] font-bold tabular-nums" style={{ color: 'var(--accent)' }}>
+            <span className="font-display text-[13px] font-bold tabular-nums" style={{ color: 'var(--accent)' }}>
               {pct}%
             </span>
           </div>

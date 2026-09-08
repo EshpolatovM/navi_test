@@ -92,7 +92,7 @@ function SetupModal({ onClose }: { onClose: () => void }) {
 
           <div>
             <SectionLabel>{t('settings.accent')}</SectionLabel>
-            <div className="grid grid-cols-4 justify-items-center gap-3">
+            <div className="grid grid-cols-5 justify-items-center gap-3">
               {ACCENT_PALETTE.map((p) => {
                 const active = accent === p.hex
                 return (

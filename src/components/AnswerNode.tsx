@@ -121,32 +121,32 @@ function AnswerNode({
     >
       <span
         style={innerStyle}
-        className="flex min-h-[54px] w-full cursor-pointer items-center gap-3 px-3.5 py-2 text-left"
+        className="flex min-h-[62px] w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left md:min-h-[68px] md:gap-3.5"
       >
         <span className="relative shrink-0">
           <span
             aria-hidden
             className="grid place-items-center rounded-full"
             style={{
-              width: 40,
-              height: 40,
+              width: 46,
+              height: 46,
               background: isPicked ? 'color-mix(in srgb, var(--accent-contrast) 22%, transparent)' : `${accent}12`,
               color: isPicked ? 'var(--accent-contrast)' : accent,
               transform: isHover ? 'scale(1.12) rotate(-4deg)' : undefined,
               transition: 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)',
             }}
           >
-            <Icon style={{ width: 19, height: 19 }} strokeWidth={2.1} />
+            <Icon style={{ width: 21, height: 21 }} strokeWidth={2.1} />
           </span>
           <span
             aria-hidden
-            className="absolute -top-1.5 -right-1.5 grid size-4.5 place-items-center rounded-full font-display text-[9px] font-semibold"
+            className="absolute -top-1.5 -right-1.5 grid size-5 place-items-center rounded-full font-display text-[10px] font-semibold"
             style={{ background: isPicked ? 'var(--accent-contrast)' : 'var(--surface-elevated)', color: isPicked ? 'var(--accent)' : 'var(--text-muted)', boxShadow: `0 2px 6px ${accent}33` }}
           >
             {letter}
           </span>
         </span>
-        <span className="flex-1 text-[12.5px] leading-snug font-medium [overflow-wrap:anywhere]">{option.text}</span>
+        <span className="flex-1 text-[14.5px] leading-[1.35] font-semibold [overflow-wrap:anywhere] md:text-[16px]">{option.text}</span>
       </span>
     </button>
   )

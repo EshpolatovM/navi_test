@@ -31,6 +31,8 @@ const uz: Dict = {
   'settings.theme.dark': 'Qorong\u2018i',
   'settings.accent': 'Akcent rang',
   'settings.close': 'Yopish',
+  'theme.toDark': 'Qorong\u2018i rejimga o\u2018tish',
+  'theme.toLight': 'Yorug\u2018 rejimga o\u2018tish',
 
   'app.back': 'Ortga',
   'app.cheat': 'Cheat rejim · tasodifiy javoblar',
@@ -131,6 +133,8 @@ const ru: Dict = {
   'settings.theme.dark': 'Тёмное',
   'settings.accent': 'Акцентный цвет',
   'settings.close': 'Закрыть',
+  'theme.toDark': 'Тёмная тема',
+  'theme.toLight': 'Светлая тема',
 
   'app.back': 'Назад',
   'app.cheat': 'Чит-режим · случайные ответы',
@@ -231,6 +235,8 @@ const en: Dict = {
   'settings.theme.dark': 'Dark',
   'settings.accent': 'Accent color',
   'settings.close': 'Close',
+  'theme.toDark': 'Switch to dark theme',
+  'theme.toLight': 'Switch to light theme',
 
   'app.back': 'Back',
   'app.cheat': 'Cheat mode · random answers',

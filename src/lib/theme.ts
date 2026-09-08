@@ -14,17 +14,29 @@ export interface PaletteOption {
   name: string
 }
 
-// Curated, product-feel palette (NOT a dev color grid).
+// Curated, muted product palette — premium, never neon.
 export const ACCENT_PALETTE: PaletteOption[] = [
-  { hex: '#6366F1', name: 'Indigo' },
-  { hex: '#2563EB', name: 'Club' },
-  { hex: '#0EA5E9', name: 'Sky' },
-  { hex: '#10B981', name: 'Emerald' },
-  { hex: '#F59E0B', name: 'Saffron' },
-  { hex: '#F43F5E', name: 'Rose' },
-  { hex: '#D946EF', name: 'Fuchsia' },
-  { hex: '#9AA0AC', name: 'Silver' },
+  { hex: '#3B7BEC', name: 'Blue' },
+  { hex: '#7C6BF0', name: 'Violet' },
+  { hex: '#17A398', name: 'Teal' },
+  { hex: '#E8904E', name: 'Orange' },
+  { hex: '#E0577E', name: 'Rose' },
 ]
+
+// Roadmap stage identity → CSS stage token (muted, harmonious across themes).
+const STAGE_COLOR: Record<string, string> = {
+  BOSHLASH: 'violet',
+  QIZIQISHLAR: 'blue',
+  FAOLIYATLAR: 'teal',
+  'ISH USLUBI': 'green',
+  'ISH MUHITI': 'orange',
+  NATIJA: 'rose',
+}
+
+export function stageVar(key: string): string {
+  const name = STAGE_COLOR[key]
+  return name ? `var(--stage-${name})` : 'var(--accent)'
+}
 
 export function luminance(hex: string): number {
   let h = hex.replace('#', '')

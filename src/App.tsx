@@ -10,8 +10,7 @@ import Onboarding from './components/Onboarding'
 import SetupModal from './components/SetupModal'
 import { useSettings } from './components/SettingsContext'
 import { useGyroParallax } from './hooks/useGyroParallax'
-import { DIMS, INTEREST_COUNT, INTEREST_QUESTIONS, QUESTIONS, buildStageModel, computeInterestProfile } from './data'
-import { toneFor } from './lib/tone'
+import { INTEREST_COUNT, INTEREST_QUESTIONS, QUESTIONS, buildStageModel } from './data'
 
 function App() {
   const { t, onboarded } = useSettings()
@@ -28,10 +27,6 @@ function App() {
   const [interestIndex, setInterestIndex] = useState(0)
   const [interestAnswers, setInterestAnswers] = useState<number[]>([])
   const [interestFinished, setInterestFinished] = useState(false)
-
-  // Accent crossfade for atmospheric background (updated from events only)
-  const [accentOld, setAccentOld] = useState('#4F46E5')
-  const [accentCurrent, setAccentCurrent] = useState('#4F46E5')
 
   const careerTotal = QUESTIONS.length
   const careerStageModel = buildStageModel(QUESTIONS)
@@ -54,24 +49,14 @@ function App() {
 
   const careerCurrent = QUESTIONS[careerIndex]
   const interestQ = INTEREST_QUESTIONS[interestIndex]
-  const diffFor = (i: number) =>
-    mode === 'career'
-      ? (QUESTIONS[i]?.difficulty ?? 0.5)
-      : (INTEREST_QUESTIONS[i]?.difficulty ?? 0.55)
 
   const handleCareerAnswer = (optionIndex: number) => {
     const next = [...careerAnswers]
     next[careerIndex] = optionIndex
     setCareerAnswers(next)
-    const oldValue = careerCurrent?.accent ?? '#4F46E5'
     if (careerIndex === careerTotal - 1) {
       setCareerFinished(true)
-      setAccentOld(oldValue)
-      setAccentCurrent('#8B5CF6')
     } else {
-      const nextValue = QUESTIONS[careerIndex + 1]?.accent ?? '#4F46E5'
-      setAccentOld(oldValue)
-      setAccentCurrent(nextValue)
       setCareerIndex((i) => i + 1)
     }
   }
@@ -80,15 +65,9 @@ function App() {
     const next = [...interestAnswers]
     next[interestIndex] = optionIndex
     setInterestAnswers(next)
-    const oldValue = interestQ?.accent ?? '#4F46E5'
     if (interestIndex === INTEREST_COUNT - 1) {
       setInterestFinished(true)
-      const top = computeInterestProfile(next).top[0]
-      setAccentOld(oldValue)
-      setAccentCurrent(DIMS[top]?.color ?? '#8B5CF6')
     } else {
-      setAccentOld(oldValue)
-      setAccentCurrent(INTEREST_QUESTIONS[interestIndex + 1]?.accent ?? '#4F46E5')
       setInterestIndex((i) => i + 1)
     }
   }
@@ -98,65 +77,34 @@ function App() {
     setCareerAnswers([])
     setCareerFinished(false)
     setCheated(false)
-    setAccentOld('#4F46E5')
-    setAccentCurrent(QUESTIONS[0]?.accent ?? '#4F46E5')
   }
 
   const handleRestartInterest = () => {
     setInterestIndex(0)
     setInterestAnswers([])
     setInterestFinished(false)
-    const firstAccent = INTEREST_QUESTIONS[0]?.accent ?? DIMS[0].color
-    setAccentOld(firstAccent)
-    setAccentCurrent(firstAccent)
   }
 
   const handleSelect = (m: AssessmentMode) => {
     setMode(m)
-    const firstAccent =
-      m === 'career'
-        ? (QUESTIONS[0]?.accent ?? '#4F46E5')
-        : (INTEREST_QUESTIONS[0]?.accent ?? DIMS[0].color)
-    setAccentOld(firstAccent)
-    setAccentCurrent(firstAccent)
     void gyro.enable()
   }
 
   const handleBack = () => setMode(null)
 
   const screenDone = mode === 'career' ? careerFinished : interestFinished
-  const screenIndex = mode === 'career' ? careerIndex : interestIndex
-  const active = mode !== null && !screenDone
 
   return (
     <div className="relative flex min-h-dvh flex-col overflow-hidden bg-[var(--surface)]">
-      {/* Atmospheric base blobs — stable, subtle */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="animate-blob absolute -top-40 -left-40 h-[34rem] w-[34rem] rounded-full bg-[var(--ambient-a)] blur-3xl" />
-        <div className="animate-blob absolute top-[28%] -right-44 h-[30rem] w-[30rem] rounded-full bg-[var(--ambient-b)] blur-3xl [animation-delay:-6s]" />
-        <div className="animate-blob absolute -bottom-32 left-[30%] h-[26rem] w-[26rem] rounded-full bg-[var(--ambient-c)] blur-3xl [animation-delay:-12s]" />
-
-        {/* Crossfading accent glows behind the scene (gyro parallax layer) */}
-        {active && (
-          <div
-            className="absolute inset-0"
-            style={{
-              transform: 'translate3d(calc(var(--gy-x) * 44px), calc(var(--gy-y) * 24px), 0)',
-              willChange: 'transform',
-            }}
-          >
-            <div
-              key={`old-${accentOld}`}
-              className="animate-bg-blob-out absolute left-1/2 top-[44%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-              style={{ background: `radial-gradient(circle, ${toneFor(accentOld, diffFor(screenIndex)).glow} 0%, transparent 70%)` }}
-            />
-            <div
-              key={`cur-${accentCurrent}`}
-              className="animate-bg-blob-in absolute left-1/2 top-[44%] h-[30rem] w-[30rem] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
-              style={{ background: `radial-gradient(circle, ${toneFor(accentCurrent, diffFor(screenIndex)).glow} 0%, transparent 70%)` }}
-            />
-          </div>
-        )}
+      {/* Atmospheric glow — one subtle, centered accent aura; never reaches edges */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+        <div
+          className="animate-aura absolute top-[36%] left-1/2 h-[26rem] w-[min(46rem,88vw)] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[70px]"
+          style={{
+            background: `radial-gradient(circle, var(--accent-glow) 0%, color-mix(in srgb, var(--accent-glow) 55%, transparent) 46%, transparent 72%)`,
+            opacity: 1,
+          }}
+        />
       </div>
 
       <Header onOpenSettings={onboarded ? () => setSettingsOpen(true) : undefined} />

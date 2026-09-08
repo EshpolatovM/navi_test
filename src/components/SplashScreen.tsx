@@ -33,8 +33,8 @@ function ModeCard({
 }) {
   return (
     <div
-      className="animate-slide-up flex flex-col rounded-3xl bg-[var(--surface-elevated)] p-6 text-left ring-1 backdrop-blur transition-transform duration-300 ease-out hover:-translate-y-1 md:p-7"
-      style={{ animationDelay: `${delay}ms`, borderColor: 'var(--border)', boxShadow: 'var(--shadow)' }}
+      className="surface-card animate-slide-up flex flex-col rounded-3xl bg-[var(--surface-elevated)] p-6 text-left backdrop-blur hover:-translate-y-1 md:p-7"
+      style={{ animationDelay: `${delay}ms` }}
     >
       <span
         className="inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold whitespace-nowrap uppercase tracking-[0.18em]"

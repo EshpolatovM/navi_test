@@ -9,8 +9,8 @@ import JourneyProgress from './JourneyProgress'
 // Constellation geometry constants.
 // N / NH are generous half-sizes for an answer chip (includes hover growth),
 // GAP is the minimum invisible clearance kept around the question bubble.
-const N = 105
-const NH = 44
+const N = 122
+const NH = 54
 const GAP = 46
 
 function QuestionScene({
@@ -175,7 +175,7 @@ const { w, h } = geo
             style={{ width: 15, height: 15, color: tone.soft }}
             strokeWidth={2.2}
           />
-          <p className="pt-5 font-display text-[1.3rem] leading-snug font-bold text-slate-800 md:text-[1.5rem] max-md:pt-4">
+          <p className="pt-5 text-[1.35rem] leading-[1.32] font-bold tracking-[-0.01em] text-slate-800 md:text-[1.5625rem] max-md:pt-4">
             {question.q}
           </p>
           <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 max-md:mt-2 max-[359px]:hidden">

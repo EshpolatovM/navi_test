@@ -1,5 +1,6 @@
 import { Check, Compass } from 'lucide-react'
 import { RESULT_STAGE, type StageBoundary, type StageDef } from '../data'
+import { stageVar } from '../lib/theme'
 import { useSettings } from './SettingsContext'
 
 type Status = 'done' | 'active' | 'upcoming'
@@ -58,15 +59,20 @@ function Roadmap({
     },
   ]
 
-  const dotStyle = (s: Step): React.CSSProperties =>
-    s.status === 'done'
-      ? { background: 'var(--accent-dark)', boxShadow: '0 2px 6px var(--accent-soft)' }
-      : s.status === 'active'
-        ? {
-            background: 'var(--accent)',
-            boxShadow: '0 0 0 3.5px var(--accent-ring), 0 2px 8px var(--accent-soft)',
-          }
-        : { background: 'var(--accent-soft)', color: 'var(--text-muted)' }
+  const dotStyle = (s: Step): React.CSSProperties => {
+    const sv = stageVar(s.key)
+    if (s.status === 'done')
+      return {
+        background: sv,
+        boxShadow: `0 2px 8px color-mix(in srgb, ${sv} 45%, transparent)`,
+      }
+    if (s.status === 'active')
+      return {
+        background: `linear-gradient(135deg, ${sv}, color-mix(in srgb, ${sv} 42%, var(--accent)))`,
+        boxShadow: '0 0 0 3.5px var(--accent-ring), 0 4px 14px var(--accent-glow)',
+      }
+    return { background: `color-mix(in srgb, ${sv} 20%, transparent)`, color: 'var(--text-muted)' }
+  }
 
   const labelStyle = (s: Step): React.CSSProperties =>
     s.status === 'active'
@@ -84,7 +90,7 @@ function Roadmap({
           boxShadow: 'var(--shadow)',
         }}
       >
-        <p className="mb-2 px-1.5 font-display text-[10px] font-bold uppercase tracking-[0.24em] text-slate-400">
+        <p className="mb-2 px-1.5 font-display text-[11px] font-bold uppercase tracking-[0.22em] text-slate-400">
           {t('road.title')}
         </p>
 
@@ -93,32 +99,32 @@ function Roadmap({
             const isLast = i === steps.length - 1
             const Icon = s.icon
             return (
-              <li key={s.key} className="relative flex items-start gap-2.5 px-0.5 py-[5px]">
+              <li key={s.key} className="relative flex items-start gap-3 px-0.5 py-1.5">
                 {!isLast && (
                   <span
                     aria-hidden
-                    className="absolute top-6 left-[7px] h-[calc(100%-9px)] w-px"
+                    className="absolute top-6 left-[7px] h-[calc(100%-10px)] w-px"
                     style={{
-                      background: s.status === 'done' ? 'var(--accent-soft)' : 'var(--border)',
+                      background: s.status === 'done' ? `color-mix(in srgb, ${stageVar(s.key)} 35%, transparent)` : 'var(--border)',
                     }}
                   />
                 )}
 
-                <span className="relative z-10 mt-0.5 grid size-[14px] shrink-0 place-items-center rounded-full text-white" style={dotStyle(s)}>
+                <span className="relative z-10 mt-0.5 grid size-[15px] shrink-0 place-items-center rounded-full text-white" style={dotStyle(s)}>
                   {s.status === 'done' ? (
                     <Check style={{ width: 11, height: 11 }} strokeWidth={3.5} />
                   ) : s.status === 'active' && s.key === 'BOSHLASH' ? (
-                    <Compass style={{ width: 10, height: 10 }} strokeWidth={2.4} />
+                    <Compass style={{ width: 11, height: 11 }} strokeWidth={2.4} />
                   ) : (
-                    <Icon style={{ width: 10, height: 10 }} strokeWidth={2.4} />
+                    <Icon style={{ width: 11, height: 11 }} strokeWidth={2.4} />
                   )}
                 </span>
 
                 <span className="min-w-0">
-                  <span className="flex items-center gap-1 font-display text-[11px] font-bold uppercase tracking-[0.13em]" style={labelStyle(s)}>
+                  <span className="flex items-center gap-1 font-display text-[12.5px] font-bold uppercase tracking-[0.11em]" style={labelStyle(s)}>
                     {t(`stage.${s.key}`)}
                   </span>
-                  <span className="block text-[10px] font-medium tabular-nums text-slate-400">
+                  <span className="block text-[11px] font-medium tabular-nums text-slate-500">
                     {s.meta}
                   </span>
                 </span>
