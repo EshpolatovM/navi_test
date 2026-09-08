@@ -1,10 +1,14 @@
 // RIASEC order: [Realistic, Investigative, Artistic, Social, Enterprising, Conventional]
 export type Riaset = number[]
 
+// Semantic answer-sound key, resolved by the reusable sound system in lib/sound.ts.
+export type AnswerSound = 'game' | 'design' | 'video' | 'technology' | 'social' | 'medicine'
+
 export interface Option {
   text: string
   w: Riaset
   icon?: string
+  sound?: AnswerSound
 }
 
 export interface QuizQuestion {

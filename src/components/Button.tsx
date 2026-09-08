@@ -1,3 +1,6 @@
+import { playUiSound } from '../lib/sound'
+import type { MouseEventHandler } from 'react'
+
 const sizes = {
   sm: 'h-10 px-5 text-xs',
   md: 'h-12 px-7 text-sm',
@@ -10,6 +13,7 @@ function Button({
   full = false,
   disabled = false,
   className = '',
+  onClick,
   ...props
 }: {
   variant?: 'primary' | 'ghost'
@@ -17,6 +21,7 @@ function Button({
   full?: boolean
   disabled?: boolean
   className?: string
+  onClick?: MouseEventHandler<HTMLButtonElement>
   [key: string]: unknown
 }) {
   const styles = {
@@ -36,6 +41,10 @@ function Button({
         full ? 'w-full' : ''
       } ${styles[variant]} ${className}`}
       {...props}
+      onClick={(e) => {
+        if (!disabled) playUiSound('click')
+        onClick?.(e)
+      }}
     />
   )
 }

@@ -10,7 +10,7 @@
 // options keep the QuizLab QuizQuestion shape so the existing QuestionScene +
 // AnswerNode rendering is reused 1:1 without any new answer layout.
 
-import type { Option, QuizQuestion, Riaset } from './types'
+import type { AnswerSound, Option, QuizQuestion, Riaset } from './types'
 import { DIMS } from './riasec'
 
 export interface InterestItem {
@@ -30,6 +30,18 @@ const DIM_WEIGHT: Riaset[] = [
   [0, 0, 0, 2, 0, 0],
   [0, 0, 0, 0, 2, 0],
   [0, 0, 0, 0, 0, 2],
+]
+
+// Per-dimension answer-sound palette (RIASEC order). Each question stays inside
+// its dimension's family of sounds while every option cycles to a slightly
+// different flavor — so answers never all share one identical click.
+const DIM_SOUNDS: AnswerSound[][] = [
+  ['technology', 'game', 'design', 'video'],
+  ['medicine', 'technology', 'design', 'social'],
+  ['design', 'game', 'technology', 'video'],
+  ['social', 'design', 'medicine', 'technology'],
+  ['game', 'technology', 'social', 'video'],
+  ['video', 'medicine', 'social', 'game'],
 ]
 
 // Four everyday kid-friendly situations per dimension (R, I, A, S, E, C),
@@ -363,6 +375,7 @@ export const INTEREST_QUESTIONS: QuizQuestion[] = ITEMS.map((it) => ({
     text,
     w: DIM_WEIGHT[it.dim],
     icon: it.icons[i],
+    sound: DIM_SOUNDS[it.dim][i % DIM_SOUNDS[it.dim].length],
   })),
 }))
 

@@ -11,6 +11,8 @@ import SetupModal from './components/SetupModal'
 import { useSettings } from './components/SettingsContext'
 import { useGyroParallax } from './hooks/useGyroParallax'
 import { localizeCareer, localizeInterest } from './lib/qa'
+import { playUiSound } from './lib/sound'
+import { startBackgroundMusic } from './lib/audio'
 import { INTEREST_COUNT, INTEREST_QUESTIONS, QUESTIONS, buildStageModel } from './data'
 
 function App() {
@@ -37,6 +39,13 @@ function App() {
   useEffect(() => {
     gyro.setMotion(motionEnabled)
   }, [motionEnabled, gyro])
+
+  // Background music starts once; it never restarts between questions,
+  // stages or on the result screen. Browser autoplay is handled internally
+  // (first gesture resumes a blocked attempt).
+  useEffect(() => {
+    startBackgroundMusic()
+  }, [])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -91,11 +100,15 @@ function App() {
   }
 
   const handleSelect = (m: AssessmentMode) => {
+    playUiSound('select')
     setMode(m)
     void gyro.enable()
   }
 
-  const handleBack = () => setMode(null)
+  const handleBack = () => {
+    playUiSound('back')
+    setMode(null)
+  }
 
   const screenDone = mode === 'career' ? careerFinished : interestFinished
 

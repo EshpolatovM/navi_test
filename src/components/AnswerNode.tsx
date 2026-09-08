@@ -1,4 +1,5 @@
 import type { Option, Riaset } from '../data'
+import { playAnswerSound } from '../lib/sound'
 import AnimatedAnswerIcon from './AnimatedAnswerIcon'
 
 const DIM_ICON_NAMES: string[] = ['hammer', 'flask', 'palette', 'heart', 'rocket', 'list']
@@ -52,6 +53,7 @@ function AnswerNode({
   onSelect: (i: number) => void
 }) {
   const iconName = option.icon ?? DIM_ICON_NAMES[primaryDim(option.w)]
+  const shape = 1 + (index % 4)
   const isHover = hovered === index
   const isPicked = selected === index
   const dimmed =
@@ -77,7 +79,6 @@ function AnswerNode({
     background: isPicked ? 'var(--accent)' : 'var(--surface-elevated)',
     color: isPicked ? 'var(--accent-contrast)' : 'var(--text-primary)',
     border: isPicked ? '1px solid transparent' : `1px solid ${accent}26`,
-    borderRadius: `1.3rem ${1.1 + (index % 3) * 0.22}rem 1.4rem ${1.15 + (index % 2) * 0.3}rem`,
     boxShadow: isPicked
       ? `0 18px 42px -12px var(--accent-shadow)`
       : isHover
@@ -108,7 +109,10 @@ function AnswerNode({
       aria-label={option.text}
       onMouseEnter={() => onHover(index)}
       onMouseLeave={() => onHover(null)}
-      onClick={() => onSelect(index)}
+      onClick={() => {
+        playAnswerSound(option.sound)
+        onSelect(index)
+      }}
       tabIndex={selected === null ? 0 : -1}
       disabled={selected !== null}
       style={styleBase}
@@ -120,15 +124,13 @@ function AnswerNode({
     >
       <span
         style={innerStyle}
-        className="flex min-h-[58px] w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left md:min-h-[68px] md:gap-3.5 max-md:gap-2.5"
+        className={`answer-shape-${shape} flex min-h-[46px] w-full cursor-pointer items-center gap-2 px-2.5 py-2 text-left md:min-h-[68px] md:gap-3.5 md:px-4 md:py-2.5`}
       >
         <span className="relative shrink-0">
           <span
             aria-hidden
-            className="grid place-items-center rounded-full"
+            className="grid size-[30px] place-items-center rounded-full md:size-9"
             style={{
-              width: 36,
-              height: 36,
               background: isPicked ? 'color-mix(in srgb, var(--accent-contrast) 22%, transparent)' : `${accent}12`,
               color: isPicked ? 'var(--accent-contrast)' : accent,
               transform: isHover ? 'scale(1.1) rotate(-5deg)' : isPicked ? 'scale(1.05)' : 'scale(1)',
@@ -147,7 +149,7 @@ function AnswerNode({
             {letter}
           </span>
         </span>
-        <span className="min-w-0 flex-1 break-words text-[13.5px] leading-[1.3] font-semibold md:text-[16px]">{option.text}</span>
+        <span className="min-w-0 flex-1 break-words text-[12.5px] leading-[1.25] font-semibold md:text-[16px] md:leading-[1.3] line-clamp-2">{option.text}</span>
       </span>
     </button>
   )

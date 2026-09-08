@@ -21,4 +21,4 @@ export {
   type InterestProfile,
 } from './interest'
 export { DIMS, DIM_COUNT, type DimensionMeta } from './riasec'
-export { type QuizQuestion, type Option } from './types'
+export { type QuizQuestion, type Option, type AnswerSound } from './types'

@@ -1,4 +1,4 @@
-import type { Option, QuizQuestion, Riaset } from './types'
+import type { AnswerSound, Option, QuizQuestion, Riaset } from './types'
 import { STAGES, PER_STAGE } from './stages'
 
 // Weight vectors in RIASEC order: [R, I, A, S, E, C]
@@ -10,7 +10,16 @@ const S: Riaset = [0, 0, 0, 2, 0, 0]
 const E: Riaset = [0, 0, 0, 0, 2, 0]
 const C: Riaset = [0, 0, 0, 0, 0, 2]
 
-const o = (text: string, w: Riaset): Option => ({ text, w })
+// Sound mapped 1:1 to each dimension's meaning (RIASEC order): practical →
+// tech blip, analytical → soft confirm tone, creative → soft pop, people →
+// notification blip, leading → playful select, orderly → precise media click.
+const DIM_SOUNDS: AnswerSound[] = ['technology', 'medicine', 'design', 'social', 'game', 'video']
+
+function primaryDim(w: Riaset): number {
+  return w.indexOf(Math.max(...w))
+}
+
+const o = (text: string, w: Riaset): Option => ({ text, w, sound: DIM_SOUNDS[primaryDim(w)] })
 
 // Each raw question holds 6 short options in R,I,A,S,E,C order (O*NET-flavored
 // signals derived from Interest / Work Activities / Work Styles / Work Context

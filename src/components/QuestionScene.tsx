@@ -6,6 +6,11 @@ import { useSettings } from './SettingsContext'
 import AnswerNode, { type NodePosition } from './AnswerNode'
 import JourneyProgress from './JourneyProgress'
 
+// Ten distinct bubble silhouettes (.question-shape-0 … .question-shape-9).
+// Shape is chosen deterministically from the question index; every question
+// change visibly morphs the centered card.
+const QUESTION_SHAPES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 // Constellation geometry constants.
 // N / NH are generous half-sizes for an answer chip (includes hover growth),
 // GAP is the minimum invisible clearance kept around the question bubble.
@@ -147,11 +152,11 @@ const { w, h } = geo
   const bubbleEl = (
     <div className="relative z-10 w-full">
       <div
-        className="relative px-5 pt-3 max-md:px-4 max-md:pt-2"
+        className="relative px-5 pt-3 max-md:px-4 max-md:pt-1.5"
         style={{ transform: 'rotate(-1deg)' }}
       >
         <div
-          className="relative rounded-[2rem] px-5 py-4 text-center ring-1 backdrop-blur md:px-9 md:py-7 max-md:px-4 max-md:py-3"
+          className={`question-shape-${QUESTION_SHAPES[index % QUESTION_SHAPES.length]} relative px-5 py-4 text-center ring-1 backdrop-blur md:px-9 md:py-7 max-md:px-3.5 max-md:py-2`}
           style={{
             width: '100%',
             background:
@@ -175,10 +180,10 @@ const { w, h } = geo
             style={{ width: 14, height: 14, color: tone.soft }}
             strokeWidth={2.2}
           />
-          <p className="pt-4 text-[1.18rem] leading-[1.3] font-bold tracking-[-0.01em] text-slate-800 md:pt-5 md:text-[1.5625rem] md:leading-[1.32] max-[359px]:text-[1.1rem]">
+          <p className="pt-2.5 text-[1.12rem] leading-[1.3] font-bold tracking-[-0.01em] text-slate-800 md:pt-5 md:text-[1.5625rem] md:leading-[1.32] max-[359px]:text-[1.06rem]">
             {question.q}
           </p>
-          <p className="mt-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-400 md:mt-3 md:text-[10px] max-[359px]:hidden">
+          <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-400 md:mt-3 md:text-[10px] max-[359px]:hidden">
             {t('scene.hint')}
           </p>
         </div>
@@ -255,7 +260,7 @@ const { w, h } = geo
   const tileNodes = (
     <>
       {/* Phones + tablets (<1024): bubble + 2-column grid */}
-      <div className="flex w-full flex-col items-center gap-2.5 lg:hidden max-md:gap-2">
+      <div className="flex w-full flex-col items-center gap-2.5 lg:hidden max-md:gap-3">
         <div className="flex w-full justify-center">
           <div
             className="w-[min(440px,calc(100vw-1.5rem))]"
