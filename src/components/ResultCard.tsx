@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { RotateCcw, Sparkles } from 'lucide-react'
 import { computeResult, DIMS } from '../data'
+import { useSettings } from './SettingsContext'
 
 function useCountUp(target: number, delay = 200, duration = 800) {
   const [display, setDisplay] = useState(0)
@@ -26,11 +27,12 @@ function useCountUp(target: number, delay = 200, duration = 800) {
 
 function Donut({ pct, accent, delay = 300 }: { pct: number; accent: string; delay?: number }) {
   const [off, setOff] = useState(327)
+  const { t } = useSettings()
   const R = 52
   const C = 2 * Math.PI * R
   useEffect(() => {
-    const t = window.setTimeout(() => setOff(C * (1 - pct / 100)), delay)
-    return () => window.clearTimeout(t)
+    const ti = window.setTimeout(() => setOff(C * (1 - pct / 100)), delay)
+    return () => window.clearTimeout(ti)
   }, [pct, C, delay])
 
   return (
@@ -56,7 +58,7 @@ function Donut({ pct, accent, delay = 300 }: { pct: number; accent: string; dela
             <DonutCount target={pct} delay={delay} />
           </span>
           <span className="mt-0.5 block text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-400">
-            signal
+            {t('rc.signal')}
           </span>
         </span>
       </div>
@@ -116,6 +118,7 @@ function Row({
 }
 
 function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () => void }) {
+  const { t } = useSettings()
   const { profile, ranked, best } = computeResult(answers)
   const accent = best.career.color
   const alternatives = ranked.slice(0, 5)
@@ -136,13 +139,13 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
       />
 
       <p className="mb-5 text-center text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-        Sizning javoblaringizga asoslanib, bu kasb yo\u2018nalishlari sizga eng mos bo\u2018lishi mumkin
+        {t('rc.top')}
       </p>
 
       {/* Hero signal */}
-      <div className="mx-auto max-w-[560px] rounded-[2rem] bg-white/90 px-6 py-8 text-center shadow-[0_24px_60px_-20px_rgba(28,25,23,0.25)] ring-1 ring-white/70 backdrop-blur md:px-10">
+      <div className="mx-auto max-w-[560px] rounded-[2rem] bg-[var(--surface-elevated)] px-6 py-8 text-center ring-1 backdrop-blur md:px-10" style={{ borderColor: 'var(--border)', boxShadow: 'var(--shadow)' }}>
         <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: accent, background: `${accent}12` }}>
-          <Sparkles style={{ width: 11, height: 11 }} /> Sizning karyera signalingiz
+          <Sparkles style={{ width: 11, height: 11 }} /> {t('rc.karyera')}
         </span>
 
         <div className="mt-6">
@@ -167,20 +170,22 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
               <span className="font-display text-[11px] font-bold" style={{ color: accent }}>
                 {DIMS[d].key}
               </span>
-              <span className="text-[12px] font-medium text-slate-600">{DIMS[d].name}</span>
+              <span className="text-[12px] font-medium text-slate-600">{t(`dim.${DIMS[d].key}.name`)}</span>
               <span className="text-[11px] font-bold tabular-nums text-slate-400">{share}%</span>
             </span>
           ))}
         </div>
         <p className="mt-2.5 text-[11.5px] text-slate-400">
-          Sizning eng kuchli signallaringiz: {topDims.map(({ d }, i) => `${i === 0 ? '' : ', '}${DIMS[d].name.toLowerCase()}`).join('')}.
+          {t('rc.yourSignals', {
+            list: topDims.map(({ d }, i) => `${i === 0 ? '' : ', '}${t(`dim.${DIMS[d].key}.name`).toLowerCase()}`).join(''),
+          })}
         </p>
       </div>
 
       {/* Top directions */}
-      <div className="mx-auto mt-5 max-w-[560px] rounded-[2rem] bg-white/90 px-6 py-6 shadow-[0_20px_50px_-24px_rgba(28,25,23,0.3)] ring-1 ring-white/70 backdrop-blur md:px-8">
+      <div className="mx-auto mt-5 max-w-[560px] rounded-[2rem] bg-[var(--surface-elevated)] px-6 py-6 ring-1 backdrop-blur md:px-8" style={{ borderColor: 'var(--border)', boxShadow: 'var(--shadow)' }}>
         <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
-          Eng mos kasb yo\u2018nalishlari
+          {t('rc.signals')}
         </p>
         <div className="flex flex-col gap-4">
           {alternatives.map(({ career, score }, idx) => (
@@ -202,7 +207,7 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
         style={{ background: `${accent}08`, borderColor: `${accent}22` }}
       >
         <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.24em]" style={{ color: accent }}>
-          Nega aynan {best.career.name}?
+          {t('rc.why', { name: best.career.name })}
         </p>
         <ul className="flex flex-col gap-2.5">
           {best.reasons.map((reason, i) => (
@@ -225,14 +230,14 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
           <button
             type="button"
             onClick={onRestart}
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-sm font-bold uppercase tracking-[0.06em] text-white transition-all duration-200 ease-out select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]"
-            style={{ background: accent, boxShadow: `0 12px 28px -8px ${accent}b3` }}
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-full px-8 text-sm font-bold uppercase tracking-[0.06em] text-[var(--accent-contrast)] transition-all duration-200 ease-out select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]"
+            style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))', boxShadow: '0 12px 28px -8px var(--accent-shadow)' }}
           >
             <RotateCcw className="size-4" />
-            Yana kashf qilish
+            {t('rc.restart')}
           </button>
           <p className="mt-3 text-[11px] text-slate-400">
-            Kasb yo\u2018nalishi — bu kashf qilish uchun boshlanish nuqtasi, siz haqingizdagi hukm emas.
+            {t('rc.note')}
           </p>
         </div>
       </div>

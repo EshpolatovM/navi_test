@@ -75,12 +75,12 @@ function AnswerNode({
     transform: `translate(${dx}px, ${dy}px) rotate(${rotation}deg) scale(${s})`,
     transition: 'transform 0.34s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.34s ease, opacity 0.34s ease, background 0.34s ease, color 0.34s ease',
     opacity: dimmed ? 0.45 : 1,
-    background: isPicked ? accent : 'rgba(255,255,255,0.92)',
-    color: isPicked ? '#ffffff' : '#292524',
+    background: isPicked ? 'var(--accent)' : 'var(--surface-elevated)',
+    color: isPicked ? 'var(--accent-contrast)' : 'var(--text-primary)',
     border: isPicked ? '1px solid transparent' : `1px solid ${accent}26`,
     borderRadius: `1.3rem ${1.1 + (index % 3) * 0.22}rem 1.4rem ${1.15 + (index % 2) * 0.3}rem`,
     boxShadow: isPicked
-      ? `0 18px 42px -12px ${accent}b3`
+      ? `0 18px 42px -12px var(--accent-shadow)`
       : isHover
         ? `0 14px 34px -12px ${accent}59, 0 0 0 4px ${accent}14`
         : '0 10px 26px -14px rgba(28,25,23,0.28)',
@@ -130,8 +130,8 @@ function AnswerNode({
             style={{
               width: 40,
               height: 40,
-              background: isPicked ? 'rgba(255,255,255,0.22)' : `${accent}12`,
-              color: isPicked ? '#fff' : accent,
+              background: isPicked ? 'color-mix(in srgb, var(--accent-contrast) 22%, transparent)' : `${accent}12`,
+              color: isPicked ? 'var(--accent-contrast)' : accent,
               transform: isHover ? 'scale(1.12) rotate(-4deg)' : undefined,
               transition: 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)',
             }}
@@ -141,7 +141,7 @@ function AnswerNode({
           <span
             aria-hidden
             className="absolute -top-1.5 -right-1.5 grid size-4.5 place-items-center rounded-full font-display text-[9px] font-semibold"
-            style={{ background: isPicked ? '#fff' : 'white', color: isPicked ? accent : '#78716c', boxShadow: `0 2px 6px ${accent}33` }}
+            style={{ background: isPicked ? 'var(--accent-contrast)' : 'var(--surface-elevated)', color: isPicked ? 'var(--accent)' : 'var(--text-muted)', boxShadow: `0 2px 6px ${accent}33` }}
           >
             {letter}
           </span>

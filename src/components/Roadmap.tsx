@@ -1,6 +1,6 @@
 import { Check, Compass } from 'lucide-react'
 import { RESULT_STAGE, type StageBoundary, type StageDef } from '../data'
-import { mix, rgba, toneFor } from '../lib/tone'
+import { useSettings } from './SettingsContext'
 
 type Status = 'done' | 'active' | 'upcoming'
 
@@ -11,24 +11,21 @@ interface Step extends StageDef {
 
 function Roadmap({
   index,
-  difficulty,
   total,
   boundaries,
 }: {
   index: number
-  difficulty: number
   total: number
   boundaries: StageBoundary[]
 }) {
+  const { t } = useSettings()
   const stageIndex =
     boundaries.findIndex((b) => index + 1 >= b.from && index + 1 <= b.to) < 0
       ? boundaries.length - 1
       : boundaries.findIndex((b) => index + 1 >= b.from && index + 1 <= b.to)
   const activeBoundary = boundaries[stageIndex]
-  const local = (index + 1) - activeBoundary.from + 1
+  const local = index + 1 - activeBoundary.from + 1
   const stageTotal = activeBoundary.to - activeBoundary.from + 1
-
-  const tone = toneFor(activeBoundary.def.accent, difficulty)
 
   const startStep: StageDef = {
     ...activeBoundary.def,
@@ -40,7 +37,7 @@ function Roadmap({
     {
       ...startStep,
       status: index === 0 ? 'active' : 'done',
-      meta: `${total} savol`,
+      meta: t('road.total', { n: total }),
     },
     ...boundaries.map((b, si) => {
       const range = `${String(b.from).padStart(2, '0')}\u2013${b.to} / ${total}`
@@ -48,27 +45,47 @@ function Roadmap({
       return {
         ...b.def,
         status,
-        meta: status === 'active' ? `${range} \u00b7 savol ${local}/${stageTotal}` : range,
+        meta:
+          status === 'active'
+            ? `${range} \u00b7 ${t('road.savol', { a: local, s: stageTotal })}`
+            : range,
       }
     }),
     {
       ...RESULT_STAGE,
       status: 'upcoming' as Status,
-      meta: 'Karyera signalingiz',
+      meta: t('road.signal'),
     },
   ]
 
-  const labelColor = (s: Step) => {
-    if (s.status === 'active') return tone.deep
-    if (s.status === 'done') return mix(s.accent, '#0f172a', 0.3)
-    return '#94a3b8'
-  }
+  const dotStyle = (s: Step): React.CSSProperties =>
+    s.status === 'done'
+      ? { background: 'var(--accent-dark)', boxShadow: '0 2px 6px var(--accent-soft)' }
+      : s.status === 'active'
+        ? {
+            background: 'var(--accent)',
+            boxShadow: '0 0 0 3.5px var(--accent-ring), 0 2px 8px var(--accent-soft)',
+          }
+        : { background: 'var(--accent-soft)', color: 'var(--text-muted)' }
+
+  const labelStyle = (s: Step): React.CSSProperties =>
+    s.status === 'active'
+      ? { color: 'var(--accent)' }
+      : s.status === 'done'
+        ? { color: 'var(--text-secondary)' }
+        : { color: 'var(--text-muted)' }
 
   return (
-    <aside className="hidden w-[176px] shrink-0 xl:block" aria-label="Bosqichlar">
-      <div className="rounded-2xl border border-white/80 bg-white/55 p-3.5 shadow-[0_18px_40px_-26px_rgba(28,25,23,0.28)] backdrop-blur-md">
+    <aside className="hidden w-[176px] shrink-0 xl:block" aria-label={t('road.aside')}>
+      <div
+        className="rounded-2xl bg-[var(--surface-soft)] p-3.5 backdrop-blur-md"
+        style={{
+          border: '1px solid var(--border)',
+          boxShadow: 'var(--shadow)',
+        }}
+      >
         <p className="mb-2 px-1.5 font-display text-[10px] font-bold uppercase tracking-[0.24em] text-slate-400">
-          Sayohat
+          {t('road.title')}
         </p>
 
         <ol>
@@ -80,45 +97,26 @@ function Roadmap({
                 {!isLast && (
                   <span
                     aria-hidden
-                    className="absolute left-[7px] top-6 h-[calc(100%-9px)] w-px"
+                    className="absolute top-6 left-[7px] h-[calc(100%-9px)] w-px"
                     style={{
-                      background: s.status === 'done' ? rgba(s.accent, 0.45) : '#e2e8f0',
+                      background: s.status === 'done' ? 'var(--accent-soft)' : 'var(--border)',
                     }}
                   />
                 )}
 
-                <span
-                  className="relative z-10 mt-0.5 grid size-[14px] shrink-0 place-items-center rounded-full text-white"
-                  style={
-                    s.status === 'done'
-                      ? { background: s.accent, boxShadow: `0 2px 6px ${rgba(s.accent, 0.45)}` }
-                      : s.status === 'active'
-                        ? {
-                            background: tone.main,
-                            boxShadow: `0 0 0 3.5px ${rgba(s.accent, 0.18)}, 0 2px 8px ${rgba(s.accent, 0.4)}`,
-                          }
-                        : { background: rgba(s.accent, 0.14), color: rgba(s.accent, 0.85) }
-                  }
-                >
+                <span className="relative z-10 mt-0.5 grid size-[14px] shrink-0 place-items-center rounded-full text-white" style={dotStyle(s)}>
                   {s.status === 'done' ? (
                     <Check style={{ width: 11, height: 11 }} strokeWidth={3.5} />
                   ) : s.status === 'active' && s.key === 'BOSHLASH' ? (
                     <Compass style={{ width: 10, height: 10 }} strokeWidth={2.4} />
-                  ) : s.status === 'active' ? (
-                    <Icon style={{ width: 10, height: 10 }} strokeWidth={2.4} />
                   ) : (
-                    <Icon style={{ width: 10, height: 10 }} strokeWidth={2.2} />
+                    <Icon style={{ width: 10, height: 10 }} strokeWidth={2.4} />
                   )}
                 </span>
 
                 <span className="min-w-0">
-                  <span
-                    className={`flex items-center gap-1 font-display text-[11px] font-bold uppercase tracking-[0.13em] ${
-                      s.status === 'upcoming' ? 'text-slate-400' : ''
-                    }`}
-                    style={s.status === 'upcoming' ? undefined : { color: labelColor(s) }}
-                  >
-                    {s.key}
+                  <span className="flex items-center gap-1 font-display text-[11px] font-bold uppercase tracking-[0.13em]" style={labelStyle(s)}>
+                    {t(`stage.${s.key}`)}
                   </span>
                   <span className="block text-[10px] font-medium tabular-nums text-slate-400">
                     {s.meta}

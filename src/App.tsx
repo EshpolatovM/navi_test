@@ -6,11 +6,16 @@ import ResultCard from './components/ResultCard'
 import InterestResult from './components/InterestResult'
 import Roadmap from './components/Roadmap'
 import SplashScreen, { type AssessmentMode } from './components/SplashScreen'
+import Onboarding from './components/Onboarding'
+import SetupModal from './components/SetupModal'
+import { useSettings } from './components/SettingsContext'
 import { useGyroParallax } from './hooks/useGyroParallax'
 import { DIMS, INTEREST_COUNT, INTEREST_QUESTIONS, QUESTIONS, buildStageModel, computeInterestProfile } from './data'
 import { toneFor } from './lib/tone'
 
 function App() {
+  const { t, onboarded } = useSettings()
+  const [settingsOpen, setSettingsOpen] = useState(false)
   const [mode, setMode] = useState<AssessmentMode | null>(null)
 
   // Career test state
@@ -124,12 +129,12 @@ function App() {
   const active = mode !== null && !screenDone
 
   return (
-    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-[#faf8f4]">
+    <div className="relative flex min-h-dvh flex-col overflow-hidden bg-[var(--surface)]">
       {/* Atmospheric base blobs — stable, subtle */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="animate-blob absolute -top-40 -left-40 h-[34rem] w-[34rem] rounded-full bg-[#dfe7f5]/60 blur-3xl" />
-        <div className="animate-blob absolute top-[28%] -right-44 h-[30rem] w-[30rem] rounded-full bg-[#f3e6f0]/50 blur-3xl [animation-delay:-6s]" />
-        <div className="animate-blob absolute -bottom-32 left-[30%] h-[26rem] w-[26rem] rounded-full bg-white/70 blur-3xl [animation-delay:-12s]" />
+        <div className="animate-blob absolute -top-40 -left-40 h-[34rem] w-[34rem] rounded-full bg-[var(--ambient-a)] blur-3xl" />
+        <div className="animate-blob absolute top-[28%] -right-44 h-[30rem] w-[30rem] rounded-full bg-[var(--ambient-b)] blur-3xl [animation-delay:-6s]" />
+        <div className="animate-blob absolute -bottom-32 left-[30%] h-[26rem] w-[26rem] rounded-full bg-[var(--ambient-c)] blur-3xl [animation-delay:-12s]" />
 
         {/* Crossfading accent glows behind the scene (gyro parallax layer) */}
         {active && (
@@ -154,7 +159,9 @@ function App() {
         )}
       </div>
 
-      <Header />
+      <Header onOpenSettings={onboarded ? () => setSettingsOpen(true) : undefined} />
+
+      {settingsOpen && onboarded && <SetupModal onClose={() => setSettingsOpen(false)} />}
 
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-4 md:py-8">
         <div className="relative w-full max-w-[640px] lg:max-w-[1080px] xl:max-w-[1240px] 2xl:max-w-[1340px]">
@@ -163,21 +170,23 @@ function App() {
               <button
                 type="button"
                 onClick={handleBack}
-                className="inline-flex items-center gap-1 rounded-full bg-white/90 py-1.5 pr-3.5 pl-2 text-[11px] font-bold text-slate-600 shadow-[0_8px_20px_-10px_rgba(30,41,59,0.4)] ring-1 ring-slate-200/80 backdrop-blur transition-all duration-200 hover:-translate-x-0.5 hover:text-slate-900"
+                className="inline-flex items-center gap-1 rounded-full bg-[var(--surface-elevated)] py-1.5 pr-3.5 pl-2 text-[11px] font-bold text-slate-600 shadow-[0_8px_20px_-10px_rgba(30,41,59,0.4)] ring-1 ring-slate-200/80 backdrop-blur transition-all duration-200 hover:-translate-x-0.5 hover:text-slate-900"
               >
                 <ArrowLeft className="size-3.5" />
-                Ortga
+                {t('app.back')}
               </button>
             </div>
           )}
 
           {cheated && mode === 'career' && (
             <div className="animate-pop-in absolute left-1/2 top-0 z-30 -translate-x-1/2 rounded-full bg-slate-900 px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-amber-300 shadow-lg">
-              Cheat rejim · tasodifiy javoblar
+              {t('app.cheat')}
             </div>
           )}
 
-          {mode === null ? (
+          {!onboarded ? (
+            <Onboarding />
+          ) : mode === null ? (
             <SplashScreen
               career={
                 careerAnswers.length > 0
@@ -211,7 +220,6 @@ function App() {
                 </div>
                 <Roadmap
                   index={careerIndex}
-                  difficulty={careerCurrent?.difficulty ?? 0.5}
                   total={careerTotal}
                   boundaries={careerStageModel.boundaries}
                 />
@@ -238,12 +246,11 @@ function App() {
                   onAnswer={handleInterestAnswer}
                 />
               </div>
-              <Roadmap
-                index={interestIndex}
-                difficulty={interestQ?.difficulty ?? 0.55}
-                total={INTEREST_COUNT}
-                boundaries={interestStageModel.boundaries}
-              />
+<Roadmap
+                  index={interestIndex}
+                  total={INTEREST_COUNT}
+                  boundaries={interestStageModel.boundaries}
+                />
             </div>
           )}
         </div>

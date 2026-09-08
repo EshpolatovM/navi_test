@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import type { QuizQuestion, StageModel } from '../data'
 import { toneFor } from '../lib/tone'
+import { useSettings } from './SettingsContext'
 import AnswerNode, { type NodePosition } from './AnswerNode'
 import JourneyProgress from './JourneyProgress'
 
@@ -29,8 +30,6 @@ function QuestionScene({
   const [hovered, setHovered] = useState<number | null>(null)
   const [phase, setPhase] = useState<'in' | 'out'>('in')
   const [tumbling, setTumbling] = useState(false)
-
-  // "To'kilib ketish": when the phone is shaken, all options scatter then settle back.
   useEffect(() => {
     let timer = 0
     const onShake = () => {
@@ -88,8 +87,9 @@ function QuestionScene({
   }, [selected, onAnswer])
 
   const accent = question.accent
+  const { t } = useSettings()
   // Difficulty-tuned tone: easy → soft & airy, hard → rich & defined.
-  const t = toneFor(accent, question.difficulty)
+  const tone = toneFor(accent, question.difficulty)
 
   // Stage for this question, derived from the actual question array.
   const boundary =
@@ -155,9 +155,9 @@ const { w, h } = geo
           style={{
             width: '100%',
             background:
-              'radial-gradient(120% 120% at 20% 0%, #ffffff 0%, rgba(255,255,255,0.82) 55%, rgba(255,255,255,0.55) 100%)',
-            borderColor: t.ring,
-            boxShadow: `0 26px 60px -22px rgba(28,25,23,0.3), 0 0 0 1px rgba(255,255,255,0.8) inset`,
+              'radial-gradient(120% 120% at 20% 0%, var(--surface-elevated) 0%, var(--surface-soft) 55%, color-mix(in srgb, var(--surface-elevated) 45%, transparent) 100%)',
+            borderColor: tone.ring,
+            boxShadow: `0 26px 60px -22px rgba(28,25,23,0.3), 0 0 0 1px color-mix(in srgb, var(--surface-elevated) 35%, transparent) inset`,
             transform: `scale(${bubbleScale})`,
             transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
           }}
@@ -165,21 +165,21 @@ const { w, h } = geo
           <span
             aria-hidden
             className="absolute left-5 top-4 font-display text-[10px] font-semibold uppercase tracking-[0.28em]"
-            style={{ color: t.deep }}
+            style={{ color: tone.deep }}
           >
-            {boundary.def.key}
+            {t(`stage.${boundary.def.key}`)}
           </span>
           <Sparkles
             aria-hidden
             className="absolute right-5 top-4 mark-float"
-            style={{ width: 15, height: 15, color: t.soft }}
+            style={{ width: 15, height: 15, color: tone.soft }}
             strokeWidth={2.2}
           />
           <p className="pt-5 font-display text-[1.3rem] leading-snug font-bold text-slate-800 md:text-[1.5rem] max-md:pt-4">
             {question.q}
           </p>
           <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 max-md:mt-2 max-[359px]:hidden">
-            O&lsquo;zingni eng ko&lsquo;p o&lsquo;ziga tortganini tanla
+            {t('scene.hint')}
           </p>
         </div>
         {/* Asymmetric tail */}
@@ -188,9 +188,9 @@ const { w, h } = geo
           className="absolute -bottom-2 left-[26%] size-4.5"
           style={{
             transform: 'rotate(45deg)',
-            background: 'rgba(255,255,255,0.85)',
-            borderRight: `1.5px solid ${t.ring}`,
-            borderBottom: `1.5px solid ${t.ring}`,
+            background: 'var(--surface-soft)',
+            borderRight: `1.5px solid ${tone.ring}`,
+            borderBottom: `1.5px solid ${tone.ring}`,
           }}
         />
       </div>
@@ -209,7 +209,7 @@ const { w, h } = geo
           width: Math.max(260, bubbleSize.bw * 1.5),
           height: Math.max(260, bubbleSize.bh * 1.5),
           transform: 'translate(-50%, -50%)',
-          background: `radial-gradient(circle, ${t.glow} 0%, transparent 70%)`,
+          background: `radial-gradient(circle, ${tone.glow} 0%, transparent 70%)`,
           opacity: hovered !== null ? 1 : 0.75,
         }}
       />
@@ -231,7 +231,7 @@ const { w, h } = geo
           <AnswerNode
             key={i}
             option={opt}
-            accent={t.main}
+            accent={tone.main}
             index={i}
             letter={String(i + 1)}
             style={p}
@@ -298,7 +298,7 @@ const { w, h } = geo
                 >
                   <AnswerNode
                     option={opt}
-                    accent={t.main}
+                    accent={tone.main}
                     index={i}
                     letter={String(i + 1)}
                     style={{ x: 50, y: 46 }}
@@ -328,8 +328,6 @@ const { w, h } = geo
       <JourneyProgress
         current={index + 1}
         total={total}
-        accent={accent}
-        difficulty={question.difficulty}
         stages={stageModel.boundaries.map((s) => s.def)}
         stageKey={boundary.def.key}
         stageCurrent={stageCurrent}
@@ -342,7 +340,7 @@ const { w, h } = geo
       </div>
 
       <p className="mt-4 hidden text-center text-[12px] font-medium text-slate-400 lg:block">
-        G&lsquo;oyalar orasida erkin harakatlan — konstellyatsiya javob beradi. Birini tanla, u seni oldinga olib borsin.
+        {t('scene.footer')}
       </p>
     </div>
   )

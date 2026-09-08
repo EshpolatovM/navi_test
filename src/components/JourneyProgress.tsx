@@ -1,16 +1,16 @@
 import { Check } from 'lucide-react'
 import { RESULT_STAGE, type StageDef } from '../data'
-import { mix, rgba, toneFor, type Tone } from '../lib/tone'
+import { useSettings } from './SettingsContext'
 
 type StepState = 'done' | 'active' | 'next'
 
-function StepBadge({ step, state, tone }: { step: StageDef; state: StepState; tone: Tone }) {
+function StepBadge({ step, state }: { step: StageDef; state: StepState }) {
   const Icon = step.icon
   if (state === 'done') {
     return (
       <span
         className="relative z-10 grid size-6 place-items-center rounded-full text-white shadow-[0_4px_10px_-3px_rgba(15,23,42,0.35)] transition-all duration-300"
-        style={{ background: step.accent }}
+        style={{ background: 'var(--accent-dark)' }}
       >
         <Check className="size-3.5" strokeWidth={3.5} />
       </span>
@@ -19,10 +19,10 @@ function StepBadge({ step, state, tone }: { step: StageDef; state: StepState; to
   if (state === 'active') {
     return (
       <span
-        className="relative z-10 grid size-6 place-items-center rounded-full text-white transition-all duration-300"
+        className="relative z-10 grid size-6 place-items-center rounded-full text-[var(--accent-contrast)] transition-all duration-300"
         style={{
-          background: tone.main,
-          boxShadow: `0 0 0 3px ${tone.ring}, 0 5px 14px -4px ${tone.shadow}`,
+          background: 'var(--accent)',
+          boxShadow: '0 0 0 3px var(--accent-ring), 0 5px 14px -4px var(--accent-shadow)',
         }}
       >
         <Icon className="size-3.5" strokeWidth={2.4} />
@@ -32,7 +32,7 @@ function StepBadge({ step, state, tone }: { step: StageDef; state: StepState; to
   return (
     <span
       className="relative z-10 grid size-6 place-items-center rounded-full transition-all duration-300"
-      style={{ background: rgba(step.accent, 0.12), color: rgba(step.accent, 0.85) }}
+      style={{ background: 'var(--accent-soft)', color: 'var(--text-muted)' }}
     >
       <Icon className="size-3" strokeWidth={2.2} />
     </span>
@@ -42,8 +42,6 @@ function StepBadge({ step, state, tone }: { step: StageDef; state: StepState; to
 function JourneyProgress({
   current,
   total,
-  accent,
-  difficulty,
   stages,
   stageKey,
   stageCurrent,
@@ -51,20 +49,18 @@ function JourneyProgress({
 }: {
   current: number
   total: number
-  accent: string
-  difficulty: number
   stages: StageDef[]
   stageKey: string
   stageCurrent: number
   stageTotal: number
 }) {
+  const { t } = useSettings()
   const pct = Math.round((current / total) * 100)
   const pad = String(current).padStart(2, '0')
   const padTotal = String(total).padStart(2, '0')
   const activeIdx = Math.max(0, stages.findIndex((s) => s.key === stageKey))
   const steps: StageDef[] = [...stages, RESULT_STAGE]
   const stepW = 100 / steps.length
-  const tone = toneFor(accent, difficulty)
   const ActiveIcon = steps[activeIdx]?.icon ?? RESULT_STAGE.icon
 
   return (
@@ -74,13 +70,13 @@ function JourneyProgress({
         <div className="flex flex-col gap-1">
           <span
             className="flex items-center gap-1.5 font-display text-[10px] font-bold uppercase tracking-[0.24em]"
-            style={{ color: tone.deep }}
+            style={{ color: 'var(--accent)' }}
           >
             <ActiveIcon style={{ width: 13, height: 13 }} strokeWidth={2.4} />
-            {stageKey}
+            {t(`stage.${stageKey}`)}
           </span>
           <span className="font-display text-[13px] font-semibold tracking-[0.16em] text-slate-500">
-            SAVOL <span className="text-slate-800">{pad}</span>
+            {t('prog.savol')} <span className="text-slate-800">{pad}</span>
             <span className="mx-1.5 text-slate-300">·</span>
             <span className="text-slate-400">{padTotal}</span>
             <span className="mx-1.5 text-slate-200">·</span>
@@ -89,27 +85,26 @@ function JourneyProgress({
         </div>
         <span
           className="font-display text-[15px] font-semibold tabular-nums transition-colors duration-500"
-          style={{ color: tone.deep }}
+          style={{ color: 'var(--accent)' }}
         >
           {pct}%
         </span>
       </div>
 
-      {/* Mobile & tablet: compact white-card stage roadmap */}
+      {/* Mobile & tablet: compact card-stage roadmap */}
       <div className="lg:hidden">
-        <div className="rounded-2xl bg-white px-1 py-2.5 shadow-[0_1px_1px_rgba(15,23,42,0.05),0_10px_24px_-18px_rgba(15,23,42,0.25)] ring-1 ring-black/[0.04]">
+        <div className="rounded-2xl bg-[var(--surface-elevated)] px-1 py-2.5 shadow-[0_10px_24px_-18px_rgba(15,23,42,0.25)] ring-1 ring-black/[0.04]">
           <div className="relative mx-1">
-            {/* Connector segments — colored by each stage once reached */}
+            {/* Connector segments — tinted by state within the accent family */}
             <div aria-hidden className="absolute top-[10px] right-[10%] left-[10%] h-[3px]">
               {steps.slice(0, -1).map((step, i) => {
                 const st: StepState = i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'next'
-                const segTone = toneFor(step.accent, difficulty)
                 const bg =
                   st === 'done'
-                    ? step.accent
+                    ? 'var(--accent-dark)'
                     : st === 'active'
-                      ? `linear-gradient(90deg, ${segTone.tint}, ${segTone.main})`
-                      : rgba(step.accent, 0.16)
+                      ? 'linear-gradient(90deg, var(--accent-soft), var(--accent))'
+                      : 'var(--accent-tint)'
                 return (
                   <div
                     key={`seg-${i}`}
@@ -125,18 +120,18 @@ function JourneyProgress({
                 const state: StepState = i < activeIdx ? 'done' : i === activeIdx ? 'active' : 'next'
                 return (
                   <div key={step.key} className="flex flex-col items-center gap-[5px]" style={{ width: `${stepW}%` }}>
-                    <StepBadge step={step} state={state} tone={tone} />
+                    <StepBadge step={step} state={state} />
                     <span
                       className="w-full whitespace-nowrap text-center font-display text-[9px] leading-[1.25] uppercase transition-all duration-300"
                       style={
                         state === 'active'
-                          ? { color: tone.deep, fontWeight: 800, letterSpacing: '0.03em' }
+                          ? { color: 'var(--accent)', fontWeight: 800, letterSpacing: '0.03em' }
                           : state === 'done'
-                            ? { color: mix(step.accent, '#0f172a', 0.3), fontWeight: 700, letterSpacing: '0.02em' }
-                            : { color: '#94a3b8', fontWeight: 600, letterSpacing: '0.02em' }
+                            ? { color: 'var(--accent-dark)', fontWeight: 700, letterSpacing: '0.02em' }
+                            : { color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.02em' }
                       }
                     >
-                      {step.key}
+                      {t(`stage.${step.key}`)}
                     </span>
                   </div>
                 )
@@ -146,7 +141,7 @@ function JourneyProgress({
 
           <div className="mt-2 flex items-center justify-between border-t border-slate-100 px-2 pt-1.5">
             <span className="font-display text-[10px] font-bold tracking-[0.14em] text-slate-500">
-              SAVOL <span className="text-slate-800">{pad}</span>
+              {t('prog.savol')} <span className="text-slate-800">{pad}</span>
               <span className="mx-1 text-slate-300">/</span>
               <span className="text-slate-400">{padTotal}</span>
               <span className="mx-1.5 text-slate-200">·</span>
@@ -154,21 +149,21 @@ function JourneyProgress({
                 {stageCurrent}/{stageTotal}
               </span>
             </span>
-            <span className="font-display text-[12px] font-bold tabular-nums" style={{ color: tone.deep }}>
+            <span className="font-display text-[12px] font-bold tabular-nums" style={{ color: 'var(--accent)' }}>
               {pct}%
             </span>
           </div>
         </div>
       </div>
 
-      {/* Thin 60-question progress bar (all sizes) */}
+      {/* Thin question progress bar (all sizes) */}
       <div className="relative mt-2 h-[5px] w-full rounded-full bg-slate-200/70 lg:mt-3">
         <div
           className="h-full rounded-full transition-[width] duration-700 ease-out"
           style={{
             width: `${pct}%`,
-            background: `linear-gradient(90deg, ${rgba(tone.main, 0.4)}, ${tone.main})`,
-            boxShadow: `0 0 10px ${tone.glow}`,
+            background: 'linear-gradient(90deg, var(--accent-soft), var(--accent))',
+            boxShadow: '0 0 10px var(--accent-glow)',
           }}
         />
         {/* Soft moving glow at the tip */}
@@ -176,8 +171,8 @@ function JourneyProgress({
           className="animate-progress-glow absolute top-1/2 size-3 -translate-x-1/2 -translate-y-1/2 rounded-full"
           style={{
             left: `${pct}%`,
-            background: tone.main,
-            boxShadow: `0 0 12px 3px ${tone.glow}`,
+            background: 'var(--accent)',
+            boxShadow: '0 0 12px 3px var(--accent-glow)',
           }}
         />
       </div>

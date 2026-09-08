@@ -1,8 +1,16 @@
-function Header() {
+import { Settings } from 'lucide-react'
+
+function Header({ onOpenSettings }: { onOpenSettings?: () => void }) {
   return (
     <header className="relative z-10 flex items-center justify-between px-4 py-3.5 md:px-8">
       <a href="/" className="flex items-center gap-2.5">
-        <span className="grid size-9 place-items-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-[0_6px_16px_rgba(37,99,235,0.4)]">
+        <span
+          className="grid size-9 place-items-center rounded-lg text-white"
+          style={{
+            background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
+            boxShadow: '0 6px 16px var(--accent-shadow)',
+          }}
+        >
           <svg
             viewBox="0 0 24 24"
             width="18"
@@ -16,10 +24,21 @@ function Header() {
             <path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18" />
           </svg>
         </span>
-        <span className="text-lg font-extrabold tracking-tight text-blue-900">
-          Quiz<span className="text-blue-600">Lab</span>
+        <span className="text-lg font-extrabold tracking-tight text-slate-900">
+          Quiz<span style={{ color: 'var(--accent)' }}>Lab</span>
         </span>
       </a>
+
+      {onOpenSettings && (
+        <button
+          type="button"
+          aria-label="Sozlamalar"
+          onClick={onOpenSettings}
+          className="grid size-9 place-items-center rounded-full bg-[var(--surface-elevated)] text-slate-500 ring-1 ring-slate-200/80 transition-all duration-200 hover:-translate-y-0.5 hover:text-slate-900"
+        >
+          <Settings className="size-4.5" strokeWidth={2.2} />
+        </button>
+      )}
     </header>
   )
 }

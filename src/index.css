@@ -46,19 +46,58 @@
   --font-display: "Space Grotesk", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
+/* ---------- Design tokens ----------
+   Accent family (--accent*) is injected at runtime by lib/theme.ts from the
+   user's chosen color. Surface/text/border tokens switch with data-theme. */
 :root {
-  --bg: #faf8f4;
+  --surface: #faf8f4;
+  --surface-elevated: #ffffff;
+  --surface-elevated-2: #f4f1ea;
+  --surface-soft: rgba(255, 255, 255, 0.78);
   --text-primary: #1c1917;
   --text-secondary: #57534e;
+  --text-muted: #94a3b8;
+  --border: rgba(28, 25, 23, 0.09);
+  --border-strong: rgba(28, 25, 23, 0.16);
+  --shadow: 0 18px 48px -18px rgba(30, 41, 59, 0.28);
+  --ambient-a: rgba(223, 231, 245, 0.6);
+  --ambient-b: rgba(243, 230, 240, 0.5);
+  --ambient-c: rgba(255, 255, 255, 0.7);
+
+  /* Accent defaults (overwritten at runtime) */
   --accent: #2563eb;
+  --accent-light: #c7d2fe;
+  --accent-dark: #1e3a8a;
+  --accent-contrast: #ffffff;
+  --accent-soft: rgba(37, 99, 235, 0.14);
+  --accent-tint: rgba(37, 99, 235, 0.08);
+  --accent-ring: rgba(37, 99, 235, 0.26);
+  --accent-glow: rgba(37, 99, 235, 0.32);
+  --accent-shadow: rgba(37, 99, 235, 0.45);
 
   font-family: var(--font-sans);
   color: var(--text-primary);
-  background: var(--bg);
+  background: var(--surface);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+[data-theme='dark'] {
+  --surface: #0e131a;
+  --surface-elevated: #161d27;
+  --surface-elevated-2: #202a37;
+  --surface-soft: rgba(22, 29, 39, 0.8);
+  --text-primary: #e7edf3;
+  --text-secondary: #9aa7b4;
+  --text-muted: #6b7a8f;
+  --border: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --shadow: 0 20px 50px -18px rgba(0, 0, 0, 0.55);
+  --ambient-a: rgba(36, 45, 92, 0.4);
+  --ambient-b: rgba(74, 41, 92, 0.32);
+  --ambient-c: rgba(14, 19, 26, 0.7);
 }
 
 body {
@@ -67,7 +106,71 @@ body {
   color: var(--text-primary);
   font-family: var(--font-sans);
   line-height: 1.6;
-  background-color: var(--bg);
+  background-color: var(--surface);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+html,
+body {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Dark mode: remap stock Tailwind Palette-1 utilities to the token system so
+   the whole quiz UI inherits the theme without touching every component. */
+[data-theme='dark'] .text-slate-900,
+[data-theme='dark'] .text-slate-800,
+[data-theme='dark'] .text-slate-700 {
+  color: var(--text-primary);
+}
+[data-theme='dark'] .text-slate-600,
+[data-theme='dark'] .text-slate-500 {
+  color: var(--text-secondary);
+}
+[data-theme='dark'] .text-slate-400 {
+  color: var(--text-muted);
+}
+[data-theme='dark'] .text-slate-300,
+[data-theme='dark'] .text-slate-200 {
+  color: var(--border-strong);
+}
+[data-theme='dark'] .text-blue-900 {
+  color: var(--text-primary);
+}
+[data-theme='dark'] .text-blue-600 {
+  color: var(--accent);
+}
+[data-theme='dark'] .bg-white,
+[data-theme='dark'] .bg-white\/90 {
+  background-color: var(--surface-elevated);
+}
+[data-theme='dark'] .bg-white\/70,
+[data-theme='dark'] .bg-white\/55 {
+  background-color: var(--surface-soft);
+}
+[data-theme='dark'] .bg-slate-100 {
+  background-color: rgba(255, 255, 255, 0.07);
+}
+[data-theme='dark'] .bg-slate-200\/70 {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+[data-theme='dark'] .bg-slate-900 {
+  background-color: var(--surface-elevated-2);
+}
+[data-theme='dark'] .ring-white\/70,
+[data-theme='dark'] .ring-slate-200,
+[data-theme='dark'] .ring-slate-200\/80,
+[data-theme='dark'] .ring-black\/\[0\.04\] {
+  --tw-ring-color: var(--border);
+}
+[data-theme='dark'] .border-white\/80 {
+  border-color: var(--border);
+}
+[data-theme='dark'] .border-slate-100 {
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 #root {
