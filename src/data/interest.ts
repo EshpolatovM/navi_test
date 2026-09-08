@@ -1,152 +1,98 @@
-// O*NET-grounded interest assessment (Interest Profiler style).
+// O*NET Interest Profiler-grounded interest assessment.
 //
-// Adapted belief statements are NOT the official O*NET instrument — they are
-// activity-oriented items built around the six RIASEC interest dimensions
-// (Realistic, Investigative, Artistic, Social, Enterprising, Conventional).
-// Options are concrete work/activity phrases in natural Uzbek; dimension
-// order follows RIASEC [R, I, A, S, E, C].
-
-export interface InterestOption {
-  text: string
-  dim: number
-}
+// Adapted from O*NET Interest Profiler / RIASEC activity concepts, reworded
+// as simple everyday situations in Uzbek. NOT the official O*NET assessment —
+// an adapted, O*NET-grounded interest inventory.
+//
+// Six dimensions (RIASEC order): R, I, A, S, E, C.
+// Every item is answered on the same six-point interest scale.
 
 export interface InterestItem {
   id: number
   q: string
-  opts: InterestOption[]
+  dim: number
 }
 
-// Activity pools per dimension — concrete work/leisure behaviors.
-const POOLS: string[][] = [
+// Interest scale shown on every question (strongest first). Weight = 5 - index
+// on the screen, so "Juda qiziqaman" contributes 5 and "Umuman" contributes 0.
+export const INTEREST_LEVELS = [
+  'Juda qiziqaman',
+  'Qiziqaman',
+  'Qisman qiziqaman',
+  'Befarqman',
+  'Unchalik qiziqmayman',
+  'Umuman qiziqmayman',
+]
+
+// Four everyday-situation items per dimension (R, I, A, S, E, C).
+const ITEMS: InterestItem[] = [
   // R — Realistic
-  [
-    "Mexanik qurilma yoki asbobni tuzatish",
-    "Yog'och yoki metall narsa yasash",
-    "Mashina yoki motorni sozlash va boshqarish",
-    "Elektr simlari yoki texnik uskunani o'rnatish",
-    "Qo'l asboblari bilan aniq ish bajarish",
-    "Tashqi makonda jismoniy mehnat qilish",
-  ],
+  { id: 1, q: 'Wi-Fi yoki sim buzilib qolsa, muammoni o\u2018zingiz topib tuzatishga harakat qilasizmi?', dim: 0 },
+  { id: 2, q: 'Mebel yoki tokchani qo\u2018lda yig\u2018ish, o\u2018rnatish sizga yoqadimi?', dim: 0 },
+  { id: 3, q: 'Hovlida o\u2018simlik ekish yoki boshqa jismoniy ish qilishni xohlaysizmi?', dim: 0 },
+  { id: 4, q: 'Velosiped, mashina yoki biron qurilmani ta\u2019mirlashdan zavq olasizmi?', dim: 0 },
+
   // I — Investigative
-  [
-    "Muammoning sababini izlash va aniqlash",
-    "Ilmiy tajriba o'tkazib, natijani kuzatish",
-    "Ma'lumotlarni tahlil qilib, xulosa chiqarish",
-    "Yangi bilimlarni tadqiq qilish",
-    "Narsalar qanday ishlashini o'rganish",
-    "Buzilish yoki xatoning manbasini topish",
-  ],
+  { id: 5, q: 'Telefon yoki kompyuter nima uchun sekinlashganini o\u2018zingiz o\u2018rganib chiqasizmi?', dim: 1 },
+  { id: 6, q: 'Nimadir noto\u2018g\u2018ri ishlayotganda uning sababini izlab topish sizni qiziqtiradimi?', dim: 1 },
+  { id: 7, q: 'Yangi texnologiya va kashfiyotlar haqida o\u2018qishni yoqtirasizmi?', dim: 1 },
+  { id: 8, q: 'Biror masalani chuqur tahlil qilib, yechim topishni xohlaysizmi?', dim: 1 },
+
   // A — Artistic
-  [
-    "Yangi narsa loyihalash va yaratish",
-    "Rasm, dizayn yoki bezak yaratish",
-    "Hikoya, matn yoki she'r yozish",
-    "Vizual g'oya va ko'rinish o'ylab topish",
-    "Biror narsaning ko'rinishini o'zgacha qilish",
-    "Ijodiy sahna yoki ko'rgazma tayyorlash",
-  ],
+  { id: 9, q: 'Uyni bezash va rang, dizayn tanlashda o\u2018z g\u2018oyangizni ishga solasizmi?', dim: 2 },
+  { id: 10, q: 'Rasm chizish yoki biron-bir narsa yaratish sizga zavq beradimi?', dim: 2 },
+  { id: 11, q: 'Suratga olish, video montaj yoki ijodiy kontent tayyorlashni xohlaysizmi?', dim: 2 },
+  { id: 12, q: 'Yangi g\u2018oya yoki ijodiy loyiha o\u2018ylab topishni yoqtirasizmi?', dim: 2 },
+
   // S — Social
-  [
-    "Odamlarga yordam berish yoki maslahat berish",
-    "Bolalar yoki kattalarga o'rgatish",
-    "Muhtojlar va bemorlarga g'amxo'rlik qilish",
-    "Jamoada muloqot va hamkorlik qilish",
-    "Odamlarning muammosini tinglash",
-    "Uchrashuv va tadbirlarni o'tkazish",
-  ],
+  { id: 13, q: 'Do\u2018stingizga uy vazifasi yoki biror ishni o\u2018rganishda yordam berasizmi?', dim: 3 },
+  { id: 14, q: 'Yordamga muhtoj odamlarga ko\u2018maklashishni xohlaysizmi?', dim: 3 },
+  { id: 15, q: 'Boshqalarga yangi biror ishni o\u2018rgatishni yoqtirasizmi?', dim: 3 },
+  { id: 16, q: 'Jamoada ishlash va odamlar bilan doim muloqotda bo\u2018lish sizni quvvatlantiradimi?', dim: 3 },
+
   // E — Enterprising
-  [
-    "Odamlarni biror fikrga ishontirish",
-    "Kichik guruh yoki jamoani boshqarish",
-    "Mahsulot yoki xizmatni sotish",
-    "Muzokara olib borish",
-    "Yangi loyiha yoki biznes g'oyasini boshlash",
-    "Qaror qabul qilish va mas'uliyat olish",
-  ],
+  { id: 17, q: 'Do\u2018konda xaridorga tovar tanlashda yordam berib, uni ko\u2018ndirishni xohlaysizmi?', dim: 4 },
+  { id: 18, q: 'Guruh ichida rahbarlikni o\u2018z qo\u2018lingizga olishni yoqtirasizmi?', dim: 4 },
+  { id: 19, q: 'Biror fikr yoki mahsulotni boshqalarga ishonarli tushuntirib berasizmi?', dim: 4 },
+  { id: 20, q: 'Kichkina biznes yoki loyiha boshlash g\u2018oyasi sizni qiziqtiradimi?', dim: 4 },
+
   // C — Conventional
-  [
-    "Ma'lumotlarni tartibga solish va saqlash",
-    "Hisob-kitob va statistika yuritish",
-    "Hujjatlar va yozuvlarni aniq rasmiylashtirish",
-    "Jadval va rejalar tuzish",
-    "Qoidalar va tartiblarga muvofiq ishlash",
-    "Ma'lumotlarni tekshirish va xato topish",
-  ],
+  { id: 21, q: 'Hisob-kitob, ro\u2018yxat yoki jadvalni tartibga solishni yoqtirasizmi?', dim: 5 },
+  { id: 22, q: 'Hujjatlar va yozuvlarni aniq, qoida bo\u2018yicha to\u2018ldirishni xohlaysizmi?', dim: 5 },
+  { id: 23, q: 'Rejalar tuzib, tartib bilan ishlash sizni qoniqtiradimi?', dim: 5 },
+  { id: 24, q: 'Ma\u2019lumotlarni tekshirish, xato topish va to\u2018g\u2018rilashni yoqtirasizmi?', dim: 5 },
 ]
 
-const STEMS = [
-  "Ushbu faoliyatlarning qaysi biri sizga ko'proq yoqadi?",
-  "Qaysi mashg'ulotda vaqt o'tkazish sizga zavq beradi?",
-  "Qaysi ish turiga ko'proq qiziqasiz?",
-  "Qaysi faoliyat sizni ko'proq jalb qiladi?",
-  "Qaysi mashg'ulot sizga yaqinroq?",
-  "Qaysi ishni bajarishni ko'proq yoqtirasiz?",
-  "Qaysi faoliyat sizga eng mos keladi?",
-  "Qaysi mashg'ulotni tanlagan bo'lar edingiz?",
-]
-
-// Balanced triples: each RIASEC dimension appears exactly 9 times across the
-// 18 three-option items.
-const TRIADS: number[][] = [
-  [0, 1, 2], [3, 4, 5], [0, 3, 4], [1, 2, 5], [1, 3, 5], [0, 2, 4],
-  [2, 4, 5], [0, 1, 3], [0, 1, 4], [2, 3, 5], [0, 2, 3], [1, 4, 5],
-  [0, 1, 5], [2, 3, 4], [1, 3, 4], [0, 2, 5], [0, 4, 5], [1, 2, 3],
-]
-
-// Option text rotation counters, so a given pool phrase is only reused after
-// the pool cycles and never appears twice in the same question.
-function buildItems(): InterestItem[] {
-  const counters = [0, 0, 0, 0, 0, 0]
-  const next = (dim: number) => POOLS[dim][counters[dim]++ % POOLS[dim].length]
-  const items: InterestItem[] = TRIADS.map((t, i) => ({
-    id: i + 1,
-    q: STEMS[i % STEMS.length],
-    opts: t.map((dim) => ({ text: next(dim), dim })),
-  }))
-
-  // A few items with a different amount of options, as the source often has
-  // response sets that vary in size.
-  let c = [0, 0, 0, 0, 0, 0]
-  const take = (dim: number) => POOLS[dim][c[dim] += 1, c[dim] % POOLS[dim].length]
-  items.push(
-    { id: 19, q: "Quyidagi ikkitadan qaysi ish sizga yaqinroq?", opts: [{ text: take(0), dim: 0 }, { text: take(3), dim: 3 }] },
-    { id: 20, q: "Shu ikkita faoliyatdan qaysi birini tanlardingiz?", opts: [{ text: take(1), dim: 1 }, { text: take(5), dim: 5 }] },
-  )
-  items.push(
-    { id: 21, q: "Qaysi mashg'ulotlar sizni ko'proq ruhlantirdi?", opts: [{ text: take(0), dim: 0 }, { text: take(2), dim: 2 }, { text: take(4), dim: 4 }, { text: take(5), dim: 5 }] },
-    { id: 22, q: "Qaysi ish turlarida o'zingizni ko'proq topgan bo'lar edingiz?", opts: [{ text: take(1), dim: 1 }, { text: take(3), dim: 3 }, { text: take(4), dim: 4 }, { text: take(5), dim: 5 }] },
-  )
-  return items
-}
-
-export const INTEREST_ITEMS: InterestItem[] = buildItems()
-export const INTEREST_COUNT = INTEREST_ITEMS.length
+export const INTEREST_ITEMS: InterestItem[] = ITEMS
+export const INTEREST_COUNT = ITEMS.length
+export const ITEMS_PER_DIM = 4
 
 export interface InterestProfile {
-  // counts[d] — how many times the user picked dimension d.
+  // counts[d] — how many items of dimension d were answered.
   counts: number[]
-  // scores[d] — 0..100 normalized per appearances of d across the items.
+  // scores[d] — 0..100 on the interest scale (5 = "Juda qiziqaman").
   scores: number[]
-  // appearances[d] — total options offered for d.
+  // appearances[d] — total items available for dimension d.
   appearances: number[]
   // top — dimensions ranked strongest first.
   top: number[]
 }
 
 export function computeInterestProfile(answers: number[]): InterestProfile {
+  const sums = [0, 0, 0, 0, 0, 0]
   const counts = [0, 0, 0, 0, 0, 0]
   const appearances = [0, 0, 0, 0, 0, 0]
 
-  INTEREST_ITEMS.forEach((item, i) => {
-    item.opts.forEach((o) => appearances[o.dim]++)
-    const chosen = answers[i]
-    if (chosen === undefined) return
-    const opt = item.opts[chosen]
-    if (opt) counts[opt.dim]++
+  ITEMS.forEach((item, i) => {
+    appearances[item.dim]++
+    const v = answers[i]
+    if (v === undefined || v < 0 || v > 5) return
+    // weight: "Juda qiziqaman" (index 0) = 5 … "Umuman" (index 5) = 0
+    sums[item.dim] += 5 - v
+    counts[item.dim]++
   })
 
-  const scores = appearances.map((a, d) => (a > 0 ? Math.round((counts[d] / a) * 100) : 0))
+  const scores = sums.map((s, d) => (counts[d] > 0 ? Math.round((s / (counts[d] * 5)) * 100) : 0))
   const top = [0, 1, 2, 3, 4, 5].sort((a, b) => scores[b] - scores[a] || a - b)
   return { counts, scores, appearances, top }
 }

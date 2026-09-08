@@ -44,26 +44,28 @@ function ModeCard({
       style={{ animationDelay: `${delay}ms` }}
     >
       <span
-        className="inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.18em]"
+        className="inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[9px] font-bold whitespace-nowrap uppercase tracking-[0.18em]"
         style={{ background: `${resume ? '#10B981' : '#1e293b'}0d`, color: resume ? '#059669' : '#334155' }}
       >
         {resume ? <RotateCcw style={{ width: 10, height: 10 }} /> : null}
         {resumeLabel ?? badge}
       </span>
 
-      <div className="mt-4 flex items-center gap-4">
+      <div className="mt-4 flex min-h-[3.5rem] items-center gap-4">
         <span className={`grid size-14 shrink-0 place-items-center rounded-2xl text-white shadow-[0_12px_28px_rgba(30,41,59,0.35)] ${gradient}`}>
           {icon}
         </span>
         <div className="min-w-0">
-          <h2 className="font-display text-[19px] font-bold tracking-[-0.01em] text-slate-900 md:text-[21px]">
+          <h2 className="font-display text-[19px] font-bold leading-tight tracking-[-0.01em] text-slate-900 md:text-[21px] md:leading-snug">
             {title}
           </h2>
-          <p className="mt-0.5 text-[12px] font-semibold text-slate-500">{subtitle}</p>
+          <p className="mt-0.5 min-h-[3.25rem] text-[12px] leading-snug font-semibold text-slate-500">
+            {subtitle}
+          </p>
         </div>
       </div>
 
-      <div className="mt-4">{chips}</div>
+      <div className="mt-4 min-h-[3.5rem]">{chips}</div>
 
       <div className="mt-auto pt-6">
         <button
@@ -110,9 +112,9 @@ function SplashScreen({
         <ModeCard
           title="QIZIQISH"
           subtitle="O\u2018zingizga qaysi turdagi ish va faoliyatlar ko\u2018proq yoqishini aniqlang."
-          badge="Yangi \u00b7 qiziqish yo'nalishlari"
+          badge="Yangi \u00b7 RIASEC"
           icon={<Compass style={{ width: 30, height: 30 }} strokeWidth={2.1} />}
-          gradient="bg-gradient-to-br from-fuchsia-500 via-purple-600 to-indigo-600"
+          gradient="bg-gradient-to-br from-blue-500 to-blue-700"
           chips={
             <div className="flex flex-wrap items-center gap-1.5">
               {DIMS.map((d, i) => (

@@ -1,52 +1,46 @@
 import { useEffect, useState } from 'react'
-import { FlaskConical, Hammer, HeartHandshake, ListChecks, Palette, Rocket, Sparkles } from 'lucide-react'
+import { FlaskConical, Hammer, HeartHandshake, ListChecks, Palette, Rocket } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import { DIMS, type InterestItem } from '../data'
+import { DIMS, INTEREST_LEVELS, type InterestItem } from '../data'
 import { rgba, toneFor } from '../lib/tone'
 import InterestProgress from './InterestProgress'
 
 const DIM_ICONS: LucideIcon[] = [Hammer, FlaskConical, Palette, HeartHandshake, Rocket, ListChecks]
 
-function InterestTile({
-  text,
-  dim,
+function LevelTile({
+  label,
   index,
-  total,
   hovered,
   selected,
   onHover,
   onSelect,
 }: {
-  text: string
-  dim: number
+  label: string
   index: number
-  total: number
   hovered: number | null
   selected: number | null
   onHover: (i: number | null) => void
   onSelect: (i: number) => void
 }) {
-  const Icon = DIM_ICONS[dim]
-  const color = DIMS[dim].color
   const isHover = hovered === index
   const isPicked = selected === index
   const dimmed =
     (selected !== null && !isPicked) || (hovered !== null && !isHover && selected === null)
 
-  const gx = 16 + (index % 3) * 8
-  const gy = 9 + (index % 3) * 4.5
-  const tx = (index % 2 === 0 ? -1 : 1) * (8 + (index % 3) * 5)
-  const tr = (index % 2 === 0 ? -1 : 1) * (5 + (index % 3) * 2.5)
+  const gx = 12 + (index % 3) * 8
+  const gy = 7 + (index % 3) * 4
+  const tx = (index % 2 === 0 ? -1 : 1) * (6 + (index % 3) * 5)
+  const tr = (index % 2 === 0 ? -1 : 1) * (4 + (index % 3) * 2.5)
 
   return (
-    <div className={`w-full ${total % 2 === 1 && index === total - 1 ? 'col-span-2' : ''}`}>
+    <div className="w-full">
       <div
-        className="w-full scene-in"
+        className="scene-in w-full"
         style={{
           '--tx': `${tx}px`,
           '--ty': '26px',
           '--tr': `${tr}deg`,
-          animationDelay: `${140 + index * 60}ms`,
+          animationDelay: `${60 + index * 40}ms`,
         } as React.CSSProperties}
       >
         <div
@@ -55,7 +49,7 @@ function InterestTile({
         >
           <button
             type="button"
-            aria-label={text}
+            aria-label={label}
             onMouseEnter={() => onHover(index)}
             onMouseLeave={() => onHover(null)}
             onClick={() => onSelect(index)}
@@ -69,46 +63,42 @@ function InterestTile({
             }}
           >
             <span
-              className="flex min-h-[54px] w-full cursor-pointer items-center gap-3 px-3.5 py-2 text-left"
+              className="flex min-h-[54px] w-full cursor-pointer items-center gap-3 border px-3.5 py-2 text-left"
               style={{
-                background: isPicked ? color : 'rgba(255,255,255,0.94)',
-                color: isPicked ? '#ffffff' : '#292524',
-                border: isPicked ? '1px solid transparent' : `1px solid ${rgba(color, 0.24)}`,
-                borderRadius: `1.3rem ${1.1 + (index % 3) * 0.22}rem 1.4rem ${1.15 + (index % 2) * 0.3}rem`,
+                background: isPicked ? 'rgba(255,255,255,0.98)' : 'rgba(255,255,255,0.94)',
+                color: isPicked ? '#1e293b' : '#292524',
+                borderColor: isPicked ? '#94a3b8' : 'rgba(15,23,42,0.08)',
+                borderRadius: `1.2rem ${1.05 + (index % 3) * 0.18}rem 1.25rem ${1.1 + (index % 2) * 0.25}rem`,
                 boxShadow: isPicked
-                  ? `0 18px 42px -12px ${rgba(color, 0.7)}`
+                  ? '0 16px 40px -14px rgba(15,23,42,0.5), inset 0 0 0 2px rgba(15,23,42,0.55)'
                   : isHover
-                    ? `0 14px 34px -12px ${rgba(color, 0.35)}, 0 0 0 4px ${rgba(color, 0.12)}`
+                    ? '0 12px 30px -14px rgba(15,23,42,0.4), 0 0 0 3px rgba(15,23,42,0.12)'
                     : '0 10px 26px -14px rgba(28,25,23,0.28)',
-                transition: 'transform 0.34s cubic-bezier(0.22,1,0.36,1), box-shadow 0.34s ease, background 0.3s ease, color 0.3s ease',
+                transition: 'transform 0.34s cubic-bezier(0.22,1,0.36,1), box-shadow 0.34s ease, background 0.3s ease',
               }}
             >
               <span className="relative shrink-0">
                 <span
                   aria-hidden
-                  className="grid size-10 place-items-center rounded-full"
+                  className="grid size-9 place-items-center rounded-full font-display text-[11px] font-bold"
                   style={{
-                    background: isPicked ? 'rgba(255,255,255,0.22)' : `${rgba(color, 0.12)}`,
-                    color: isPicked ? '#ffffff' : color,
-                    transform: isHover ? 'scale(1.12) rotate(-4deg)' : undefined,
-                    transition: 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)',
-                  }}
-                >
-                  <Icon style={{ width: 19, height: 19 }} strokeWidth={2.1} />
-                </span>
-                <span
-                  aria-hidden
-                  className="absolute -top-1.5 -right-1.5 grid size-4.5 place-items-center rounded-full font-display text-[9px] font-semibold"
-                  style={{
-                    background: isPicked ? '#ffffff' : 'white',
-                    color: isPicked ? color : DIMS[dim].color,
-                    boxShadow: `0 2px 6px ${rgba(color, 0.2)}`,
+                    background: isPicked ? '#e2e8f0' : '#f1f5f9',
+                    color: isPicked ? '#1e293b' : '#64748b',
+                    boxShadow: 'inset 0 0 0 1px rgba(15,23,42,0.06)',
                   }}
                 >
                   {String(index + 1)}
                 </span>
               </span>
-              <span className="flex-1 text-[12.5px] leading-snug font-medium [overflow-wrap:anywhere]">{text}</span>
+              <span className="flex-1 text-[13px] leading-snug font-semibold">{label}</span>
+              <span
+                aria-hidden
+                className={`size-4.5 shrink-0 rounded-full transition-all duration-300 ${isPicked ? '' : 'ring-1 ring-slate-200'}`}
+                style={{
+                  background: isPicked ? '#1e293b' : 'transparent',
+                  boxShadow: isPicked ? '0 0 0 3px rgba(30,41,59,0.15)' : undefined,
+                }}
+              />
             </span>
           </button>
         </div>
@@ -142,9 +132,9 @@ function InterestScene({
     }
   }, [selected, onAnswer])
 
-  const activeDims = Array.from(new Set(item.opts.map((o) => o.dim)))
-  const accent = DIMS[activeDims[0]]?.color ?? '#8B5CF6'
+  const accent = DIMS[item.dim]?.color ?? '#8B5CF6'
   const t = toneFor(accent, 0.55)
+  const DimIcon = DIM_ICONS[item.dim]
 
   const bubbleScale = hovered !== null ? 1.025 : selected !== null ? 1.05 : 1
 
@@ -167,31 +157,36 @@ function InterestScene({
           className="absolute left-5 top-4 font-display text-[10px] font-semibold uppercase tracking-[0.28em]"
           style={{ color: t.deep }}
         >
-          Qiziqish testi
+          Qiziqish
         </span>
-        <Sparkles
+        <span
           aria-hidden
-          className="mark-float absolute right-5 top-4"
-          style={{ width: 15, height: 15, color: t.soft }}
-          strokeWidth={2.2}
-        />
+          className="absolute right-5 top-4 mark-float"
+          style={{ color: t.deep }}
+        >
+          <DimIcon style={{ width: 15, height: 15 }} strokeWidth={2.2} />
+        </span>
+
         <div className="flex items-center justify-center gap-1 pt-5 max-md:pt-4">
           {DIMS.map((d, i) => (
             <span
               key={d.key}
               title={d.name}
-              className="grid size-4.5 place-items-center rounded-full font-display text-[7.5px] font-bold text-white transition-opacity duration-300"
-              style={{ background: d.color, opacity: activeDims.includes(i) ? 1 : 0.25 }}
+              className="grid size-4.5 place-items-center rounded-full text-white"
+              style={{
+                background: d.color,
+                opacity: i === item.dim ? 1 : 0.25,
+                boxShadow: i === item.dim ? `0 0 0 3px ${rgba(d.color, 0.22)}` : undefined,
+                transition: 'opacity 0.3s ease',
+              }}
             >
-              {d.key}
+              <span className="text-[7.5px] font-bold">{d.key}</span>
             </span>
           ))}
         </div>
-        <p className="pt-3 font-display text-[1.3rem] leading-snug font-bold text-slate-800 md:text-[1.45rem]">
+
+        <p className="pt-3 font-display text-[1.15rem] leading-snug font-bold text-slate-800 md:text-[1.35rem] max-md:pt-3">
           {item.q}
-        </p>
-        <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 max-md:mt-2 max-[359px]:hidden">
-          O&lsquo;zingni eng ko&lsquo;p o&lsquo;ziga tortganini tanla
         </p>
       </div>
       <span
@@ -209,11 +204,11 @@ function InterestScene({
 
   return (
     <div className="w-full">
-      <InterestProgress current={index + 1} total={total} accent={accent} activeDims={activeDims} />
+      <InterestProgress current={index + 1} total={total} accent={accent} activeDims={[item.dim]} />
 
       <div className={phase === 'out' ? 'animate-scene-out' : 'animate-scene-in'}>
         <div className="mx-auto w-full max-w-[560px]">
-          <div className="mt-2 flex flex-col items-center gap-3 max-md:gap-2.5">
+          <div className="mt-1 flex flex-col items-center gap-3 max-md:gap-2.5">
             <div
               className="w-[min(440px,calc(100vw-2rem))]"
               style={{ transform: 'translate3d(calc(var(--gy-x) * 8px), calc(var(--gy-y) * 5px), 0)' }}
@@ -225,13 +220,11 @@ function InterestScene({
               className="mt-2 grid w-full grid-cols-2 gap-2.5 max-md:gap-2"
               style={{ animation: 'scene-in 0.5s cubic-bezier(0.22,1,0.36,1) both' }}
             >
-              {item.opts.map((opt, i) => (
-                <InterestTile
-                  key={i}
-                  text={opt.text}
-                  dim={opt.dim}
+              {INTEREST_LEVELS.map((label, i) => (
+                <LevelTile
+                  key={label}
+                  label={label}
                   index={i}
-                  total={item.opts.length}
                   hovered={hovered}
                   selected={selected}
                   onHover={setHovered}
@@ -244,10 +237,11 @@ function InterestScene({
       </div>
 
       <p className="mx-auto mt-4 hidden max-w-[560px] text-center text-[12px] font-medium text-slate-400 lg:block">
-        Bu test qaysi ish faoliyatlari sizni ko&lsquo;proq quvvatlantirishini aniqlaydi.
+        Har bir faoliyat sizga qanchalik yoqqanini baholang — qiziqish darajasi qanchalik aniq bo&lsquo;lsa,
+        profilingiz shunchalik ishonchli chiqadi.
       </p>
       {phase !== 'out' && selected === null && (
-        <div className="mt-4 text-center lg:hidden">
+        <div className="mt-3 text-center lg:hidden">
           <p className="text-[12px] font-medium text-slate-400">Javob berib davom eting</p>
         </div>
       )}

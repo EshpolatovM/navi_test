@@ -48,7 +48,7 @@ function App() {
 
   const careerCurrent = QUESTIONS[careerIndex]
   const interestCurrent = INTEREST_ITEMS[interestIndex]
-  const interestLead = (i: number) => DIMS[INTEREST_ITEMS[i]?.opts[0]?.dim ?? 0]?.color ?? '#4F46E5'
+  const interestLead = (i: number) => DIMS[INTEREST_ITEMS[i]?.dim ?? 0]?.color ?? '#4F46E5'
   const diffFor = (_i: number) => careerCurrent?.difficulty ?? 0.5
 
   const handleCareerAnswer = (optionIndex: number) => {
@@ -107,7 +107,7 @@ function App() {
     const firstAccent =
       m === 'career'
         ? (QUESTIONS[0]?.accent ?? '#4F46E5')
-        : DIMS[INTEREST_ITEMS[0]?.opts[0]?.dim ?? 0]?.color ?? '#4F46E5'
+        : DIMS[INTEREST_ITEMS[0]?.dim ?? 0]?.color ?? '#4F46E5'
     setAccentOld(firstAccent)
     setAccentCurrent(firstAccent)
     void gyro.enable()
