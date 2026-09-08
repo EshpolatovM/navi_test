@@ -1,10 +1,10 @@
-import { Settings } from 'lucide-react'
+import { Moon, Settings, Sun } from 'lucide-react'
 import { useSettings } from './SettingsContext'
 
 function Header({ onOpenSettings }: { onOpenSettings?: () => void }) {
   const { theme, setTheme, t } = useSettings()
   return (
-    <header className="relative z-10 flex items-center justify-between px-4 py-3.5 md:px-8">
+    <header className="relative z-10 flex items-center justify-between px-4 py-2.5 md:px-8 md:py-3.5">
       <a href="/" className="motion-ui flex items-center gap-2.5">
         <span
           className="grid size-9 place-items-center rounded-lg text-white"
@@ -38,7 +38,28 @@ function Header({ onOpenSettings }: { onOpenSettings?: () => void }) {
           onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
           className="grid size-9 place-items-center rounded-full bg-[var(--surface-elevated)] text-[15px] leading-none ring-1 ring-slate-200/80 transition-all duration-200 hover:-translate-y-0.5 active:scale-90"
         >
-          <span aria-hidden>{theme === 'dark' ? '☀️' : '🌙'}</span>
+          <span aria-hidden className="theme-toggle relative grid size-[18px] place-items-center">
+            <Sun
+              className="theme-toggle-sun"
+              size={18}
+              style={{
+                position: 'absolute',
+                opacity: theme === 'dark' ? 1 : 0,
+                transform: theme === 'dark' ? 'rotate(0deg) scale(1)' : 'rotate(120deg) scale(0.3)',
+              }}
+              strokeWidth={2.4}
+            />
+            <Moon
+              className="theme-toggle-moon"
+              size={18}
+              style={{
+                position: 'absolute',
+                opacity: theme === 'dark' ? 0 : 1,
+                transform: theme === 'dark' ? 'rotate(-120deg) scale(0.3)' : 'rotate(0deg) scale(1)',
+              }}
+              strokeWidth={2.4}
+            />
+          </span>
         </button>
 
         {onOpenSettings && (

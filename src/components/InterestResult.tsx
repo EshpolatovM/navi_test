@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { ArrowLeft, FlaskConical, Hammer, HeartHandshake, ListChecks, Palette, Rocket, RotateCcw, Sparkles } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
+import { ArrowLeft, RotateCcw, Sparkles } from 'lucide-react'
 import { DIMS, computeInterestProfile } from '../data'
 import { useSettings } from './SettingsContext'
+import QuizIcon from './QuizIcon'
 
-const DIM_ICONS: LucideIcon[] = [Hammer, FlaskConical, Palette, HeartHandshake, Rocket, ListChecks]
+const DIM_ICON_NAMES: string[] = ['hammer', 'flask', 'palette', 'heart', 'rocket', 'list']
 
 function useCountUp(target: number, delay = 200, duration = 800) {
   const [display, setDisplay] = useState(0)
@@ -87,14 +87,14 @@ function DimRow({
 }) {
   const { t } = useSettings()
   const dim = DIMS[d]
-  const Icon = DIM_ICONS[d]
+  const dimIcon = DIM_ICON_NAMES[d]
   return (
     <div className="animate-slide-up flex items-center gap-3.5" style={{ animationDelay: `${delay}ms` }}>
       <span
         className="grid size-11 shrink-0 place-items-center rounded-2xl text-white"
         style={{ background: dim.color, boxShadow: `0 8px 18px ${dim.color}45` }}
       >
-        <Icon style={{ width: 20, height: 20 }} strokeWidth={2.2} />
+        <QuizIcon name={dimIcon} size={20} />
       </span>
       <div className="min-w-0 flex-1">
         <div className="mb-1 flex items-baseline justify-between gap-2">

@@ -329,6 +329,22 @@ h3 {
   }
 }
 
+/* Gentle idle bob for answer icons — a few tenths of a px so it never shifts
+   the card or breaks alignment with the adjacent label. */
+@keyframes answer-icon-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1.5px);
+  }
+}
+
+.answer-icon-float {
+  animation: answer-icon-float 5s ease-in-out 0.6s infinite;
+}
+
 @keyframes question-in {
   from {
     opacity: 0;
@@ -715,6 +731,15 @@ h3 {
   animation: fade-in 0.4s ease both;
 }
 
+/* Theme toggle: existing Sun/Moon icons crossfade + rotate on theme switch.
+   Smooth, short (~450ms), subtle. Disabled below for reduced motion / Motion OFF. */
+.theme-toggle-sun,
+.theme-toggle-moon {
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-card-in,
   .animate-question-in,
@@ -729,6 +754,7 @@ h3 {
   .animate-grow-x,
   .animate-fade-in,
   .mark-float,
+  .answer-icon-float,
   .animate-scene-in,
   .animate-scene-out,
   .animate-bubble-pop,
@@ -740,6 +766,11 @@ h3 {
   .animate-progress-glow,
   .animate-ring-pulse {
     animation: none;
+  }
+
+  .theme-toggle-sun,
+  .theme-toggle-moon {
+    transition: none;
   }
 
   .motion-glow,
@@ -775,6 +806,7 @@ html[data-motion='off'] .animate-slide-up,
 html[data-motion='off'] .animate-grow-x,
 html[data-motion='off'] .animate-fade-in,
 html[data-motion='off'] .mark-float,
+html[data-motion='off'] .answer-icon-float,
 html[data-motion='off'] .animate-scene-in,
 html[data-motion='off'] .animate-scene-out,
 html[data-motion='off'] .animate-bubble-pop,
@@ -786,6 +818,11 @@ html[data-motion='off'] .animate-bg-blob-out,
 html[data-motion='off'] .animate-progress-glow,
 html[data-motion='off'] .animate-ring-pulse {
   animation: none;
+}
+
+html[data-motion='off'] .theme-toggle-sun,
+html[data-motion='off'] .theme-toggle-moon {
+  transition: none;
 }
 
 html[data-motion='off'] .motion-glow,

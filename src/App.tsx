@@ -116,7 +116,7 @@ function App() {
 
       {settingsOpen && onboarded && <SetupModal onClose={() => setSettingsOpen(false)} />}
 
-      <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-4 md:py-8">
+      <main className="relative z-10 flex flex-1 items-start justify-center px-4 py-2 md:items-center md:py-8">
         <div className="relative w-full max-w-[640px] lg:max-w-[1080px] xl:max-w-[1240px] 2xl:max-w-[1340px] [perspective:1600px]">
           {mode !== null && !screenDone && (
             <div className="motion-ui mb-1.5 flex justify-start">
@@ -159,7 +159,7 @@ function App() {
                 <ResultCard answers={careerAnswers} onRestart={handleRestartCareer} />
               </div>
             ) : (
-              <div className="xl:grid xl:grid-cols-[176px_minmax(0,1fr)_176px] xl:items-center xl:gap-8">
+              <div className="xl:grid xl:grid-cols-[minmax(180px,1fr)_minmax(0,900px)_minmax(180px,1fr)] xl:items-center xl:gap-8">
                 <div className="hidden xl:block" aria-hidden />
                 <div className="min-w-0">
                   <QuestionScene
@@ -187,7 +187,7 @@ function App() {
               />
             </div>
           ) : (
-            <div className="xl:grid xl:grid-cols-[176px_minmax(0,1fr)_176px] xl:items-center xl:gap-8">
+            <div className="xl:grid xl:grid-cols-[minmax(180px,1fr)_minmax(0,900px)_minmax(180px,1fr)] xl:items-center xl:gap-8">
               <div className="hidden xl:block" aria-hidden />
               <div className="min-w-0">
                 <QuestionScene

@@ -1,11 +1,10 @@
-import type { LucideIcon } from 'lucide-react'
-
 // RIASEC order: [Realistic, Investigative, Artistic, Social, Enterprising, Conventional]
 export type Riaset = number[]
 
 export interface Option {
   text: string
   w: Riaset
+  icon?: string
 }
 
 export interface QuizQuestion {
@@ -27,6 +26,6 @@ export interface CareerProfile {
   name: string
   riasec: Riaset
   color: string
-  icon: LucideIcon
+  icon: string
   description: string
 }

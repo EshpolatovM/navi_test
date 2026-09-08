@@ -1,44 +1,19 @@
-import {
-  Activity,
-  BarChart3,
-  ChefHat,
-  Code2,
-  FlaskConical,
-  Hammer,
-  HeartPulse,
-  Languages,
-  Leaf,
-  LineChart,
-  Megaphone,
-  Music,
-  Palette,
-  PencilRuler,
-  PenLine,
-  Plane,
-  Rocket,
-  Scale,
-  Shield,
-  Stethoscope,
-  TrendingUp,
-  Users,
-  Wheat,
-  Wrench,
-  Zap,
-  GraduationCap,
-  Calculator,
-} from 'lucide-react'
 import type { CareerProfile, Riaset } from './types'
 
 // Curated occupation set using O*NET-style RIASEC interest codes.
 // The shape matches the O*NET SOC dataset, so the full occupation database
 // can be swapped in later without changing the engine.
+//
+// `icon` is a semantic icon name resolved by the QuizIcon component — SVG
+// assets from src/assets/images/ are used wherever a matching direction
+// exists, otherwise a Lucide fallback name is used.
 export const CAREERS: CareerProfile[] = [
   {
     id: 'dev',
     name: 'Dastur ishlab chiquvchi',
     riasec: [8, 85, 25, 12, 22, 30],
     color: '#2563EB',
-    icon: Code2,
+    icon: 'it',
     description: 'Dasturlar, ilovalar va veb-saytlarni yaratib, ularni doimiy yaxshilab boradi.',
   },
   {
@@ -46,7 +21,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Ma\u2019lumotlar tahlilchisi',
     riasec: [10, 88, 12, 8, 18, 32],
     color: '#0EA5E9',
-    icon: BarChart3,
+    icon: 'chart',
     description: 'Xom ma\u2019lumotlarni aniq xulosalarga aylantiradi va oqilona qarorlar qabul qilishga yordam beradi.',
   },
   {
@@ -54,7 +29,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Grafik dizayner',
     riasec: [8, 18, 90, 12, 30, 14],
     color: '#F97316',
-    icon: Palette,
+    icon: 'design',
     description: 'Odamlar eslab qoladigan vizual identifikatsiya, interfeys va brendlarni yaratadi.',
   },
   {
@@ -62,7 +37,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Me\u2019mor',
     riasec: [48, 35, 78, 10, 26, 18],
     color: '#DB2777',
-    icon: PencilRuler,
+    icon: 'pencil_ruler',
     description: 'Go\u2018zallik, konstruksiya va odamlar turmushini uyg\u2018unlashtirgan binolar va fazolarni loyihalaydi.',
   },
   {
@@ -70,7 +45,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Shifokor',
     riasec: [12, 80, 15, 72, 25, 12],
     color: '#16A34A',
-    icon: Stethoscope,
+    icon: 'doctor',
     description: 'Odamlarni tashxislaydi, davolaydi va ularning sog\u2018lom hayot kechirishiga ko\u2018maklashadi.',
   },
   {
@@ -78,7 +53,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Hamshira',
     riasec: [30, 45, 8, 85, 18, 22],
     color: '#059669',
-    icon: HeartPulse,
+    icon: 'heart',
     description: 'Bemorlarga har kuni amaliy yordam va g\u2018amxo\u2018rlik ko\u2018rsatadi.',
   },
   {
@@ -86,7 +61,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'O\u2018qituvchi',
     riasec: [12, 30, 22, 88, 25, 20],
     color: '#7C3AED',
-    icon: GraduationCap,
+    icon: 'graduation',
     description: 'O\u2018quvchilarni o\u2018rganishga, o\u2018sishga va o\u2018z imkoniyatlarini kashf etishga yo\u2018l ko\u2018rsatadi.',
   },
   {
@@ -94,7 +69,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Avtomexanik',
     riasec: [95, 35, 8, 18, 12, 45],
     color: '#B45309',
-    icon: Wrench,
+    icon: 'wrench',
     description: 'Avtomobillar va texnikani tashxislab, ta\u2019mirlab, ularni harakatda ushlab turadi.',
   },
   {
@@ -102,7 +77,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Elektrik',
     riasec: [92, 30, 5, 10, 15, 55],
     color: '#EAB308',
-    icon: Zap,
+    icon: 'zap',
     description: 'Uylar va korxonalarni quvvat bilan ta\u2019minlovchi elektr tizimlarini o\u2018rnatadi va ta\u2019mirlaydi.',
   },
   {
@@ -110,7 +85,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Duradgor',
     riasec: [90, 15, 20, 8, 15, 35],
     color: '#92400E',
-    icon: Hammer,
+    icon: 'hammer',
     description: 'Xom yog\u2018ochdan uylar, mebellar va nozik detallar quradi va shakllantiradi.',
   },
   {
@@ -118,7 +93,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Oshpaz',
     riasec: [70, 15, 60, 35, 40, 20],
     color: '#EA580C',
-    icon: ChefHat,
+    icon: 'chef',
     description: 'Ta\u2019m, mahorat va tezlikni uyg\u2018unlashtirib, odamlarni zavqlantiradigan taomlar tayyorlaydi.',
   },
   {
@@ -126,7 +101,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Musiqachi',
     riasec: [5, 15, 90, 35, 30, 8],
     color: '#EF4444',
-    icon: Music,
+    icon: 'music',
     description: 'Auditoriyani hayratga soladigan va ruhlantiradigan musiqa yaratadi va ijro etadi.',
   },
   {
@@ -134,7 +109,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Yozuvchi',
     riasec: [5, 25, 85, 30, 28, 15],
     color: '#8B5CF6',
-    icon: PenLine,
+    icon: 'pen',
     description: 'Hikoyalarni aytib, so\u2018z orqali ma\u2019lumot beradi, ilhomlantiradi va ta\u2019sir qiladi.',
   },
   {
@@ -142,7 +117,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Psixolog / maslahatchi',
     riasec: [5, 35, 20, 95, 15, 25],
     color: '#14B8A6',
-    icon: Users,
+    icon: 'users',
     description: 'Odamlarga ruhiy salomatlik, qiyinchiliklar va shaxsiy o\u2018sishda yordam beradi.',
   },
   {
@@ -150,7 +125,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Fizioterapevt',
     riasec: [45, 55, 10, 80, 20, 20],
     color: '#22C55E',
-    icon: Activity,
+    icon: 'activity',
     description: 'Odamlarga harakat qobiliyatini tiklashga va og\u2018riqsiz yashashga yordam beradi.',
   },
   {
@@ -158,7 +133,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Savdo menejeri',
     riasec: [20, 15, 15, 55, 95, 30],
     color: '#F59E0B',
-    icon: TrendingUp,
+    icon: 'trending',
     description: 'Jamoani boshqaradi, munosabatlarni quradi va daromadni oshiradigan bitimlar tuzadi.',
   },
   {
@@ -166,7 +141,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Tadbirkor',
     riasec: [30, 25, 30, 30, 95, 20],
     color: '#EC4899',
-    icon: Rocket,
+    icon: 'rocket',
     description: 'Korxonalarni boshlaydi, o\u2018lchangan tavakkal qiladi va yangi narsalarni yaratadi.',
   },
   {
@@ -174,7 +149,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Marketing menejeri',
     riasec: [8, 20, 60, 40, 90, 20],
     color: '#F43F5E',
-    icon: Megaphone,
+    icon: 'marketing',
     description: 'E\u2018tiborni tortadigan va talabni oshiradigan brend va kampaniyalarni shakllantiradi.',
   },
   {
@@ -182,7 +157,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Huquqshunos',
     riasec: [10, 55, 20, 40, 80, 45],
     color: '#6366F1',
-    icon: Scale,
+    icon: 'scale',
     description: 'Ishlarni himoya qiladi, qonunni talqin qiladi va mijoz manfaatini qo\u2018riqlaydi.',
   },
   {
@@ -190,7 +165,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Buxgalter',
     riasec: [10, 30, 5, 15, 25, 95],
     color: '#0891B2',
-    icon: Calculator,
+    icon: 'calculator',
     description: 'Moliyaviy hisobni aniq yuritadi va pulni oqilona boshqarish bo\u2018yicha maslahat beradi.',
   },
   {
@@ -198,7 +173,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Moliyaviy tahlilchi',
     riasec: [10, 80, 5, 10, 35, 60],
     color: '#06B6D4',
-    icon: LineChart,
+    icon: 'line_chart',
     description: 'Bozorlar va investitsiyalarni o\u2018rganib, oqilona moliyaviy qarorlar uchun asos yaratadi.',
   },
   {
@@ -206,7 +181,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Politsiya xodimi',
     riasec: [85, 25, 5, 60, 25, 25],
     color: '#1D4ED8',
-    icon: Shield,
+    icon: 'shield',
     description: 'Jamoani himoya qiladi, favqulodda vaziyatlarga javob beradi va tartibni ta\u2019minlaydi.',
   },
   {
@@ -214,7 +189,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Fermer / dehqon',
     riasec: [95, 25, 5, 15, 20, 30],
     color: '#65A30D',
-    icon: Wheat,
+    icon: 'wheat',
     description: 'Oziq-ovqat yetishtiradi, yer, hayvonlar va hosilni barcha fasllarda boshqaradi.',
   },
   {
@@ -222,7 +197,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Uchuvchi',
     riasec: [70, 55, 8, 20, 30, 40],
     color: '#0284C7',
-    icon: Plane,
+    icon: 'plane',
     description: 'Samolyotlarni boshqaradi va murakkab jarayonlarni aniqlik va xotirjamlik bilan yuritadi.',
   },
   {
@@ -230,7 +205,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Tarjimon',
     riasec: [5, 35, 45, 60, 10, 55],
     color: '#A855F7',
-    icon: Languages,
+    icon: 'languages',
     description: 'Tillar va madaniyatlarni aniqlik va noziklik bilan bog\u2018laydi.',
   },
   {
@@ -238,7 +213,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Atrof-muhit bo\u2018yicha mutaxassis',
     riasec: [90, 55, 10, 20, 15, 25],
     color: '#15803D',
-    icon: Leaf,
+    icon: 'leaf',
     description: 'O\u2018rmonlar, suv va yovvoyi tabiatni dala ishlari va ehtiyotkor rejalash orqali himoya qiladi.',
   },
   {
@@ -246,7 +221,7 @@ export const CAREERS: CareerProfile[] = [
     name: 'Tadqiqotchi biolog',
     riasec: [10, 95, 12, 10, 15, 25],
     color: '#0F766E',
-    icon: FlaskConical,
+    icon: 'flask',
     description: 'Tirik tizimlarni o\u2018rganadi va tushunchani chuqurlashtiradigan kashfiyotlar qiladi.',
   },
 ]

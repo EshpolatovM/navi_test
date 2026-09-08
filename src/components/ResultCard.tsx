@@ -3,6 +3,7 @@ import { RotateCcw, Sparkles } from 'lucide-react'
 import { computeResult, DIMS } from '../data'
 import { careerDescription, careerName } from '../lib/qa'
 import { useSettings } from './SettingsContext'
+import QuizIcon from './QuizIcon'
 
 function useCountUp(target: number, delay = 200, duration = 800) {
   const [display, setDisplay] = useState(0)
@@ -194,7 +195,7 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
           {alternatives.map(({ career, score }, idx) => (
             <Row
               key={career.id}
-              icon={<career.icon style={{ width: 20, height: 20 }} strokeWidth={2.2} />}
+              icon={<QuizIcon name={career.icon} size={20} />}
               name={careerName(career.id, lang) ?? career.name}
               score={score}
               accent={career.color}

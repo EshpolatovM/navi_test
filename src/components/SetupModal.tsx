@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Check, ChevronDown, X } from 'lucide-react'
+import { Check, ChevronDown, Moon, Pause, Sparkles, Sun, X } from 'lucide-react'
 import { LANGS } from '../lib/i18n'
 import { ACCENT_EXTENDED, ACCENT_PALETTE } from '../lib/theme'
 import { useSettings } from './SettingsContext'
@@ -88,7 +88,7 @@ function SetupModal({ onClose }: { onClose: () => void }) {
                     className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-left ring-1 transition-colors"
                     style={{ borderColor: active ? 'var(--accent)' : 'var(--border)', background: active ? 'var(--accent-tint)' : 'transparent' }}
                   >
-                    <span className="text-[18px]">{l.flag}</span>
+                    <span className="grid size-9 shrink-0 place-items-center rounded-lg text-[11px] font-extrabold tracking-[0.06em]" style={{ background: active ? 'var(--accent-soft)' : 'rgba(0,0,0,0.03)', color: active ? 'var(--accent)' : 'var(--text-secondary)' }}>{l.badge}</span>
                     <span className="flex-1 text-[13px] font-bold text-slate-800">{l.label}</span>
                     {active && (
                       <span className="grid size-5 place-items-center rounded-full text-white" style={{ background: 'var(--accent)' }}>
@@ -115,7 +115,11 @@ function SetupModal({ onClose }: { onClose: () => void }) {
                     className="flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-bold text-slate-800 ring-1 transition-colors"
                     style={{ borderColor: active ? 'var(--accent)' : 'var(--border)', background: active ? 'var(--accent-tint)' : 'transparent' }}
                   >
-                    {light ? '☀️' : '🌙'}
+                    {light ? (
+                      <Sun style={{ width: 16, height: 16 }} strokeWidth={2.4} />
+                    ) : (
+                      <Moon style={{ width: 16, height: 16 }} strokeWidth={2.4} />
+                    )}
                     {t(light ? 'settings.theme.light' : 'settings.theme.dark')}
                   </button>
                 )
@@ -137,7 +141,11 @@ function SetupModal({ onClose }: { onClose: () => void }) {
                     className="flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-bold text-slate-800 ring-1 transition-colors"
                     style={{ borderColor: active ? 'var(--accent)' : 'var(--border)', background: active ? 'var(--accent-tint)' : 'transparent' }}
                   >
-                    {on ? '🌀' : '🧘'}
+                    {on ? (
+                      <Sparkles style={{ width: 16, height: 16 }} strokeWidth={2.4} />
+                    ) : (
+                      <Pause style={{ width: 16, height: 16 }} strokeWidth={2.4} />
+                    )}
                     {t(on ? 'settings.motion.on' : 'settings.motion.off')}
                   </button>
                 )

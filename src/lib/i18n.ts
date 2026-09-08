@@ -4,10 +4,10 @@
 
 export type Lang = 'uz' | 'ru' | 'en'
 
-export const LANGS: { code: Lang; label: string; native: string; flag: string }[] = [
-  { code: 'uz', label: 'O\u2018ZBEKCHA', native: 'O\u2018zbekcha', flag: '\u{1F1FA}\u{1F1FF}' },
-  { code: 'ru', label: 'РУССКИЙ', native: 'Русский', flag: '\u{1F1F7}\u{1F1FA}' },
-  { code: 'en', label: 'ENGLISH', native: 'English', flag: '\u{1F1EC}\u{1F1E7}' },
+export const LANGS: { code: Lang; label: string; native: string; badge: string }[] = [
+  { code: 'uz', label: 'O\u2018ZBEKCHA', native: 'O\u2018zbekcha', badge: 'UZ' },
+  { code: 'ru', label: 'РУССКИЙ', native: 'Русский', badge: 'RU' },
+  { code: 'en', label: 'ENGLISH', native: 'English', badge: 'EN' },
 ]
 
 type Dict = Record<string, string>

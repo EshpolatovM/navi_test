@@ -66,7 +66,7 @@ function JourneyProgress({
   const ActiveIcon = steps[activeIdx]?.icon ?? RESULT_STAGE.icon
 
   return (
-    <div className="motion-edge mx-auto mb-4 w-full max-w-2xl px-1 lg:mb-5">
+    <div className="motion-edge mx-auto mb-2.5 w-full max-w-2xl px-1 lg:mb-5">
       {/* Desktop header — stage label + question counter */}
       <div className="hidden items-end justify-between lg:flex">
         <div className="flex flex-col gap-1">
@@ -95,7 +95,7 @@ function JourneyProgress({
 
       {/* Mobile & tablet: compact card-stage roadmap */}
       <div className="lg:hidden">
-        <div className="rounded-2xl bg-[var(--surface-elevated)] px-1 py-2.5 shadow-[0_10px_24px_-18px_rgba(15,23,42,0.25)] ring-1 ring-black/[0.04]">
+        <div className="rounded-2xl bg-[var(--surface-elevated)] px-1 py-1.5 shadow-[0_10px_24px_-18px_rgba(15,23,42,0.25)] ring-1 ring-black/[0.04]">
           <div className="relative mx-1">
             {/* Connector segments — tinted by state within the accent family */}
             <div aria-hidden className="absolute top-[10px] right-[10%] left-[10%] h-[3px]">
@@ -142,7 +142,7 @@ function JourneyProgress({
             </div>
           </div>
 
-          <div className="mt-2 flex items-center justify-between border-t border-slate-100 px-2 pt-1.5">
+          <div className="mt-1.5 flex items-center justify-between border-t border-slate-100 px-2 pt-1">
             <span className="font-display text-[11px] font-bold tracking-[0.12em] text-slate-500">
               {t('prog.savol')} <span className="text-slate-800">{pad}</span>
               <span className="mx-1 text-slate-300">/</span>
@@ -160,7 +160,7 @@ function JourneyProgress({
       </div>
 
       {/* Thin question progress bar (all sizes) */}
-      <div className="relative mt-2 h-[5px] w-full rounded-full bg-slate-200/70 lg:mt-3">
+      <div className="relative mt-1.5 h-[5px] w-full rounded-full bg-slate-200/70 lg:mt-3">
         <div
           className="h-full rounded-full transition-[width] duration-700 ease-out"
           style={{

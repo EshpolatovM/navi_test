@@ -147,11 +147,11 @@ const { w, h } = geo
   const bubbleEl = (
     <div className="relative z-10 w-full">
       <div
-        className="relative px-6 pt-4 max-md:px-4 max-md:pt-3"
+        className="relative px-5 pt-3 max-md:px-4 max-md:pt-2"
         style={{ transform: 'rotate(-1deg)' }}
       >
         <div
-          className="relative rounded-[2rem] px-6 py-6 text-center ring-1 backdrop-blur md:px-9 md:py-7 max-md:px-5 max-md:py-3.5"
+          className="relative rounded-[2rem] px-5 py-4 text-center ring-1 backdrop-blur md:px-9 md:py-7 max-md:px-4 max-md:py-3"
           style={{
             width: '100%',
             background:
@@ -164,21 +164,21 @@ const { w, h } = geo
         >
           <span
             aria-hidden
-            className="absolute left-5 top-4 font-display text-[10px] font-semibold uppercase tracking-[0.28em]"
+            className="absolute left-5 top-3.5 font-display text-[9px] font-semibold uppercase tracking-[0.28em] md:top-4 md:text-[10px]"
             style={{ color: tone.deep }}
           >
             {t(`stage.${boundary.def.key}`)}
           </span>
           <Sparkles
             aria-hidden
-            className="absolute right-5 top-4 mark-float"
-            style={{ width: 15, height: 15, color: tone.soft }}
+            className="absolute right-5 top-3.5 mark-float md:top-4"
+            style={{ width: 14, height: 14, color: tone.soft }}
             strokeWidth={2.2}
           />
-          <p className="pt-5 text-[1.35rem] leading-[1.32] font-bold tracking-[-0.01em] text-slate-800 md:text-[1.5625rem] max-md:pt-4">
+          <p className="pt-4 text-[1.18rem] leading-[1.3] font-bold tracking-[-0.01em] text-slate-800 md:pt-5 md:text-[1.5625rem] md:leading-[1.32] max-[359px]:text-[1.1rem]">
             {question.q}
           </p>
-          <p className="mt-3 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400 max-md:mt-2 max-[359px]:hidden">
+          <p className="mt-2 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-400 md:mt-3 md:text-[10px] max-[359px]:hidden">
             {t('scene.hint')}
           </p>
         </div>
@@ -255,10 +255,10 @@ const { w, h } = geo
   const tileNodes = (
     <>
       {/* Phones + tablets (<1024): bubble + 2-column grid */}
-      <div className="flex flex-col items-center gap-3 lg:hidden max-md:gap-2.5">
+      <div className="flex w-full flex-col items-center gap-2.5 lg:hidden max-md:gap-2">
         <div className="flex w-full justify-center">
           <div
-            className="w-[min(440px,calc(100vw-2rem))]"
+            className="w-[min(440px,calc(100vw-1.5rem))]"
             style={{ transform: 'translate3d(calc(var(--gy-x) * 8px), calc(var(--gy-y) * 5px), 0)' }}
           >
             <div style={{ animation: 'bubble-pop 0.6s cubic-bezier(0.22,1,0.36,1) both' }}>{bubbleEl}</div>
@@ -266,7 +266,7 @@ const { w, h } = geo
         </div>
 
         <div
-          className="mt-2 grid w-full grid-cols-2 gap-2.5 max-md:gap-2"
+          className="grid w-full grid-cols-2 gap-2"
           style={{ maxWidth: 440, animation: 'scene-in 0.5s cubic-bezier(0.22,1,0.36,1) both' }}
         >
           {question.opts.map((opt, i) => {

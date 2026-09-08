@@ -1,8 +1,7 @@
-import { FlaskConical, Hammer, HeartHandshake, ListChecks, Palette, Rocket } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
 import type { Option, Riaset } from '../data'
+import AnimatedAnswerIcon from './AnimatedAnswerIcon'
 
-const DIM_ICONS: LucideIcon[] = [Hammer, FlaskConical, Palette, HeartHandshake, Rocket, ListChecks]
+const DIM_ICON_NAMES: string[] = ['hammer', 'flask', 'palette', 'heart', 'rocket', 'list']
 
 function primaryDim(w: Riaset): number {
   let best = 0
@@ -52,7 +51,7 @@ function AnswerNode({
   onHover: (i: number | null) => void
   onSelect: (i: number) => void
 }) {
-  const Icon = DIM_ICONS[primaryDim(option.w)]
+  const iconName = option.icon ?? DIM_ICON_NAMES[primaryDim(option.w)]
   const isHover = hovered === index
   const isPicked = selected === index
   const dimmed =
@@ -121,32 +120,34 @@ function AnswerNode({
     >
       <span
         style={innerStyle}
-        className="flex min-h-[62px] w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left md:min-h-[68px] md:gap-3.5"
+        className="flex min-h-[58px] w-full cursor-pointer items-center gap-3 px-4 py-2.5 text-left md:min-h-[68px] md:gap-3.5 max-md:gap-2.5"
       >
         <span className="relative shrink-0">
           <span
             aria-hidden
             className="grid place-items-center rounded-full"
             style={{
-              width: 46,
-              height: 46,
+              width: 36,
+              height: 36,
               background: isPicked ? 'color-mix(in srgb, var(--accent-contrast) 22%, transparent)' : `${accent}12`,
               color: isPicked ? 'var(--accent-contrast)' : accent,
-              transform: isHover ? 'scale(1.12) rotate(-4deg)' : undefined,
-              transition: 'transform 0.3s cubic-bezier(0.34,1.56,0.64,1)',
+              transform: isHover ? 'scale(1.1) rotate(-5deg)' : isPicked ? 'scale(1.05)' : 'scale(1)',
+              transition: 'transform 0.32s cubic-bezier(0.34,1.56,0.64,1)',
             }}
           >
-            <Icon style={{ width: 21, height: 21 }} strokeWidth={2.1} />
+            <span className="answer-icon-float grid place-items-center">
+              <AnimatedAnswerIcon name={iconName} size={20} />
+            </span>
           </span>
           <span
             aria-hidden
-            className="absolute -top-1.5 -right-1.5 grid size-5 place-items-center rounded-full font-display text-[10px] font-semibold"
+            className="absolute -top-1.5 -right-1.5 grid size-6 place-items-center rounded-full font-display text-[10.5px] font-bold"
             style={{ background: isPicked ? 'var(--accent-contrast)' : 'var(--surface-elevated)', color: isPicked ? 'var(--accent)' : 'var(--text-muted)', boxShadow: `0 2px 6px ${accent}33` }}
           >
             {letter}
           </span>
         </span>
-        <span className="flex-1 text-[14.5px] leading-[1.35] font-semibold [overflow-wrap:anywhere] md:text-[16px]">{option.text}</span>
+        <span className="min-w-0 flex-1 break-words text-[13.5px] leading-[1.3] font-semibold md:text-[16px]">{option.text}</span>
       </span>
     </button>
   )

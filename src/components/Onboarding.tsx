@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Check, ChevronDown } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, ChevronDown, Moon, Sun } from 'lucide-react'
 import { LANGS } from '../lib/i18n'
 import { ACCENT_EXTENDED, ACCENT_PALETTE } from '../lib/theme'
 import { useSettings } from './SettingsContext'
@@ -103,10 +103,10 @@ function Onboarding() {
                     style={{ borderColor: active ? 'var(--accent)' : 'var(--border)' }}
                   >
                     <span
-                      className="grid size-12 shrink-0 place-items-center rounded-xl text-[22px] ring-1"
-                      style={{ background: active ? 'var(--accent-soft)' : 'rgba(0,0,0,0.03)' }}
+                      className="grid size-12 shrink-0 place-items-center rounded-xl text-[15px] font-extrabold tracking-[0.08em] ring-1"
+                      style={{ background: active ? 'var(--accent-soft)' : 'rgba(0,0,0,0.03)', color: active ? 'var(--accent)' : 'var(--text-secondary)' }}
                     >
-                      {l.flag}
+                      {l.badge}
                     </span>
                     <span className="flex-1">
                       <span className="block font-display text-[15px] font-bold tracking-[0.04em] text-slate-900">
@@ -154,8 +154,12 @@ function Onboarding() {
                   >
                     <ThemePreview dark={opt === 'dark'} />
                     <span className="flex w-full items-center justify-between">
-                      <span className="text-[13px] font-bold text-slate-900">
-                        {opt === 'light' ? '☀️ ' : '🌙 '}
+                      <span className="flex items-center gap-1.5 text-[13px] font-bold text-slate-900">
+                        {opt === 'light' ? (
+                          <Sun style={{ width: 15, height: 15 }} strokeWidth={2.4} />
+                        ) : (
+                          <Moon style={{ width: 15, height: 15 }} strokeWidth={2.4} />
+                        )}
                         {t(opt === 'light' ? 'onb.theme.light' : 'onb.theme.dark')}
                       </span>
                       {active && (
