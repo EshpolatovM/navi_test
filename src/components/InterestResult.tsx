@@ -151,7 +151,7 @@ function InterestResult({
   const ordered = [0, 1, 2, 3, 4, 5].sort((a, b) => scores[b] - scores[a] || a - b)
 
   return (
-    <div className="animate-question-in relative w-full">
+    <div className="motion-pan-m animate-question-in relative w-full">
       <div
         aria-hidden
         className="pointer-events-none absolute -top-16 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full blur-3xl"

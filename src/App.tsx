@@ -99,7 +99,7 @@ function App() {
       {/* Atmospheric glow — one subtle, centered accent aura; never reaches edges */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
         <div
-          className="animate-aura absolute top-[36%] left-1/2 h-[26rem] w-[min(46rem,88vw)] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[70px]"
+          className="animate-aura motion-glow absolute top-[36%] left-1/2 h-[26rem] w-[min(46rem,88vw)] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[70px]"
           style={{
             background: `radial-gradient(circle, var(--accent-glow) 0%, color-mix(in srgb, var(--accent-glow) 55%, transparent) 46%, transparent 72%)`,
             opacity: 1,
@@ -112,9 +112,9 @@ function App() {
       {settingsOpen && onboarded && <SetupModal onClose={() => setSettingsOpen(false)} />}
 
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-4 md:py-8">
-        <div className="relative w-full max-w-[640px] lg:max-w-[1080px] xl:max-w-[1240px] 2xl:max-w-[1340px]">
+        <div className="relative w-full max-w-[640px] lg:max-w-[1080px] xl:max-w-[1240px] 2xl:max-w-[1340px] [perspective:1600px]">
           {mode !== null && !screenDone && (
-            <div className="mb-1.5 flex justify-start">
+            <div className="motion-ui mb-1.5 flex justify-start">
               <button
                 type="button"
                 onClick={handleBack}

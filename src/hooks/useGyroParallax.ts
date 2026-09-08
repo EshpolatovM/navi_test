@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v))
 
-function canUse(): boolean {
+function getReduced(): boolean {
+  if (typeof window === 'undefined') return false
+  if (!window.matchMedia) return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+function gyroCapable(): boolean {
   if (typeof window === 'undefined') return false
   if (!('DeviceOrientationEvent' in window)) return false
   const mq = (q: string) => (window.matchMedia ? window.matchMedia(q).matches : false)
@@ -26,12 +32,28 @@ function accelMag(e: DeviceMotionEvent): number {
   return 0
 }
 
+/**
+ * ONE global motion controller for the whole QuizLab scene.
+ *
+ * Pointer (desktop) and gyro (mobile) feed the SAME smoothed state, which is
+ * published to root CSS variables every frame:
+ *   --mx / --my     normalized parallel input (-1..1)      → horizontal pan
+ *   --rotx / --roty degrees (±3) from the same input       → subtle depth tilt
+ *   --gy-x / --gy-y legacy aliases consumed by QuestionScene
+ *
+ * Every visual element reads these variables with its own depth factor via
+ * the .motion-* classes, so the whole scene reacts as one physical surface.
+ * Values are lerped (damped), clamped and written on translate3d-friendly
+ * custom properties only — top/left/width/height are never touched.
+ */
 export function useGyroParallax() {
   const [active, setActive] = useState(false)
   const st = useRef({
     raf: 0,
     last: 0,
     enabled: false,
+    gyroEnabled: false,
+    reduced: false,
     streak: 0,
     lastShake: 0,
     target: { x: 0, y: 0 },
@@ -39,16 +61,21 @@ export function useGyroParallax() {
   })
 
   const write = (x: number, y: number) => {
-    const el = document.body
-    el.style.setProperty('--gy-x', String(x))
-    el.style.setProperty('--gy-y', String(y))
+    const r = document.documentElement
+    r.style.setProperty('--mx', String(x))
+    r.style.setProperty('--my', String(y))
+    r.style.setProperty('--rotx', String(x * 3))
+    r.style.setProperty('--roty', String(y * 3))
+    r.style.setProperty('--gy-x', String(x))
+    r.style.setProperty('--gy-y', String(y))
   }
 
   const tick = (now: number) => {
     const s = st.current
     const dt = now - s.last > 0 ? now - s.last : 16.7
     s.last = now
-    const k = 1 - Math.exp(-dt / 95)
+    // Exponential damping — soft, smooth, never snaps to the raw sensor.
+    const k = 1 - Math.exp(-dt / 110)
     const x = s.smooth.x + (s.target.x - s.smooth.x) * k
     const y = s.smooth.y + (s.target.y - s.smooth.y) * k
     s.smooth.x = x
@@ -63,6 +90,26 @@ export function useGyroParallax() {
     if (s.raf) return
     s.last = performance.now()
     s.raf = requestAnimationFrame(tick)
+  }
+
+  const onPointer = (e: PointerEvent) => {
+    const s = st.current
+    if (s.reduced || s.gyroEnabled) return
+    if (e.pointerType === 'touch' && s.gyroEnabled) return
+    const w = window.innerWidth || 1
+    const h = window.innerHeight || 1
+    // Relative to viewport center, clamped to ±1 → cursor on an edge = max depth.
+    s.target.x = clamp((e.clientX / w) * 2 - 1, -1, 1)
+    s.target.y = clamp((e.clientY / h) * 2 - 1, -1, 1)
+    ensureLoop()
+  }
+
+  const onLeave = () => {
+    const s = st.current
+    if (s.reduced) return
+    s.target.x = 0
+    s.target.y = 0
+    ensureLoop()
   }
 
   const onOrient = (e: DeviceOrientationEvent) => {
@@ -93,6 +140,7 @@ export function useGyroParallax() {
     const s = st.current
     if (s.enabled) return
     s.enabled = true
+    s.gyroEnabled = true
     write(0, 0)
     window.addEventListener('deviceorientation', onOrient)
     window.addEventListener('devicemotion', onMotion)
@@ -103,6 +151,7 @@ export function useGyroParallax() {
   const stop = () => {
     const s = st.current
     s.enabled = false
+    s.gyroEnabled = false
     window.removeEventListener('deviceorientation', onOrient)
     window.removeEventListener('devicemotion', onMotion)
     if (s.raf) cancelAnimationFrame(s.raf)
@@ -114,11 +163,39 @@ export function useGyroParallax() {
   }
 
   useEffect(() => {
+    const s = st.current
+    s.reduced = getReduced()
+    if (s.reduced) return () => {}
+    // Desktop / fallback: subtle pointer parallax drives the same state.
+    window.addEventListener('pointermove', onPointer, { passive: true })
+    window.addEventListener('pointercancel', onLeave)
+    document.documentElement.addEventListener('mouseleave', onLeave)
+    window.addEventListener('blur', onLeave)
+
+    const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const onPref = () => {
+      s.reduced = mql.matches
+      if (s.reduced) {
+        s.smooth = { x: 0, y: 0 }
+        s.target = { x: 0, y: 0 }
+        write(0, 0)
+        if (s.raf) cancelAnimationFrame(s.raf)
+        s.raf = 0
+        if (s.enabled) stop()
+      }
+    }
+    mql.addEventListener('change', onPref)
+
     const onRe = () => {
-      if (!canUse() && st.current.enabled) stop()
+      if (!gyroCapable() && s.enabled) stop()
     }
     window.addEventListener('resize', onRe)
     return () => {
+      window.removeEventListener('pointermove', onPointer)
+      window.removeEventListener('pointercancel', onLeave)
+      document.documentElement.removeEventListener('mouseleave', onLeave)
+      window.removeEventListener('blur', onLeave)
+      mql.removeEventListener('change', onPref)
       window.removeEventListener('resize', onRe)
       stop()
     }
@@ -127,7 +204,7 @@ export function useGyroParallax() {
 
   const enable = async (): Promise<boolean> => {
     if (st.current.enabled) return true
-    if (!canUse()) return false
+    if (!gyroCapable()) return false
     const DOE = window.DeviceOrientationEvent as typeof window.DeviceOrientationEvent & {
       requestPermission?: () => Promise<string>
     }

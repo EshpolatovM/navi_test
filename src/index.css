@@ -613,6 +613,75 @@ h3 {
   animation: ring-pulse 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
 }
 
+/* ---------- Unified motion layer ----------
+   One global smoothed state (--mx/--my normalized ±1, --rotx/--roty ±3°,
+   published by the controller in src/hooks/useGyroParallax) drives every
+   depth level below. Movements are only a few pixels so the designed layout
+   never changes — this is a visual layer above it. Elements without their
+   own transform animations use the transform property (composes with the
+   individual translate/rotate utilities); elements whose transform slot is
+   owned by entrance/float keyframes use the .motion-pan-* individual
+   translate property so both compose cleanly. */
+:root {
+  --mx: 0;
+  --my: 0;
+  --rotx: 0;
+  --roty: 0;
+  --gy-x: 0;
+  --gy-y: 0;
+}
+
+/* Level 1 — answer constellation tray: strongest pan + gentle tray tilt */
+.motion-tray {
+  transform: perspective(1200px) translate3d(calc(var(--mx) * 7px), calc(var(--my) * 5px), 0)
+    rotateX(calc(var(--roty) * 1.1deg)) rotateY(calc(var(--rotx) * 1.4deg));
+  transform-origin: 50% 45%;
+  will-change: transform;
+}
+
+/* Level 2 — main panels (roadmap, progress, journey) */
+.motion-edge {
+  transform: translate3d(calc(var(--mx) * 2.4px), calc(var(--my) * 1.8px), 0)
+    rotateX(calc(var(--roty) * 0.7deg)) rotateY(calc(var(--rotx) * 0.7deg));
+}
+
+/* Level 3 — small UI: logo, header controls, back button, labels */
+.motion-ui {
+  transform: translate3d(calc(var(--mx) * 1.5px), calc(var(--my) * 1.2px), 0)
+    rotateX(calc(var(--roty) * 0.5deg)) rotateY(calc(var(--rotx) * 0.5deg));
+}
+
+/* Background atmospheric glow — reacts just a little, edges stay clean */
+.motion-glow {
+  transform: translate3d(calc(var(--mx) * 5px), calc(var(--my) * 6px), 0);
+}
+
+/* Pan-only via the individual translate property — safe on elements whose
+   transform is occupied by entrance/float keyframes or hover utilities. */
+.motion-pan-m {
+  translate: calc(var(--mx) * 3px) calc(var(--my) * 2.4px);
+}
+
+.motion-pan-s {
+  translate: calc(var(--mx) * 1.6px) calc(var(--my) * 1.4px);
+}
+
+/* Independent, de-synchronized gentle floating (translate property so it
+   composes with parallax transforms above it). Roadmap: almost static. */
+@keyframes float-road {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -1.5px;
+  }
+}
+
+.float-road {
+  animation: float-road 11s ease-in-out 1.4s infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-card-in,
   .animate-question-in,
@@ -637,5 +706,17 @@ h3 {
   .animate-progress-glow,
   .animate-ring-pulse {
     animation: none;
+  }
+
+  .motion-glow,
+  .motion-edge,
+  .motion-ui,
+  .motion-tray,
+  .motion-pan-m,
+  .motion-pan-s,
+  .float-road {
+    transform: none !important;
+    translate: none !important;
+    animation: none !important;
   }
 }

@@ -130,7 +130,7 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
     .map((d) => ({ d, share: Math.round((profile[d] / total) * 100) }))
 
   return (
-    <div className="animate-question-in relative w-full">
+    <div className="motion-pan-m animate-question-in relative w-full">
       {/* Soft accent halo */}
       <div
         aria-hidden

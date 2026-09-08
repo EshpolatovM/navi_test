@@ -24,7 +24,7 @@ function SetupModal({ onClose }: { onClose: () => void }) {
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
-        className="animate-bubble-in w-full max-w-md rounded-3xl bg-[var(--surface-elevated)] p-6 shadow-[var(--shadow)] ring-1 transition-colors"
+        className="motion-pan-m animate-bubble-in w-full max-w-md rounded-3xl bg-[var(--surface-elevated)] p-6 shadow-[var(--shadow)] ring-1 transition-colors"
         style={{ borderColor: 'var(--border)' }}
       >
         <div className="mb-5 flex items-center justify-between">
@@ -35,7 +35,7 @@ function SetupModal({ onClose }: { onClose: () => void }) {
             type="button"
             aria-label={t('settings.close')}
             onClick={onClose}
-            className="grid size-8 place-items-center rounded-full text-slate-500 ring-1 ring-slate-200/80 transition-colors hover:text-slate-900"
+            className="grid size-8 place-items-center rounded-full text-slate-500 ring-1 ring-slate-200/80 transition-all duration-200 hover:text-slate-900 active:scale-90"
           >
             <X className="size-4" />
           </button>

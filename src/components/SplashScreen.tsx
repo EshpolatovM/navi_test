@@ -33,7 +33,7 @@ function ModeCard({
 }) {
   return (
     <div
-      className="surface-card animate-slide-up flex flex-col rounded-3xl bg-[var(--surface-elevated)] p-6 text-left backdrop-blur hover:-translate-y-1 md:p-7"
+      className="surface-card motion-pan-s animate-slide-up flex flex-col rounded-3xl bg-[var(--surface-elevated)] p-6 text-left backdrop-blur hover:-translate-y-1 md:p-7"
       style={{ animationDelay: `${delay}ms` }}
     >
       <span

@@ -82,7 +82,7 @@ function Roadmap({
         : { color: 'var(--text-muted)' }
 
   return (
-    <aside className="hidden w-[176px] shrink-0 xl:block" aria-label={t('road.aside')}>
+    <aside className="motion-edge float-road hidden w-[176px] shrink-0 xl:block" aria-label={t('road.aside')}>
       <div
         className="rounded-2xl bg-[var(--surface-soft)] p-3.5 backdrop-blur-md"
         style={{

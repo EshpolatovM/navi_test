@@ -49,7 +49,7 @@ function Onboarding() {
   }
 
   return (
-    <div className="animate-question-in relative mx-auto flex w-full max-w-[560px] flex-1 flex-col px-4 py-6">
+    <div className="motion-pan-m animate-question-in relative mx-auto flex w-full max-w-[560px] flex-1 flex-col px-4 py-6">
       {/* back control */}
       {stepIdx > 0 && (
         <button

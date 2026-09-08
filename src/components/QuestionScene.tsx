@@ -198,7 +198,7 @@ const { w, h } = geo
   )
 
   const orbitNodes = (
-    <div ref={orbitRef} className="relative hidden h-[600px] w-full max-w-[1080px] mx-auto lg:block">
+    <div ref={orbitRef} className="motion-tray relative hidden h-[600px] w-full max-w-[1080px] mx-auto lg:block">
       {/* Soft halo behind the centered bubble */}
       <div
         aria-hidden
@@ -218,7 +218,7 @@ const { w, h } = geo
       <div
         ref={bubbleRef}
         className="animate-bubble-float absolute z-20"
-        style={{ left: cx, top: cy, width: bw, transform: 'translate(-50%, -50%)' }}
+        style={{ left: cx, top: cy, width: bw, transform: 'translate(-50%, -50%)', translate: 'calc(var(--gy-x) * 3px) calc(var(--gy-y) * 3px)' }}
       >
         <div className="animate-bubble-pop">{bubbleEl}</div>
       </div>
@@ -272,9 +272,9 @@ const { w, h } = geo
           {question.opts.map((opt, i) => {
             const c = question.opts.length
             const rot = (i % 2 === 0 ? 1 : -1) * (1 + (i % 3))
-            // Per-tile gyro parallax depth (visible, layered): 16/24/32 → 9/13/18 px
-            const gx = 16 + (i % 3) * 8
-            const gy = 9 + (i % 3) * 4.5
+            // Per-tile gyro parallax depth (visible, layered): 8/10/12 → 6/7.5/9 px
+            const gx = 8 + (i % 3) * 2
+            const gy = 6 + (i % 3) * 1.5
             const tx = (i % 2 === 0 ? -1 : 1) * (8 + (i % 3) * 5)
             const tr = (i % 2 === 0 ? -1 : 1) * (5 + (i % 3) * 2.5)
             return (

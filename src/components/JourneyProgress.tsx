@@ -66,7 +66,7 @@ function JourneyProgress({
   const ActiveIcon = steps[activeIdx]?.icon ?? RESULT_STAGE.icon
 
   return (
-    <div className="mx-auto mb-4 w-full max-w-2xl px-1 lg:mb-5">
+    <div className="motion-edge mx-auto mb-4 w-full max-w-2xl px-1 lg:mb-5">
       {/* Desktop header — stage label + question counter */}
       <div className="hidden items-end justify-between lg:flex">
         <div className="flex flex-col gap-1">
