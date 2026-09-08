@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { RotateCcw, Sparkles } from 'lucide-react'
 import { computeResult, DIMS } from '../data'
+import { careerDescription, careerName } from '../lib/qa'
 import { useSettings } from './SettingsContext'
 
 function useCountUp(target: number, delay = 200, duration = 800) {
@@ -118,9 +119,11 @@ function Row({
 }
 
 function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () => void }) {
-  const { t } = useSettings()
-  const { profile, ranked, best } = computeResult(answers)
+  const { t, lang } = useSettings()
+  const { profile, ranked, best } = computeResult(answers, lang)
   const accent = best.career.color
+  const bestName = careerName(best.career.id, lang) ?? best.career.name
+  const bestDesc = careerDescription(best.career.id, lang) ?? best.career.description
   const alternatives = ranked.slice(0, 5)
 
   const total = Math.max(1, profile.reduce((s, v) => s + v, 0))
@@ -143,7 +146,7 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
       </p>
 
       {/* Hero signal */}
-      <div className="mx-auto max-w-[560px] rounded-[2rem] bg-[var(--surface-elevated)] px-6 py-8 text-center ring-1 backdrop-blur md:px-10" style={{ borderColor: 'var(--border)', boxShadow: 'var(--shadow)' }}>
+      <div className="motion-d1 mx-auto max-w-[560px] rounded-[2rem] bg-[var(--surface-elevated)] px-6 py-8 text-center ring-1 backdrop-blur md:px-10" style={{ borderColor: 'var(--border)', boxShadow: 'var(--shadow)' }}>
         <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em]" style={{ color: accent, background: `${accent}12` }}>
           <Sparkles style={{ width: 11, height: 11 }} /> {t('rc.karyera')}
         </span>
@@ -153,10 +156,10 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
         </div>
 
         <h2 className="mt-4 font-display text-[26px] leading-tight font-semibold text-slate-900 md:text-[30px]">
-          {best.career.name}
+          {bestName}
         </h2>
         <p className="mx-auto mt-2 max-w-sm text-[14px] leading-relaxed text-slate-500">
-          {best.career.description}
+          {bestDesc}
         </p>
 
         {/* Strongest signals */}
@@ -183,7 +186,7 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
       </div>
 
       {/* Top directions */}
-      <div className="mx-auto mt-5 max-w-[560px] rounded-[2rem] bg-[var(--surface-elevated)] px-6 py-6 ring-1 backdrop-blur md:px-8" style={{ borderColor: 'var(--border)', boxShadow: 'var(--shadow)' }}>
+      <div className="motion-d2 mx-auto mt-5 max-w-[560px] rounded-[2rem] bg-[var(--surface-elevated)] px-6 py-6 ring-1 backdrop-blur md:px-8" style={{ borderColor: 'var(--border)', boxShadow: 'var(--shadow)' }}>
         <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-slate-400">
           {t('rc.signals')}
         </p>
@@ -192,7 +195,7 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
             <Row
               key={career.id}
               icon={<career.icon style={{ width: 20, height: 20 }} strokeWidth={2.2} />}
-              name={career.name}
+              name={careerName(career.id, lang) ?? career.name}
               score={score}
               accent={career.color}
               delay={600 + idx * 130}
@@ -203,11 +206,11 @@ function ResultCard({ answers, onRestart }: { answers: number[]; onRestart: () =
 
       {/* Why this fits */}
       <div
-        className="mx-auto mt-5 max-w-[560px] rounded-[2rem] px-6 py-6 ring-1 backdrop-blur md:px-8"
+        className="motion-d3 mx-auto mt-5 max-w-[560px] rounded-[2rem] px-6 py-6 ring-1 backdrop-blur md:px-8"
         style={{ background: `${accent}08`, borderColor: `${accent}22` }}
       >
         <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.24em]" style={{ color: accent }}>
-          {t('rc.why', { name: best.career.name })}
+          {t('rc.why', { name: bestName })}
         </p>
         <ul className="flex flex-col gap-2.5">
           {best.reasons.map((reason, i) => (

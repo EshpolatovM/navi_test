@@ -338,10 +338,6 @@ const { w, h } = geo
         {orbitNodes}
         {tileNodes}
       </div>
-
-      <p className="mt-4 hidden text-center text-[12px] font-medium text-slate-400 lg:block">
-        {t('scene.footer')}
-      </p>
     </div>
   )
 }

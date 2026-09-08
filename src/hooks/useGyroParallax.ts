@@ -12,7 +12,7 @@ function gyroCapable(): boolean {
   if (typeof window === 'undefined') return false
   if (!('DeviceOrientationEvent' in window)) return false
   const mq = (q: string) => (window.matchMedia ? window.matchMedia(q).matches : false)
-  return mq('(pointer: coarse)') && mq('(max-width: 1023px)') && !mq('(prefers-reduced-motion: reduce)')
+  return mq('(pointer: coarse)') && !mq('(prefers-reduced-motion: reduce)')
 }
 
 // Force needed for a "fast shake" (~1.4g sustained over a couple of readings).
@@ -53,6 +53,8 @@ export function useGyroParallax() {
     last: 0,
     enabled: false,
     gyroEnabled: false,
+    granted: false,
+    motionOn: true,
     reduced: false,
     streak: 0,
     lastShake: 0,
@@ -94,7 +96,7 @@ export function useGyroParallax() {
 
   const onPointer = (e: PointerEvent) => {
     const s = st.current
-    if (s.reduced || s.gyroEnabled) return
+    if (s.reduced || !s.motionOn || s.gyroEnabled) return
     if (e.pointerType === 'touch' && s.gyroEnabled) return
     const w = window.innerWidth || 1
     const h = window.innerHeight || 1
@@ -106,7 +108,7 @@ export function useGyroParallax() {
 
   const onLeave = () => {
     const s = st.current
-    if (s.reduced) return
+    if (s.reduced || !s.motionOn) return
     s.target.x = 0
     s.target.y = 0
     ensureLoop()
@@ -141,6 +143,7 @@ export function useGyroParallax() {
     if (s.enabled) return
     s.enabled = true
     s.gyroEnabled = true
+    s.granted = true
     write(0, 0)
     window.addEventListener('deviceorientation', onOrient)
     window.addEventListener('devicemotion', onMotion)
@@ -172,6 +175,13 @@ export function useGyroParallax() {
     document.documentElement.addEventListener('mouseleave', onLeave)
     window.addEventListener('blur', onLeave)
 
+    // First tap anywhere also tries to unlock gyro (iOS needs a real gesture).
+    const boot = () => {
+      if (st.current.motionOn) void enable()
+    }
+    window.addEventListener('pointerdown', boot, { once: true })
+    window.addEventListener('touchstart', boot, { once: true, passive: true })
+
     const mql = window.matchMedia('(prefers-reduced-motion: reduce)')
     const onPref = () => {
       s.reduced = mql.matches
@@ -195,6 +205,8 @@ export function useGyroParallax() {
       window.removeEventListener('pointercancel', onLeave)
       document.documentElement.removeEventListener('mouseleave', onLeave)
       window.removeEventListener('blur', onLeave)
+      window.removeEventListener('pointerdown', boot)
+      window.removeEventListener('touchstart', boot)
       mql.removeEventListener('change', onPref)
       window.removeEventListener('resize', onRe)
       stop()
@@ -204,7 +216,7 @@ export function useGyroParallax() {
 
   const enable = async (): Promise<boolean> => {
     if (st.current.enabled) return true
-    if (!gyroCapable()) return false
+    if (!st.current.motionOn || !gyroCapable()) return false
     const DOE = window.DeviceOrientationEvent as typeof window.DeviceOrientationEvent & {
       requestPermission?: () => Promise<string>
     }
@@ -225,5 +237,27 @@ export function useGyroParallax() {
     return true
   }
 
-  return { active, enable }
+  // Global Motion setting: keeps the whole system (gyro + parallax + floats)
+  // suspended while OFF; remembers the granted device state so re-enabling is
+  // seamless. Hover/press effects and entrance animations are untouched.
+  const setMotion = (on: boolean) => {
+    const s = st.current
+    if (on === s.motionOn) return
+    s.motionOn = on
+    if (on) {
+      if (s.granted) start()
+      else ensureLoop()
+    } else {
+      if (s.enabled) stop()
+      else {
+        if (s.raf) cancelAnimationFrame(s.raf)
+        s.raf = 0
+        s.smooth = { x: 0, y: 0 }
+        s.target = { x: 0, y: 0 }
+        write(0, 0)
+      }
+    }
+  }
+
+  return { active, enable, setMotion }
 }

@@ -147,6 +147,8 @@ function InterestResult({
   const first = DIMS[top[0]]
   const second = DIMS[top[1]]
   const accent = first.color
+  const firstAdj = t(`dim.${first.key}.keyAdj`)
+  const firstPhrase = t(`dim.${first.key}.phrase`)
 
   const ordered = [0, 1, 2, 3, 4, 5].sort((a, b) => scores[b] - scores[a] || a - b)
 
@@ -179,7 +181,7 @@ function InterestResult({
           {first.key} · {t(`dim.${first.key}.short`)}
         </h2>
         <p className="mx-auto mt-2 max-w-sm text-[14px] leading-relaxed text-slate-500">
-          {t('ir.para', { adj: first.keyAdj, phrase: first.phrase })}
+          {t('ir.para', { adj: firstAdj, phrase: firstPhrase })}
           {top[1] !== top[0] && ` ${t('ir.para2', { short: t(`dim.${second.key}.short`).toLowerCase() })}`}
         </p>
 

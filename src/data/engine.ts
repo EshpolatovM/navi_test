@@ -1,3 +1,5 @@
+import { translate, type Lang } from '../lib/i18n'
+import { careerName } from '../lib/qa'
 import { CAREERS, type CareerProfile } from './careers'
 import { QUESTIONS } from './questions'
 import { DIMS } from './riasec'
@@ -39,7 +41,7 @@ function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v))
 }
 
-function generateReasons(career: CareerProfile, profile: Riaset): string[] {
+function generateReasons(career: CareerProfile, profile: Riaset, lang: Lang): string[] {
   const top2 = [0, 1, 2, 3, 4, 5]
     .sort((a, b) => profile[b] - profile[a])
     .slice(0, 2)
@@ -47,14 +49,7 @@ function generateReasons(career: CareerProfile, profile: Riaset): string[] {
   const d1 = DIMS[top2[0]]
   const d2 = DIMS[top2[1]]
 
-  const reasons: string[] = []
-
-  // Reason 1: user's strongest interest
-  reasons.push(
-    `Sizning javoblaringiz ${d1.name} ishiga kuchli moyillikni ko\u2018rsatadi \u2014 ${d1.phrase}.`,
-  )
-
-  // Reason 2: career matches top dimension
+  // Reason 2: career matches top dimensions
   const careerTop = [0, 1, 2, 3, 4, 5]
     .sort((a, b) => career.riasec[b] - career.riasec[a])
     .slice(0, 2)
@@ -62,24 +57,35 @@ function generateReasons(career: CareerProfile, profile: Riaset): string[] {
   const cd1 = DIMS[careerTop[0]]
   const cd2 = DIMS[careerTop[1]]
 
-  reasons.push(
-    `${career.name} — ${cd1.name} va ${cd2.name} kuchli tomonlariga qurilgan; sizning profilingiz buni aks ettiradi.`,
-  )
+  const name = translate(lang, 'rc.reason1', {
+    d1: translate(lang, `dim.${d1.key}.name`),
+    p1: translate(lang, `dim.${d1.key}.phrase`),
+  })
 
-  // Reason 3: second user dimension
-  reasons.push(
-    `Ikkinchi kuchli signalingiz ${d2.name}: ${d2.phrase}, bu yo\u2018nalish buni qadrlaydi.`,
-  )
+  const matching = translate(lang, 'rc.reason2', {
+    name: careerName(career.id, lang) ?? career.name,
+    cd1: translate(lang, `dim.${cd1.key}.name`),
+    cd2: translate(lang, `dim.${cd2.key}.name`),
+  })
 
-  // Reason 4: summary
-  reasons.push(
-    `Barcha ${QUESTIONS.length} javobda sizning tanlovlaringiz ${d1.keyAdj} va ${d2.keyAdj} ishga ishora qiladi.`,
-  )
+  const second = translate(lang, 'rc.reason3', {
+    d2: translate(lang, `dim.${d2.key}.name`),
+    p2: translate(lang, `dim.${d2.key}.phrase`),
+  })
 
-  return reasons
+  const summary = translate(lang, 'rc.reason4', {
+    n: QUESTIONS.length,
+    kj1: translate(lang, `dim.${d1.key}.keyAdj`),
+    kj2: translate(lang, `dim.${d2.key}.keyAdj`),
+  })
+
+  return [name, matching, second, summary]
 }
 
-export function computeResult(answers: number[]): {
+export function computeResult(
+  answers: number[],
+  lang: Lang = 'uz',
+): {
   profile: Riaset
   ranked: CareerMatch[]
   best: CareerMatch
@@ -101,7 +107,7 @@ export function computeResult(answers: number[]): {
   const ranked = CAREERS.map((career) => {
     const cos = centeredCosine(profile, career.riasec)
     const score = clamp(Math.round(100 * cos), 3, 99)
-    const reasons = generateReasons(career, profile)
+    const reasons = generateReasons(career, profile, lang)
     return { career, score, reasons }
   })
     .sort((a, b) => b.score - a.score || a.career.name.localeCompare(b.career.name))

@@ -1,5 +1,4 @@
 import { ArrowRight, Compass, RotateCcw } from 'lucide-react'
-import { CAREERS, DIMS, INTEREST_COUNT, QUESTIONS, STAGES } from '../data'
 import { useSettings } from './SettingsContext'
 
 export type AssessmentMode = 'interest' | 'career'
@@ -15,7 +14,6 @@ function ModeCard({
   subtitle,
   badge,
   icon,
-  chips,
   cta,
   onSelect,
   delay,
@@ -25,7 +23,6 @@ function ModeCard({
   subtitle: string
   badge: string
   icon: React.ReactNode
-  chips: React.ReactNode
   cta: string
   onSelect: () => void
   delay: number
@@ -33,7 +30,7 @@ function ModeCard({
 }) {
   return (
     <div
-      className="surface-card motion-pan-s animate-slide-up flex flex-col rounded-3xl bg-[var(--surface-elevated)] p-6 text-left backdrop-blur hover:-translate-y-1 md:p-7"
+      className="surface-card motion-d1 animate-slide-up flex flex-col rounded-3xl bg-[var(--surface-elevated)] p-6 text-left backdrop-blur hover:-translate-y-1 md:p-7"
       style={{ animationDelay: `${delay}ms` }}
     >
       <span
@@ -48,7 +45,7 @@ function ModeCard({
         {badge}
       </span>
 
-      <div className="mt-4 flex min-h-[3.5rem] items-center gap-4">
+      <div className="mt-4 flex items-center gap-4">
         <span
           className="grid size-14 shrink-0 place-items-center rounded-2xl text-white"
           style={{
@@ -62,13 +59,11 @@ function ModeCard({
           <h2 className="font-display text-[19px] font-bold leading-tight tracking-[-0.01em] text-slate-900 md:text-[21px] md:leading-snug">
             {title}
           </h2>
-          <p className="mt-0.5 min-h-[3.25rem] text-[12px] leading-snug font-semibold text-slate-500">
+          <p className="mt-0.5 text-[12px] leading-snug font-semibold text-slate-500">
             {subtitle}
           </p>
         </div>
       </div>
-
-      <div className="mt-4 min-h-[3.5rem]">{chips}</div>
 
       <div className="mt-auto pt-6">
         <button
@@ -103,7 +98,7 @@ function SplashScreen({
     <div className="animate-question-in mx-auto w-full max-w-[1040px] px-1">
       <div className="mb-7 text-center">
         <div
-          className="animate-bubble-in mx-auto mb-4 grid size-14 place-items-center rounded-2xl bg-[var(--surface-elevated)] text-slate-900 shadow-[0_12px_28px_-10px_rgba(30,41,59,0.4)] ring-1 backdrop-blur md:size-16"
+          className="animate-bubble-in float-road mx-auto mb-4 grid size-14 place-items-center rounded-2xl bg-[var(--surface-elevated)] text-slate-900 shadow-[0_12px_28px_-10px_rgba(30,41,59,0.4)] ring-1 backdrop-blur md:size-16"
           style={{ borderColor: 'var(--border)' }}
         >
           <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -124,22 +119,6 @@ function SplashScreen({
           subtitle={t('card.interest.sub')}
           badge={interest?.finished ? t('card.result') : interest ? t('card.resume', { n: interest.answered, total: interest.total }) : t('card.interest.badge')}
           icon={<Compass style={{ width: 30, height: 30 }} strokeWidth={2.1} />}
-          chips={
-            <div className="flex flex-wrap items-center gap-1.5">
-              {DIMS.map((d, i) => (
-                <span
-                  key={d.key}
-                  className="animate-slide-up inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 ring-1"
-                  style={{ background: `${d.color}0d`, borderColor: `${d.color}33`, animationDelay: `${200 + i * 60}ms` }}
-                >
-                  <span className="font-display text-[10px] font-bold" style={{ color: d.color }}>
-                    {d.key}
-                  </span>
-                  <span className="text-[11px] font-semibold text-slate-600">{t(`dim.${d.key}.short`)}</span>
-                </span>
-              ))}
-            </div>
-          }
           cta={t('card.cta')}
           onSelect={() => onSelect('interest')}
           delay={150}
@@ -155,36 +134,11 @@ function SplashScreen({
               <path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18" />
             </svg>
           }
-          chips={
-            <div className="flex flex-wrap items-center gap-1.5">
-              {STAGES.map((s, i) => (
-                <span
-                  key={s.key}
-                  className="animate-slide-up inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 ring-1"
-                  style={{ background: 'var(--accent-tint)', borderColor: 'var(--accent-ring)', animationDelay: `${200 + i * 70}ms` }}
-                >
-                  <span className="grid size-4 place-items-center rounded-full text-white" style={{ background: 'var(--accent)' }}>
-                    <s.icon style={{ width: 9, height: 9 }} strokeWidth={2.6} />
-                  </span>
-                  <span className="text-[10px] font-bold tracking-[0.06em] text-slate-600">{t(`stage.${s.key}`)}</span>
-                </span>
-              ))}
-            </div>
-          }
           cta={t('card.cta')}
           onSelect={() => onSelect('career')}
           delay={220}
           isResume={career !== null}
         />
-      </div>
-
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-center">
-        <span className="rounded-full px-3.5 py-1.5 text-[11px] font-semibold text-slate-500 ring-1 ring-slate-200">
-          {t('splash.chip.interest', { n: INTEREST_COUNT })}
-        </span>
-        <span className="rounded-full px-3.5 py-1.5 text-[11px] font-semibold text-slate-500 ring-1 ring-slate-200">
-          {t('splash.chip.career', { n: QUESTIONS.length, m: CAREERS.length })}
-        </span>
       </div>
     </div>
   )

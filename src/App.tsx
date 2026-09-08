@@ -10,10 +10,11 @@ import Onboarding from './components/Onboarding'
 import SetupModal from './components/SetupModal'
 import { useSettings } from './components/SettingsContext'
 import { useGyroParallax } from './hooks/useGyroParallax'
+import { localizeCareer, localizeInterest } from './lib/qa'
 import { INTEREST_COUNT, INTEREST_QUESTIONS, QUESTIONS, buildStageModel } from './data'
 
 function App() {
-  const { t, onboarded } = useSettings()
+  const { t, onboarded, lang, motionEnabled } = useSettings()
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [mode, setMode] = useState<AssessmentMode | null>(null)
 
@@ -34,6 +35,10 @@ function App() {
   const gyro = useGyroParallax()
 
   useEffect(() => {
+    gyro.setMotion(motionEnabled)
+  }, [motionEnabled, gyro])
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!(e.ctrlKey && e.altKey && (e.key === 'b' || e.key === 'B'))) return
       e.preventDefault()
@@ -47,8 +52,8 @@ function App() {
     return () => window.removeEventListener('keydown', onKey)
   }, [])
 
-  const careerCurrent = QUESTIONS[careerIndex]
-  const interestQ = INTEREST_QUESTIONS[interestIndex]
+  const careerCurrent = localizeCareer(QUESTIONS[careerIndex], lang)
+  const interestQ = localizeInterest(INTEREST_QUESTIONS[interestIndex], lang)
 
   const handleCareerAnswer = (optionIndex: number) => {
     const next = [...careerAnswers]

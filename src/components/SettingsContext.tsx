@@ -8,12 +8,14 @@ interface Settings {
   theme: ThemeMode
   accent: string
   onboarded: boolean
+  motionEnabled: boolean
 }
 
 interface SettingsApi extends Settings {
   setLang: (l: Lang) => void
   setTheme: (t: ThemeMode) => void
   setAccent: (a: string) => void
+  setMotionEnabled: (on: boolean) => void
   completeOnboarding: () => void
   t: (key: string, vars?: Record<string, string | number>) => string
 }
@@ -23,6 +25,7 @@ const K = {
   theme: 'selectedTheme',
   accent: 'selectedAccentColor',
   onboarded: 'onboardingCompleted',
+  motion: 'motionEnabled',
 }
 
 const DEFAULT_ACCENT = '#3B7BEC'
@@ -48,10 +51,15 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   )
   const [accent, setAccentState] = useState<string>(() => read(K.accent, DEFAULT_ACCENT))
   const [onboarded, setOnboarded] = useState<boolean>(() => read<string>(K.onboarded, '0') === '1')
+  const [motionEnabled, setMotionEnabledState] = useState<boolean>(() => read<string>(K.motion, '1') === '1')
 
   useEffect(() => {
     applyTheme(theme, accent)
   }, [theme, accent])
+
+  useEffect(() => {
+    document.documentElement.dataset.motion = motionEnabled ? 'on' : 'off'
+  }, [motionEnabled])
 
   const api = useMemo<SettingsApi>(
     () => ({
@@ -59,6 +67,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       theme,
       accent,
       onboarded,
+      motionEnabled,
       setLang: (l) => {
         setLangState(l)
         try {
@@ -91,9 +100,17 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           /* private mode */
         }
       },
+      setMotionEnabled: (on) => {
+        setMotionEnabledState(on)
+        try {
+          localStorage.setItem(K.motion, on ? '1' : '0')
+        } catch {
+          /* private mode */
+        }
+      },
       t: (key, vars) => translate(lang, key, vars),
     }),
-    [lang, theme, accent, onboarded],
+    [lang, theme, accent, onboarded, motionEnabled],
   )
 
   return <Ctx.Provider value={api}>{children}</Ctx.Provider>

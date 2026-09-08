@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Check } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, ChevronDown } from 'lucide-react'
 import { LANGS } from '../lib/i18n'
-import { ACCENT_PALETTE } from '../lib/theme'
+import { ACCENT_EXTENDED, ACCENT_PALETTE } from '../lib/theme'
 import { useSettings } from './SettingsContext'
 
 const STEPS = ['lang', 'theme', 'color'] as const
@@ -41,6 +41,7 @@ function Onboarding() {
   const { lang, theme, accent, t, setLang, setTheme, setAccent, completeOnboarding } = useSettings()
   const [step, setStep] = useState<Step>('lang')
   const [pickedColor, setPickedColor] = useState<string | null>(accent)
+  const [showMore, setShowMore] = useState(false)
   const stepIdx = STEPS.indexOf(step)
 
   const go = (next: Step) => setStep(next)
@@ -201,8 +202,10 @@ function Onboarding() {
               </div>
             </div>
 
-            <div className="grid grid-cols-5 justify-items-center gap-3">
-              {ACCENT_PALETTE.map((p) => {
+            <div
+              className={`grid justify-items-center gap-3 ${showMore ? 'grid-cols-6' : 'grid-cols-6'}`}
+            >
+              {[...ACCENT_PALETTE, ...(showMore ? ACCENT_EXTENDED : [])].map((p) => {
                 const active = pickedColor === p.hex || (pickedColor === null && accent === p.hex)
                 return (
                   <button
@@ -213,19 +216,34 @@ function Onboarding() {
                       setAccent(p.hex)
                       setPickedColor(p.hex)
                     }}
-                    className="relative grid size-12 place-items-center rounded-full transition-transform duration-200 hover:scale-110 focus-visible:scale-105"
+                    className={`relative place-items-center rounded-full transition-transform duration-200 hover:scale-110 focus-visible:scale-105 active:scale-95 ${
+                      showMore ? 'grid size-10' : 'grid size-12'
+                    } ${showMore ? 'animate-fade-in' : ''}`}
                     style={{
-                      background: `linear-gradient(135deg, ${p.hex}, ${p.hex})`,
+                      background: p.hex,
                       boxShadow: active
                         ? `0 0 0 3px var(--surface-elevated), 0 0 0 6px ${p.hex}66`
                         : '0 6px 16px -6px rgba(0,0,0,0.35)',
                     }}
                   >
-                    {active && <Check className="size-5 text-white" strokeWidth={3.2} />}
+                    {active && <Check className={`text-white ${showMore ? 'size-4' : 'size-5'}`} strokeWidth={3.2} />}
                   </button>
                 )
               })}
             </div>
+
+            <button
+              type="button"
+              onClick={() => setShowMore((v) => !v)}
+              className="mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-[12px] font-bold text-slate-500 ring-1 transition-colors hover:text-slate-800"
+              style={{ borderColor: 'var(--border)' }}
+            >
+              {t('settings.more')}
+              <ChevronDown
+                className="size-3.5 transition-transform duration-200"
+                style={{ transform: showMore ? 'rotate(180deg)' : 'none' }}
+              />
+            </button>
 
             <div className="mt-auto pt-8">
               <button

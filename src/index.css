@@ -682,6 +682,39 @@ h3 {
   animation: float-road 11s ease-in-out 1.4s infinite;
 }
 
+/* Fine-grained parallax depth for static cards/panels. Uses the individual
+   translate property, so it stacks with entrance animations AND leaves
+   Tailwind's translate utilities (hover lifts, centering) intact — depth
+   simply adds a few pixels on top. */
+.motion-d1 {
+  translate: calc(var(--mx) * 1.2px) calc(var(--my) * 1px);
+}
+.motion-d2 {
+  translate: calc(var(--mx) * 2px) calc(var(--my) * 1.6px);
+}
+.motion-d3 {
+  translate: calc(var(--mx) * 3px) calc(var(--my) * 2.4px);
+}
+.motion-d4 {
+  translate: calc(var(--mx) * 4.4px) calc(var(--my) * 3.4px);
+}
+.motion-d5 {
+  translate: calc(var(--mx) * 6px) calc(var(--my) * 4.6px);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s ease both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-card-in,
   .animate-question-in,
@@ -694,6 +727,7 @@ h3 {
   .animate-bubble-in,
   .animate-slide-up,
   .animate-grow-x,
+  .animate-fade-in,
   .mark-float,
   .animate-scene-in,
   .animate-scene-out,
@@ -714,9 +748,59 @@ h3 {
   .motion-tray,
   .motion-pan-m,
   .motion-pan-s,
+  .motion-d1,
+  .motion-d2,
+  .motion-d3,
+  .motion-d4,
+  .motion-d5,
   .float-road {
     transform: none !important;
     translate: none !important;
     animation: none !important;
   }
+}
+
+/* Manual Motion OFF (settings) — same outcome, driven by the settings toggle
+   instead of the OS preference. */
+html[data-motion='off'] .animate-card-in,
+html[data-motion='off'] .animate-question-in,
+html[data-motion='off'] .animate-option-in,
+html[data-motion='off'] .animate-shake,
+html[data-motion='off'] .animate-pop-in,
+html[data-motion='off'] .animate-blob,
+html[data-motion='off'] .animate-drift,
+html[data-motion='off'] .animate-aura,
+html[data-motion='off'] .animate-bubble-in,
+html[data-motion='off'] .animate-slide-up,
+html[data-motion='off'] .animate-grow-x,
+html[data-motion='off'] .animate-fade-in,
+html[data-motion='off'] .mark-float,
+html[data-motion='off'] .animate-scene-in,
+html[data-motion='off'] .animate-scene-out,
+html[data-motion='off'] .animate-bubble-pop,
+html[data-motion='off'] .animate-bubble-float,
+html[data-motion='off'] .animate-node-in,
+html[data-motion='off'] .animate-node-float,
+html[data-motion='off'] .animate-bg-blob-in,
+html[data-motion='off'] .animate-bg-blob-out,
+html[data-motion='off'] .animate-progress-glow,
+html[data-motion='off'] .animate-ring-pulse {
+  animation: none;
+}
+
+html[data-motion='off'] .motion-glow,
+html[data-motion='off'] .motion-edge,
+html[data-motion='off'] .motion-ui,
+html[data-motion='off'] .motion-tray,
+html[data-motion='off'] .motion-pan-m,
+html[data-motion='off'] .motion-pan-s,
+html[data-motion='off'] .motion-d1,
+html[data-motion='off'] .motion-d2,
+html[data-motion='off'] .motion-d3,
+html[data-motion='off'] .motion-d4,
+html[data-motion='off'] .motion-d5,
+html[data-motion='off'] .float-road {
+  transform: none !important;
+  translate: none !important;
+  animation: none !important;
 }

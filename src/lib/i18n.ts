@@ -30,6 +30,10 @@ const uz: Dict = {
   'settings.theme.light': 'Yorug\u2018',
   'settings.theme.dark': 'Qorong\u2018i',
   'settings.accent': 'Akcent rang',
+  'settings.motion': 'Harakat effektlari',
+  'settings.motion.on': 'YOQIQ',
+  'settings.motion.off': 'O\u2018CHIRILGAN',
+  'settings.more': 'Ko\u2018proq ranglar',
   'settings.close': 'Yopish',
   'theme.toDark': 'Qorong\u2018i rejimga o\u2018tish',
   'theme.toLight': 'Yorug\u2018 rejimga o\u2018tish',
@@ -66,8 +70,6 @@ const uz: Dict = {
   'prog.savol': 'SAVOL',
 
   'scene.hint': 'O\u2018zingni eng ko\u2018p o\u2018ziga tortganini tanla',
-  'scene.footer':
-    'G\u2018oyalar orasida erkin harakatlan — konstellyatsiya javob beradi. Birini tanla, u seni oldinga olib borsin.',
 
   'ir.top': 'Javoblaringiz asosida qiziqish yo\u2018nalishingiz aniqlandi',
   'ir.profile': 'Sizning RIASEC profilingiz',
@@ -92,6 +94,11 @@ const uz: Dict = {
   'rc.why': 'Nega aynan {name}?',
   'rc.restart': 'Yana kashf qilish',
   'rc.note': 'Kasb yo\u2018nalishi — bu kashf qilish uchun boshlanish nuqtasi, siz haqingizdagi hukm emas.',
+  'rc.reason1': 'Sizning javoblaringiz {d1} ishiga kuchli moyillikni ko\u2018rsatadi \u2014 {p1}.',
+  'rc.reason2':
+    '{name} \u2014 {cd1} va {cd2} kuchli tomonlariga qurilgan; sizning profilingiz buni aks ettiradi.',
+  'rc.reason3': 'Ikkinchi kuchli signalingiz {d2}: {p2}, bu yo\u2018nalish buni qadrlaydi.',
+  'rc.reason4': 'Barcha {n} javobda sizning tanlovlaringiz {kj1} va {kj2} ishga ishora qiladi.',
 
   'stage.BOSHLASH': 'BOSHLASH',
   'stage.QIZIQISHLAR': 'QIZIQISHLAR',
@@ -102,16 +109,30 @@ const uz: Dict = {
 
   'dim.R.name': 'Amaliy (Realistik)',
   'dim.R.short': 'Amaliy',
+  'dim.R.phrase':
+    'asbob-uskunalar, materiallar, mashinalar va real jismoniy narsalar bilan ishlashni',
+  'dim.R.keyAdj': 'amaliy va mohir',
   'dim.I.name': 'Izlanuvchan (Analitik)',
   'dim.I.short': 'Izlanuvchan',
+  'dim.I.phrase': 'tahlil qilish, tadqiq qilish va narsalarning qanday ishlashini aniqlashni',
+  'dim.I.keyAdj': 'tahliliy va izlanuvchan',
   'dim.A.name': 'Ijodiy (Artistik)',
   'dim.A.short': 'Ijodiy',
+  'dim.A.phrase': 'dizayn qilish, yaratish va original g\u2018oyalarni ifoda etishni',
+  'dim.A.keyAdj': 'ijodiy va ifodali',
   'dim.S.name': 'Ijtimoiy',
   'dim.S.short': 'Ijtimoiy',
+  'dim.S.phrase':
+    'odamlarga yordam berish, ta\u2019lim berish va ular bilan muloqot qilishni',
+  'dim.S.keyAdj': 'odamlarga yo\u2018naltirilgan',
   'dim.E.name': 'Tadbirkor',
   'dim.E.short': 'Tadbirkor',
+  'dim.E.phrase': 'rahbarlik qilish, ishontirish va katta maqsadlarga erishishni',
+  'dim.E.keyAdj': 'tadbirkor va natijaga intiluvchan',
   'dim.C.name': 'Tartibli (Konventsional)',
   'dim.C.short': 'Tartibli',
+  'dim.C.phrase': 'tartibga solish, rejalashtirish va aniq izchillikni saqlashni',
+  'dim.C.keyAdj': 'tartibli va sinchkov',
 }
 
 const ru: Dict = {
@@ -132,6 +153,10 @@ const ru: Dict = {
   'settings.theme.light': 'Светлое',
   'settings.theme.dark': 'Тёмное',
   'settings.accent': 'Акцентный цвет',
+  'settings.motion': 'Эффекты движения',
+  'settings.motion.on': 'ВКЛ',
+  'settings.motion.off': 'ВЫКЛ',
+  'settings.more': 'Больше цветов',
   'settings.close': 'Закрыть',
   'theme.toDark': 'Тёмная тема',
   'theme.toLight': 'Светлая тема',
@@ -168,8 +193,6 @@ const ru: Dict = {
   'prog.savol': 'ВОПРОС',
 
   'scene.hint': 'Выбери то, что привлекает больше всего',
-  'scene.footer':
-    'Двигайся свободно среди идей — созвездие ответит. Выбери одну, она поведёт тебя дальше.',
 
   'ir.top': 'На основе ответов определён ваш интерес',
   'ir.profile': 'Ваш RIASEC-профиль',
@@ -194,6 +217,10 @@ const ru: Dict = {
   'rc.why': 'Почему именно {name}?',
   'rc.restart': 'Открыть заново',
   'rc.note': 'Направление профессии — это отправная точка для открытия, а не приговор о вас.',
+  'rc.reason1': 'Ваши ответы показывают сильную склонность к {d1} \u2014 {p1}.',
+  'rc.reason2': '{name} построена на сильных сторонах {cd1} и {cd2}; ваш профиль это отражает.',
+  'rc.reason3': 'Ваш второй сильный сигнал \u2014 {d2}: {p2}; это направление ценит его.',
+  'rc.reason4': 'Во всех {n} ответах ваши выборы указывают на {kj1} и {kj2} работу.',
 
   'stage.BOSHLASH': 'СТАРТ',
   'stage.QIZIQISHLAR': 'ИНТЕРЕСЫ',
@@ -204,16 +231,29 @@ const ru: Dict = {
 
   'dim.R.name': 'Практический (Реалистический)',
   'dim.R.short': 'Практический',
+  'dim.R.phrase':
+    'работать с инструментами, материалами, машинами и реальными физическими объектами',
+  'dim.R.keyAdj': 'практичный и умелый',
   'dim.I.name': 'Исследовательский (Аналитический)',
   'dim.I.short': 'Исследовательский',
+  'dim.I.phrase': 'анализировать, исследовать и понимать, как устроены вещи',
+  'dim.I.keyAdj': 'аналитический и любознательный',
   'dim.A.name': 'Творческий (Артистический)',
   'dim.A.short': 'Творческий',
+  'dim.A.phrase': 'создавать, проектировать и выражать оригинальные идеи',
+  'dim.A.keyAdj': 'творческий и выразительный',
   'dim.S.name': 'Социальный',
   'dim.S.short': 'Социальный',
+  'dim.S.phrase': 'помогать людям, обучать и общаться с ними',
+  'dim.S.keyAdj': 'ориентированный на людей',
   'dim.E.name': 'Предприимчивый',
   'dim.E.short': 'Предприимчивый',
+  'dim.E.phrase': 'руководить, убеждать и достигать больших целей',
+  'dim.E.keyAdj': 'предприимчивый и нацеленный на результат',
   'dim.C.name': 'Конвенциональный (Упорядоченный)',
   'dim.C.short': 'Упорядоченный',
+  'dim.C.phrase': 'наводить порядок, планировать и поддерживать точную последовательность',
+  'dim.C.keyAdj': 'упорядоченный и внимательный',
 }
 
 const en: Dict = {
@@ -234,6 +274,10 @@ const en: Dict = {
   'settings.theme.light': 'Light',
   'settings.theme.dark': 'Dark',
   'settings.accent': 'Accent color',
+  'settings.motion': 'Motion effects',
+  'settings.motion.on': 'ON',
+  'settings.motion.off': 'OFF',
+  'settings.more': 'More colors',
   'settings.close': 'Close',
   'theme.toDark': 'Switch to dark theme',
   'theme.toLight': 'Switch to light theme',
@@ -270,8 +314,6 @@ const en: Dict = {
   'prog.savol': 'QUESTION',
 
   'scene.hint': 'Pick what draws you in the most',
-  'scene.footer':
-    'Move freely among the ideas — the constellation will respond. Choose one, and let it lead you forward.',
 
   'ir.top': 'Your interest direction was identified from your answers',
   'ir.profile': 'Your RIASEC profile',
@@ -296,6 +338,10 @@ const en: Dict = {
   'rc.why': 'Why {name}?',
   'rc.restart': 'Explore again',
   'rc.note': 'A career path is a starting point for discovery, not a verdict about you.',
+  'rc.reason1': 'Your answers show a strong pull toward {d1} \u2014 {p1}.',
+  'rc.reason2': '{name} is built on strong {cd1} and {cd2}; your profile reflects that.',
+  'rc.reason3': 'Your second strongest signal is {d2}: {p2}, and this path values it.',
+  'rc.reason4': 'Across all {n} answers, your choices point to {kj1} and {kj2} work.',
 
   'stage.BOSHLASH': 'START',
   'stage.QIZIQISHLAR': 'INTERESTS',
@@ -306,16 +352,29 @@ const en: Dict = {
 
   'dim.R.name': 'Practical (Realistic)',
   'dim.R.short': 'Practical',
+  'dim.R.phrase':
+    'working with tools, materials, machines and real physical objects',
+  'dim.R.keyAdj': 'practical and skilled',
   'dim.I.name': 'Investigative (Analytic)',
   'dim.I.short': 'Investigative',
+  'dim.I.phrase': 'analysing, researching and figuring out how things work',
+  'dim.I.keyAdj': 'analytical and inquisitive',
   'dim.A.name': 'Artistic',
   'dim.A.short': 'Artistic',
+  'dim.A.phrase': 'designing, creating and expressing original ideas',
+  'dim.A.keyAdj': 'creative and expressive',
   'dim.S.name': 'Social',
   'dim.S.short': 'Social',
+  'dim.S.phrase': 'helping people, teaching and connecting with them',
+  'dim.S.keyAdj': 'people-oriented',
   'dim.E.name': 'Enterprising',
   'dim.E.short': 'Enterprising',
+  'dim.E.phrase': 'leading, persuading and reaching big goals',
+  'dim.E.keyAdj': 'enterprising and results-driven',
   'dim.C.name': 'Conventional (Orderly)',
   'dim.C.short': 'Orderly',
+  'dim.C.phrase': 'organising, planning and keeping precise order',
+  'dim.C.keyAdj': 'orderly and meticulous',
 }
 
 const dicts: Record<Lang, Dict> = { uz, ru, en }
