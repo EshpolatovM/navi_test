@@ -96,6 +96,18 @@ function QuestionScene({
   // Difficulty-tuned tone: easy → soft & airy, hard → rich & defined.
   const tone = toneFor(accent, question.difficulty)
 
+  // Adaptive question-text sizing: the longer the question, the more compact
+  // the font, so the bubble never balloons. Bucket by real text length.
+  const qlen = question.q.length
+  const textSize =
+    qlen <= 45
+      ? 'question-text-short'
+      : qlen <= 80
+        ? 'question-text-medium'
+        : qlen <= 120
+          ? 'question-text-long'
+          : 'question-text-extra-long'
+
   // Stage for this question, derived from the actual question array.
   const boundary =
     stageModel.boundaries.find((s) => index + 1 >= s.from && index + 1 <= s.to) ??
@@ -180,7 +192,7 @@ const { w, h } = geo
             style={{ width: 14, height: 14, color: tone.soft }}
             strokeWidth={2.2}
           />
-          <p className="pt-2.5 text-[1.12rem] leading-[1.3] font-bold tracking-[-0.01em] text-slate-800 md:pt-5 md:text-[1.5625rem] md:leading-[1.32] max-[359px]:text-[1.06rem]">
+          <p className={`${textSize} pt-2.5 font-bold tracking-[-0.01em] text-slate-800 md:pt-5`}>
             {question.q}
           </p>
           <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-400 md:mt-3 md:text-[10px] max-[359px]:hidden">
