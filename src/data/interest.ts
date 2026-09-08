@@ -1,11 +1,16 @@
 // O*NET Interest Profiler-grounded interest assessment.
 //
-// Adapted from O*NET Interest Profiler / RIASEC activity concepts, reworded
-// as simple everyday situations in Uzbek. NOT the official O*NET assessment —
-// an adapted, O*NET-grounded interest inventory.
+// Adapted from O*NET Interest Profiler / RIASEC activity concepts, reworded as
+// simple everyday situations for 11–14 year olds. NOT the official O*NET
+// assessment — an adapted, O*NET-grounded interest inventory.
 //
-// Six dimensions (RIASEC order): R, I, A, S, E, C.
-// Every item is answered on the same six-point interest scale.
+// Every question reuses the exact same QuizLab QuizQuestion shape and the same
+// six-point interest scale as its answer set, so the existing QuestionScene +
+// AnswerNode rendering is reused 1:1 without any new answer layout.
+
+import type { Option, QuizQuestion, Riaset } from './types'
+import { DIMS } from './riasec'
+import { stageAt } from './stages'
 
 export interface InterestItem {
   id: number
@@ -13,8 +18,9 @@ export interface InterestItem {
   dim: number
 }
 
-// Interest scale shown on every question (strongest first). Weight = 5 - index
-// on the screen, so "Juda qiziqaman" contributes 5 and "Umuman" contributes 0.
+// The six-point interest scale shown on every question (strongest first).
+// Scoring weight = 5 - index, so "Juda qiziqaman" contributes 5 and
+// "Umuman qiziqmayman" contributes 0.
 export const INTEREST_LEVELS = [
   'Juda qiziqaman',
   'Qiziqaman',
@@ -24,48 +30,72 @@ export const INTEREST_LEVELS = [
   'Umuman qiziqmayman',
 ]
 
-// Four everyday-situation items per dimension (R, I, A, S, E, C).
+// Single-dimension weight vector used as the answer option weight, so the
+// AnswerNode badge picks the icon of the dimension the question measures.
+const DIM_WEIGHT: Riaset[] = [
+  [2, 0, 0, 0, 0, 0],
+  [0, 2, 0, 0, 0, 0],
+  [0, 0, 2, 0, 0, 0],
+  [0, 0, 0, 2, 0, 0],
+  [0, 0, 0, 0, 2, 0],
+  [0, 0, 0, 0, 0, 2],
+]
+
+// Four everyday kid-friendly situations per dimension (R, I, A, S, E, C),
+// staying faithful to the O*NET Interest Profiler content.
 const ITEMS: InterestItem[] = [
-  // R — Realistic
-  { id: 1, q: 'Wi-Fi yoki sim buzilib qolsa, muammoni o\u2018zingiz topib tuzatishga harakat qilasizmi?', dim: 0 },
-  { id: 2, q: 'Mebel yoki tokchani qo\u2018lda yig\u2018ish, o\u2018rnatish sizga yoqadimi?', dim: 0 },
-  { id: 3, q: 'Hovlida o\u2018simlik ekish yoki boshqa jismoniy ish qilishni xohlaysizmi?', dim: 0 },
-  { id: 4, q: 'Velosiped, mashina yoki biron qurilmani ta\u2019mirlashdan zavq olasizmi?', dim: 0 },
+  // R — Realistic (building, fixing, hands-on)
+  { id: 1, q: 'Minecraft yoki Roblox\u2019da o\u2018zingiz server yaratib yoki uy qurab ko\u2018rganmisiz?', dim: 0 },
+  { id: 2, q: 'Velosiped, skeyt yoki o\u2018yinchoq buzilsa, uni o\u2018zingiz tuzatishni xohlaysizmi?', dim: 0 },
+  { id: 3, q: 'Uyda kartondan, qog\u2018ozdan yoki asboblar bilan biror narsa yasashni yoqtirasizmi?', dim: 0 },
+  { id: 4, q: 'Robot, mashina yoki qurilmalarning qanday ishlashiga qiziqasizmi?', dim: 0 },
 
-  // I — Investigative
-  { id: 5, q: 'Telefon yoki kompyuter nima uchun sekinlashganini o\u2018zingiz o\u2018rganib chiqasizmi?', dim: 1 },
-  { id: 6, q: 'Nimadir noto\u2018g\u2018ri ishlayotganda uning sababini izlab topish sizni qiziqtiradimi?', dim: 1 },
-  { id: 7, q: 'Yangi texnologiya va kashfiyotlar haqida o\u2018qishni yoqtirasizmi?', dim: 1 },
-  { id: 8, q: 'Biror masalani chuqur tahlil qilib, yechim topishni xohlaysizmi?', dim: 1 },
+  // I — Investigative (researching, finding the cause)
+  { id: 5, q: 'Telefon yoki kompyuterda biror narsa ishlamay qolsa, sababini o\u2018zingiz topishga harakat qilasizmi?', dim: 1 },
+  { id: 6, q: 'Suv, o\u2018simlik yoki magnitlar bilan kichik ilmiy tajriba qilishni yoqtirasizmi?', dim: 1 },
+  { id: 7, q: 'Yulduzlar, dinozavrlar yoki tabiat sirlari haqida o\u2018qib o\u2018rganishni xohlaysizmi?', dim: 1 },
+  { id: 8, q: 'Biror masalani o\u2018ylab, o\u2018zingiz yechim topganingizda quvonasizmi?', dim: 1 },
 
-  // A — Artistic
-  { id: 9, q: 'Uyni bezash va rang, dizayn tanlashda o\u2018z g\u2018oyangizni ishga solasizmi?', dim: 2 },
-  { id: 10, q: 'Rasm chizish yoki biron-bir narsa yaratish sizga zavq beradimi?', dim: 2 },
-  { id: 11, q: 'Suratga olish, video montaj yoki ijodiy kontent tayyorlashni xohlaysizmi?', dim: 2 },
-  { id: 12, q: 'Yangi g\u2018oya yoki ijodiy loyiha o\u2018ylab topishni yoqtirasizmi?', dim: 2 },
+  // A — Artistic (creating content, design, self-expression)
+  { id: 9, q: 'Rasm chizish, suratga olish yoki video montaj qilib, o\u2018z kontentingizni yaratishni yoqtirasizmi?', dim: 2 },
+  { id: 10, q: 'Telefonda yoki daftarda o\u2018z qahramoningiz, kiyim yoki bezak dizaynini o\u2018ylab topasizmi?', dim: 2 },
+  { id: 11, q: 'Hikoya, qo\u2018shiq yoki she\u2019r yozib, fikrlaringizni ifoda etishni xohlaysizmi?', dim: 2 },
+  { id: 12, q: 'Xonangiz yoki stolingizni o\u2018z didingiz bilan chiroyli bezashni yoqtirasizmi?', dim: 2 },
 
-  // S — Social
-  { id: 13, q: 'Do\u2018stingizga uy vazifasi yoki biror ishni o\u2018rganishda yordam berasizmi?', dim: 3 },
-  { id: 14, q: 'Yordamga muhtoj odamlarga ko\u2018maklashishni xohlaysizmi?', dim: 3 },
-  { id: 15, q: 'Boshqalarga yangi biror ishni o\u2018rgatishni yoqtirasizmi?', dim: 3 },
-  { id: 16, q: 'Jamoada ishlash va odamlar bilan doim muloqotda bo\u2018lish sizni quvvatlantiradimi?', dim: 3 },
+  // S — Social (helping, teaching, connecting)
+  { id: 13, q: 'Do\u2018stingizga o\u2018yin qoidalarini yoki uy vazifasini tushuntirib berishni yoqtirasizmi?', dim: 3 },
+  { id: 14, q: 'Sinfdoshlaringizga yoki kichiklarga yordam berishdan xursand bo\u2018lasizmi?', dim: 3 },
+  { id: 15, q: 'Guruh o\u2018yinida hamma bilan muloqot qilib, birga o\u2018ynashni xohlaysizmi?', dim: 3 },
+  { id: 16, q: 'Do\u2018stlaringiz muammosini tinglab, ularga dalda berishni yoqtirasizmi?', dim: 3 },
 
-  // E — Enterprising
-  { id: 17, q: 'Do\u2018konda xaridorga tovar tanlashda yordam berib, uni ko\u2018ndirishni xohlaysizmi?', dim: 4 },
-  { id: 18, q: 'Guruh ichida rahbarlikni o\u2018z qo\u2018lingizga olishni yoqtirasizmi?', dim: 4 },
-  { id: 19, q: 'Biror fikr yoki mahsulotni boshqalarga ishonarli tushuntirib berasizmi?', dim: 4 },
-  { id: 20, q: 'Kichkina biznes yoki loyiha boshlash g\u2018oyasi sizni qiziqtiradimi?', dim: 4 },
+  // E — Enterprising (leading, selling, persuading)
+  { id: 17, q: 'Sinf yoki to\u2018garak ishida rahbar bo\u2018lib, ishlarni taqsimlashni xohlaysizmi?', dim: 4 },
+  { id: 18, q: 'Yarmarka yoki do\u2018konda biror narsani sotish va odamlarni ko\u2018ndirishni sinab ko\u2018rmoqchimisiz?', dim: 4 },
+  { id: 19, q: 'Yangi o\u2018yin-g\u2018oyani taklif qilib, guruhni o\u2018z fikringizga ishontirmoqchisiz?', dim: 4 },
+  { id: 20, q: 'Musobaqada jamoani g\u2018oliblikka undash va boshqarishni yoqtirasizmi?', dim: 4 },
 
-  // C — Conventional
-  { id: 21, q: 'Hisob-kitob, ro\u2018yxat yoki jadvalni tartibga solishni yoqtirasizmi?', dim: 5 },
-  { id: 22, q: 'Hujjatlar va yozuvlarni aniq, qoida bo\u2018yicha to\u2018ldirishni xohlaysizmi?', dim: 5 },
-  { id: 23, q: 'Rejalar tuzib, tartib bilan ishlash sizni qoniqtiradimi?', dim: 5 },
-  { id: 24, q: 'Ma\u2019lumotlarni tekshirish, xato topish va to\u2018g\u2018rilashni yoqtirasizmi?', dim: 5 },
+  // C — Conventional (organizing, records, rules)
+  { id: 21, q: 'Kitoblar, o\u2018yinchoqlar yoki qalamlaringizni tartibga solib, ro\u2018yxat tuzishni yoqtirasizmi?', dim: 5 },
+  { id: 22, q: 'Dars va to\u2018garak rejasini tuzib, ishlarini o\u2018z vaqtida bajarishdan mamnun bo\u2018lasizmi?', dim: 5 },
+  { id: 23, q: 'Ballar yoki pullar hisobini yuritib, xatoni topishni yoqtirasizmi?', dim: 5 },
+  { id: 24, q: 'Stikerlar va jadvallar bilan reja yuritib, tartibda qolishni xohlaysizmi?', dim: 5 },
 ]
 
 export const INTEREST_ITEMS: InterestItem[] = ITEMS
 export const INTEREST_COUNT = ITEMS.length
 export const ITEMS_PER_DIM = 4
+
+// Questions fed straight into the existing QuestionScene: identical shape,
+// identical 6 answer options (the interest scale), only the question text and
+// the accent (per RIASEC dimension) differ.
+export const INTEREST_QUESTIONS: QuizQuestion[] = ITEMS.map((it, i) => ({
+  id: it.id,
+  q: it.q,
+  accent: DIMS[it.dim].color,
+  stage: stageAt(i),
+  difficulty: 0.55,
+  opts: INTEREST_LEVELS.map((text): Option => ({ text, w: DIM_WEIGHT[it.dim] })),
+}))
 
 export interface InterestProfile {
   // counts[d] — how many items of dimension d were answered.

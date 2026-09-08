@@ -3,12 +3,11 @@ import { ArrowLeft } from 'lucide-react'
 import Header from './components/Header'
 import QuestionScene from './components/QuestionScene'
 import ResultCard from './components/ResultCard'
-import InterestScene from './components/InterestScene'
 import InterestResult from './components/InterestResult'
 import Roadmap from './components/Roadmap'
 import SplashScreen, { type AssessmentMode } from './components/SplashScreen'
 import { useGyroParallax } from './hooks/useGyroParallax'
-import { DIMS, INTEREST_ITEMS, INTEREST_COUNT, QUESTIONS, computeInterestProfile } from './data'
+import { DIMS, INTEREST_COUNT, INTEREST_QUESTIONS, QUESTIONS, computeInterestProfile } from './data'
 import { toneFor } from './lib/tone'
 
 function App() {
@@ -47,9 +46,11 @@ function App() {
   }, [])
 
   const careerCurrent = QUESTIONS[careerIndex]
-  const interestCurrent = INTEREST_ITEMS[interestIndex]
-  const interestLead = (i: number) => DIMS[INTEREST_ITEMS[i]?.dim ?? 0]?.color ?? '#4F46E5'
-  const diffFor = (_i: number) => careerCurrent?.difficulty ?? 0.5
+  const interestQ = INTEREST_QUESTIONS[interestIndex]
+  const diffFor = (i: number) =>
+    mode === 'career'
+      ? (QUESTIONS[i]?.difficulty ?? 0.5)
+      : (INTEREST_QUESTIONS[i]?.difficulty ?? 0.55)
 
   const handleCareerAnswer = (optionIndex: number) => {
     const next = [...careerAnswers]
@@ -72,7 +73,7 @@ function App() {
     const next = [...interestAnswers]
     next[interestIndex] = optionIndex
     setInterestAnswers(next)
-    const oldValue = interestLead(interestIndex)
+    const oldValue = interestQ?.accent ?? '#4F46E5'
     if (interestIndex === INTEREST_COUNT - 1) {
       setInterestFinished(true)
       const top = computeInterestProfile(next).top[0]
@@ -80,7 +81,7 @@ function App() {
       setAccentCurrent(DIMS[top]?.color ?? '#8B5CF6')
     } else {
       setAccentOld(oldValue)
-      setAccentCurrent(interestLead(interestIndex + 1))
+      setAccentCurrent(INTEREST_QUESTIONS[interestIndex + 1]?.accent ?? '#4F46E5')
       setInterestIndex((i) => i + 1)
     }
   }
@@ -98,8 +99,9 @@ function App() {
     setInterestIndex(0)
     setInterestAnswers([])
     setInterestFinished(false)
-    setAccentOld(DIMS[0].color)
-    setAccentCurrent(interestLead(0))
+    const firstAccent = INTEREST_QUESTIONS[0]?.accent ?? DIMS[0].color
+    setAccentOld(firstAccent)
+    setAccentCurrent(firstAccent)
   }
 
   const handleSelect = (m: AssessmentMode) => {
@@ -107,7 +109,7 @@ function App() {
     const firstAccent =
       m === 'career'
         ? (QUESTIONS[0]?.accent ?? '#4F46E5')
-        : DIMS[INTEREST_ITEMS[0]?.dim ?? 0]?.color ?? '#4F46E5'
+        : (INTEREST_QUESTIONS[0]?.accent ?? DIMS[0].color)
     setAccentOld(firstAccent)
     setAccentCurrent(firstAccent)
     void gyro.enable()
@@ -216,14 +218,18 @@ function App() {
               />
             </div>
           ) : (
-            <div className="mx-auto w-full max-w-[640px]">
-              <InterestScene
-                key={interestIndex}
-                item={interestCurrent}
-                index={interestIndex}
-                total={INTEREST_COUNT}
-                onAnswer={handleInterestAnswer}
-              />
+            <div className="xl:grid xl:grid-cols-[176px_minmax(0,1fr)_176px] xl:items-center xl:gap-8">
+              <div className="hidden xl:block" aria-hidden />
+              <div className="min-w-0">
+                <QuestionScene
+                  key={interestIndex}
+                  question={interestQ!}
+                  index={interestIndex}
+                  total={INTEREST_COUNT}
+                  onAnswer={handleInterestAnswer}
+                />
+              </div>
+              <Roadmap index={interestIndex} difficulty={interestQ?.difficulty ?? 0.55} total={INTEREST_COUNT} />
             </div>
           )}
         </div>

@@ -5,6 +5,7 @@ export { computeResult, type CareerMatch } from './engine'
 export {
   INTEREST_ITEMS,
   INTEREST_COUNT,
+  INTEREST_QUESTIONS,
   INTEREST_LEVELS,
   ITEMS_PER_DIM,
   computeInterestProfile,
