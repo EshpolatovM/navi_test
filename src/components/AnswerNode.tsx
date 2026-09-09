@@ -53,7 +53,6 @@ function AnswerNode({
   onSelect: (i: number) => void
 }) {
   const iconName = option.icon ?? DIM_ICON_NAMES[primaryDim(option.w)]
-  const shape = 1 + (index % 4)
   const isHover = hovered === index
   const isPicked = selected === index
   const dimmed =
@@ -124,12 +123,12 @@ function AnswerNode({
     >
       <span
         style={innerStyle}
-        className={`answer-shape-${shape} flex min-h-[46px] w-full cursor-pointer items-center gap-2 px-2.5 py-2 text-left md:min-h-[68px] md:gap-3.5 md:px-4 md:py-2.5`}
+        className={`answer-shape flex w-full cursor-pointer items-center gap-2 px-2.5 py-2.5 text-left min-h-[48px] md:min-h-[72px] md:gap-4 md:px-4 md:py-3`}
       >
         <span className="relative shrink-0">
           <span
             aria-hidden
-            className="grid size-[30px] place-items-center rounded-full md:size-9"
+            className="grid size-[34px] place-items-center rounded-full md:size-10"
             style={{
               background: isPicked ? 'color-mix(in srgb, var(--accent-contrast) 22%, transparent)' : `${accent}12`,
               color: isPicked ? 'var(--accent-contrast)' : accent,

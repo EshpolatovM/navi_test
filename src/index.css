@@ -228,70 +228,56 @@ h3 {
   font-family: var(--font-display);
 }
 
-/* Answer-node silhouettes — four genuinely different horizontal shapes:
-   capsule (stadium), wavy organic blob, asymmetric shoulder pill, and a
-   tapering leaf/teardrop. Pure radius geometry (lengths + percentages);
-   no transform, no clip-path, so hover/gyro motion and shadows stay intact. */
-.answer-shape-1 {
-  border-radius: 999rem;
+/* Quiz-scene composition — ONE identical vertical layout at every breakpoint:
+   progress → question card → small gap → 2-column answer grid.
+   Only the SCALE changes with the viewport (clamp), never the structure.
+   No absolute/constellation/orbit positioning; everything lives in flow. */
+.quiz-scene {
+  row-gap: clamp(18px, 2.4vw, 34px);
 }
 
-.answer-shape-2 {
-  border-radius: 44% 56% 56% 44% / 65% 38% 38% 70%;
+.quiz-scene-question {
+  width: min(100%, clamp(460px, 46vw, 640px));
 }
 
-.answer-shape-3 {
-  border-radius: 999rem 30% 12% 999rem;
+.quiz-scene-question > * {
+  width: 100%;
 }
 
-.answer-shape-4 {
-  border-radius: 45% 18% 16% 45% / 120% 55% 55% 120%;
+.answers-grid {
+  width: min(100%, clamp(460px, 52vw, 720px));
+  column-gap: clamp(10px, 1.5vw, 26px);
+  row-gap: clamp(12px, 1.6vw, 28px);
 }
 
-/* Question-bubble silhouettes — ten genuinely different shapes, chosen
-   deterministically by question index (index % 10). Short questions stay
-   compact, long ones widen & grow tall; percent radii keep every silhouette
-   proportional to its content. Pure radius geometry: no transform (the motion
-   system owns transform), no clip-path (ring + drop shadow must trace the
-   outline), so the glowing halo and premium floating look are preserved. */
-.question-shape-0 {
-  border-radius: 50% / 52%;
+/* Answer cards — ONE shared soft-organic silhouette for every answer. Same
+   radius, same border/shadow treatment, same icon container, same typography.
+   Only content/icon/color/state differ. NO per-answer shape variation.
+   NO perfect pill (999rem), NO perfect circle, NO sharp rectangle. */
+.answer-shape {
+  border-radius: 23px 28px 21px 30px;
 }
 
-.question-shape-1 {
-  border-radius: 999rem;
+/* Question bubble — one consistent organic speech-bubble silhouette at every
+   breakpoint. Wide horizontal body, large soft asymmetric rounded corners and
+   a subtly curved lower edge. NEVER circular, NEVER a pill. Padding scales
+   smoothly with clamp(); mobile (<768px) drops to a compact fixed padding for
+   comfortable tap targets. */
+.question-bubble {
+  border-radius: 34px 42px 40px 28px / 40px 36px 34px 44px;
+  padding: clamp(14px, 1.9vw, 27px) clamp(16px, 2.6vw, 38px) clamp(20px, 2.3vw, 32px);
 }
 
-.question-shape-2 {
-  border-radius: 38% 62% 60% 40% / 55% 42% 58% 45%;
-}
+/* Mobile (<=768px): same structure, compact scale. */
+@media (max-width: 768px) {
+  .answer-shape {
+    border-radius: 18px 21px 19px 22px;
+  }
 
-.question-shape-3 {
-  border-radius: 48% 52% 60% 40% / 82% 82% 32% 32%;
-}
-
-.question-shape-4 {
-  border-radius: 26% 58% 58% 26% / 62% 40% 62% 40%;
-}
-
-.question-shape-5 {
-  border-radius: 24% 76% 24% 76% / 48% 56% 48% 56%;
-}
-
-.question-shape-6 {
-  border-radius: 48% 14% 14% 48% / 130% 62% 62% 130%;
-}
-
-.question-shape-7 {
-  border-radius: 74% 26% 40% 60% / 58% 48% 52% 42%;
-}
-
-.question-shape-8 {
-  border-radius: 12% 64% 14% 58% / 22% 55% 18% 50%;
-}
-
-.question-shape-9 {
-  border-radius: 14% 48% 48% 14% / 62% 64% 36% 60%;
+  .question-bubble {
+    min-height: 120px;
+    padding: 18px 18px 22px;
+  }
 }
 
 /* Adaptive question-text font sizing — the longer the question, the more

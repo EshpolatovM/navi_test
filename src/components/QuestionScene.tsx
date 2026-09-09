@@ -1,22 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Sparkles } from 'lucide-react'
 import type { QuizQuestion, StageModel } from '../data'
 import { toneFor } from '../lib/tone'
 import { useSettings } from './SettingsContext'
-import AnswerNode, { type NodePosition } from './AnswerNode'
+import AnswerNode from './AnswerNode'
 import JourneyProgress from './JourneyProgress'
-
-// Ten distinct bubble silhouettes (.question-shape-0 … .question-shape-9).
-// Shape is chosen deterministically from the question index; every question
-// change visibly morphs the centered card.
-const QUESTION_SHAPES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-// Constellation geometry constants.
-// N / NH are generous half-sizes for an answer chip (includes hover growth),
-// GAP is the minimum invisible clearance kept around the question bubble.
-const N = 122
-const NH = 54
-const GAP = 46
 
 function QuestionScene({
   question,
@@ -47,38 +35,6 @@ function QuestionScene({
       window.removeEventListener('quiz:shake', onShake)
       window.clearTimeout(timer)
     }
-  }, [])
-
-  // Measured geometry — node positions are recomputed so collisions are impossible.
-  const orbitRef = useRef<HTMLDivElement | null>(null)
-  const bubbleRef = useRef<HTMLDivElement | null>(null)
-  const [geo, setGeo] = useState({ w: 1080, h: 600 })
-  const [bubbleSize, setBubbleSize] = useState({ bw: 460, bh: 280 })
-
-  useEffect(() => {
-    const el = orbitRef.current
-    if (!el) return
-    const ro = new ResizeObserver((entries) => {
-      const e = entries[0]
-      const w = e.borderBoxSize?.[0]?.inlineSize ?? 0
-      const h = e.borderBoxSize?.[0]?.blockSize ?? 0
-      if (w > 0 && h > 0) setGeo((g) => (g.w === w && g.h === h ? g : { w, h }))
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [])
-
-  useEffect(() => {
-    const el = bubbleRef.current
-    if (!el) return
-    const ro = new ResizeObserver((entries) => {
-      const e = entries[0]
-      const w = e.borderBoxSize?.[0]?.inlineSize ?? 0
-      const h = e.borderBoxSize?.[0]?.blockSize ?? 0
-      if (w > 0 && h > 0) setBubbleSize((s) => (s.bw === w && s.bh === h ? s : { bw: w, bh: h }))
-    })
-    ro.observe(el)
-    return () => ro.disconnect()
   }, [])
 
   useEffect(() => {
@@ -115,60 +71,16 @@ function QuestionScene({
   const stageCurrent = index - boundary.from + 2
   const stageTotal = boundary.to - boundary.from + 1
 
-// --- Symmetric constellation around the centered bubble -------------------
-// Node count follows each O*NET-style item's option count (4/5/6), so the
-// layout is chosen per question. Every axis is clamped by the measured
-// container so nodes can never leave the playfield or reach the bubble's safe zone.
-const { w, h } = geo
-  const cx = w / 2
-  const cy = h / 2
-  const Bhh = bubbleSize.bh / 2
-
-  const ps = Math.max(44, Math.min(Bhh + NH + GAP, cy - NH - 44))
-
-  // Bubble width is chosen so the constellation never teeters on safety:
-  // worst case a node pulls inward (hover attract + growth). NEED is the
-  // minimum clearance kept even when the measured container is narrow.
-  const NEED = 24
-  const lim = cx - N - 44
-  const bw = Math.min(460, w * 0.46, 2 * (lim - N - NEED))
-  const Bhw = bw / 2
-  const sx = Math.max(44, Math.min(Bhw + N + GAP, lim))
-  const sy = Math.min(Math.max(ps - NH - 38, NH + 38), Math.max(cy - NH - 44, 44))
-
-  const orbitPtsFor = (n: number): NodePosition[] => {
-    const top = { x: cx, y: cy - ps } as NodePosition
-    const lu = { x: cx - sx, y: cy - sy } as NodePosition
-    const ru = { x: cx + sx, y: cy - sy } as NodePosition
-    const bottom = { x: cx, y: cy + ps } as NodePosition
-    const rl = { x: cx + sx, y: cy + sy } as NodePosition
-    const ll = { x: cx - sx, y: cy + sy } as NodePosition
-    if (n === 3) return [top, ll, rl]
-    if (n === 4) return [lu, ru, ll, rl]
-    if (n === 5) return [top, lu, ru, ll, rl]
-    return [top, lu, ru, bottom, rl, ll]
-  }
-  const orbitPts = orbitPtsFor(question.opts.length)
-
-  const flyOf = (p: NodePosition) => {
-    const dx = Math.sign(p.x - cx)
-    const dy = Math.sign(p.y - cy)
-    const fx = dx * Math.max(90, Math.round(w * 0.09))
-    const fy = dy * Math.round(h * 0.06)
-    return { fx, fy }
-  }
-
-  const signs: NodePosition = { x: cx, y: cy }
   const bubbleScale = hovered !== null ? 1.025 : selected !== null ? 1.05 : 1
 
   const bubbleEl = (
     <div className="relative z-10 w-full">
       <div
-        className="relative px-5 pt-3 max-md:px-4 max-md:pt-1.5"
-        style={{ transform: 'rotate(-1deg)' }}
+        className="relative pt-3 max-md:pt-1.5"
+        style={{ transform: 'rotate(-0.5deg)' }}
       >
         <div
-          className={`question-shape-${QUESTION_SHAPES[index % QUESTION_SHAPES.length]} relative px-5 py-4 text-center ring-1 backdrop-blur md:px-9 md:py-7 max-md:px-3.5 max-md:py-2`}
+          className="question-bubble relative text-center ring-1 backdrop-blur"
           style={{
             width: '100%',
             background:
@@ -192,19 +104,24 @@ const { w, h } = geo
             style={{ width: 14, height: 14, color: tone.soft }}
             strokeWidth={2.2}
           />
+<<<<<<< HEAD
           <p className={`${textSize} pt-2.5 font-bold tracking-[-0.01em] text-slate-800 md:pt-5`}>
+=======
+          <p className="pt-2.5 text-[1.12rem] leading-[1.3] font-bold tracking-[-0.01em] text-slate-800 md:pt-5 md:text-[1.5625rem] md:leading-[1.32] max-md:text-[18px] max-[359px]:max-md:text-[16px]">
+>>>>>>> 187aae7 (f)
             {question.q}
           </p>
           <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-400 md:mt-3 md:text-[10px] max-[359px]:hidden">
             {t('scene.hint')}
           </p>
         </div>
-        {/* Asymmetric tail */}
+        {/* Centered speech-bubble notch — fuses into the card body */}
         <span
           aria-hidden
-          className="absolute -bottom-2 left-[26%] size-4.5"
+          className="absolute left-1/2 size-[16px]"
           style={{
-            transform: 'rotate(45deg)',
+            bottom: -4,
+            transform: 'translateX(-50%) rotate(45deg)',
             background: 'var(--surface-soft)',
             borderRight: `1.5px solid ${tone.ring}`,
             borderBottom: `1.5px solid ${tone.ring}`,
@@ -214,130 +131,77 @@ const { w, h } = geo
     </div>
   )
 
-  const orbitNodes = (
-    <div ref={orbitRef} className="motion-tray relative hidden h-[600px] w-full max-w-[1080px] mx-auto lg:block">
-      {/* Soft halo behind the centered bubble */}
+  const questionEl = (
+    <div className="quiz-scene-question">
       <div
-        aria-hidden
-        className="pointer-events-none absolute rounded-full blur-3xl transition-opacity duration-500"
-        style={{
-          left: cx,
-          top: cy,
-          width: Math.max(260, bubbleSize.bw * 1.5),
-          height: Math.max(260, bubbleSize.bh * 1.5),
-          transform: 'translate(-50%, -50%)',
-          background: `radial-gradient(circle, ${tone.glow} 0%, transparent 70%)`,
-          opacity: hovered !== null ? 1 : 0.75,
-        }}
-      />
-
-      {/* Question bubble — always dead-center, with a guaranteed safe zone */}
-      <div
-        ref={bubbleRef}
-        className="animate-bubble-float absolute z-20"
-        style={{ left: cx, top: cy, width: bw, transform: 'translate(-50%, -50%)', translate: 'calc(var(--gy-x) * 3px) calc(var(--gy-y) * 3px)' }}
+        className="w-full"
+        style={{ transform: 'translate3d(calc(var(--gy-x) * 5px), calc(var(--gy-y) * 4px), 0)' }}
       >
-        <div className="animate-bubble-pop">{bubbleEl}</div>
+        <div style={{ animation: 'bubble-pop 0.6s cubic-bezier(0.22, 1, 0.36, 1) both' }}>
+          {bubbleEl}
+        </div>
       </div>
-
-      {question.opts.map((opt, i) => {
-        const p = orbitPts[i]
-        const rot = (i % 2 === 0 ? 1 : -1) * (1.5 + (i % 3) * 0.9)
-        const fly = flyOf(p)
-        return (
-          <AnswerNode
-            key={i}
-            option={opt}
-            accent={tone.main}
-            index={i}
-            letter={String(i + 1)}
-            style={p}
-            center={signs}
-            rotation={rot}
-            flyX={`${fly.fx}px`}
-            flyY={`${fly.fy}px`}
-            floatY={`${6 + (index % 3) * 3}px`}
-            delay={140 + i * 45}
-            hovered={hovered}
-            selected={selected}
-            variant="orbit"
-            onHover={setHovered}
-            onSelect={setSelected}
-          />
-        )
-      })}
     </div>
   )
 
-  const tileNodes = (
-    <>
-      {/* Phones + tablets (<1024): bubble + 2-column grid */}
-      <div className="flex w-full flex-col items-center gap-2.5 lg:hidden max-md:gap-3">
-        <div className="flex w-full justify-center">
-          <div
-            className="w-[min(440px,calc(100vw-1.5rem))]"
-            style={{ transform: 'translate3d(calc(var(--gy-x) * 8px), calc(var(--gy-y) * 5px), 0)' }}
-          >
-            <div style={{ animation: 'bubble-pop 0.6s cubic-bezier(0.22,1,0.36,1) both' }}>{bubbleEl}</div>
-          </div>
-        </div>
+  const answerCount = question.opts.length
 
-        <div
-          className="grid w-full grid-cols-2 gap-2"
-          style={{ maxWidth: 440, animation: 'scene-in 0.5s cubic-bezier(0.22,1,0.36,1) both' }}
-        >
-          {question.opts.map((opt, i) => {
-            const c = question.opts.length
-            const rot = (i % 2 === 0 ? 1 : -1) * (1 + (i % 3))
-            // Per-tile gyro parallax depth (visible, layered): 8/10/12 → 6/7.5/9 px
-            const gx = 8 + (i % 3) * 2
-            const gy = 6 + (i % 3) * 1.5
-            const tx = (i % 2 === 0 ? -1 : 1) * (8 + (i % 3) * 5)
-            const tr = (i % 2 === 0 ? -1 : 1) * (5 + (i % 3) * 2.5)
-            return (
-              <div
-                key={i}
-                className={`w-full ${c % 2 === 1 && i === c - 1 ? 'col-span-2' : ''}`}
-                style={{
-                  animation: tumbling
-                    ? `tumble-out 0.95s cubic-bezier(0.36,0.07,0.19,0.97) ${i * 55}ms both`
-                    : undefined,
-                  '--tx': `${tx}px`,
-                  '--ty': '26px',
-                  '--tr': `${tr}deg`,
-                } as React.CSSProperties}
-              >
-                <div
-                  className="w-full"
-                  style={{
-                    transform: `translate3d(calc(var(--gy-x) * ${gx}px), calc(var(--gy-y) * ${gy}px), 0)`,
-                  }}
-                >
-                  <AnswerNode
-                    option={opt}
-                    accent={tone.main}
-                    index={i}
-                    letter={String(i + 1)}
-                    style={{ x: 50, y: 46 }}
-                    center={{ x: 50, y: 42 }}
-                    rotation={rot}
-                    flyX="0px"
-                    flyY="12px"
-                    floatY="0px"
-                    delay={140 + i * 60}
-                    hovered={hovered}
-                    selected={selected}
-                    variant="tile"
-                    onHover={setHovered}
-                    onSelect={tumbling ? () => {} : setSelected}
-                  />
-                </div>
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    </>
+  const answersEl = (
+    <div
+      className="answers-grid grid w-full grid-cols-2"
+      style={{ animation: 'scene-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both' }}
+    >
+      {question.opts.map((opt, i) => {
+        const full = answerCount % 2 === 1 && i === answerCount - 1
+        const rot = (i % 2 === 0 ? -1 : 1) * 0.75
+        // Subtle per-card gyro parallax depth only — never changes grid flow.
+        const gx = 7 + (i % 3) * 2
+        const gy = 5 + (i % 3) * 1.5
+        const tx = (i % 2 === 0 ? -1 : 1) * (10 + (i % 3) * 6)
+        const tr = (i % 2 === 0 ? -1 : 1) * (6 + (i % 3) * 3)
+        return (
+          <div
+            key={i}
+            className={`w-full ${full ? 'col-span-2' : ''}`}
+            style={{
+              animation: tumbling
+                ? `tumble-out 0.95s cubic-bezier(0.36, 0.07, 0.19, 0.97) ${i * 55}ms both`
+                : undefined,
+              '--tx': `${tx}px`,
+              '--ty': '26px',
+              '--tr': `${tr}deg`,
+            } as React.CSSProperties}
+          >
+            <div
+              className="w-full"
+              style={{
+                transform: `translate3d(calc(var(--gy-x) * ${gx}px), calc(var(--gy-y) * ${gy}px), 0)`,
+              }}
+            >
+              <AnswerNode
+                option={opt}
+                accent={tone.main}
+                index={i}
+                letter={String(i + 1)}
+                style={{ x: 50, y: 50 }}
+                center={{ x: 50, y: 44 }}
+                rotation={rot}
+                flyX="0px"
+                flyY="10px"
+                floatY="0px"
+                delay={90 + i * 45}
+                hovered={hovered}
+                selected={selected}
+                variant="tile"
+                full={full}
+                onHover={setHovered}
+                onSelect={tumbling ? () => {} : setSelected}
+              />
+            </div>
+          </div>
+        )
+      })}
+    </div>
   )
 
   return (
@@ -352,8 +216,10 @@ const { w, h } = geo
       />
 
       <div className={phase === 'out' ? 'animate-scene-out' : 'animate-scene-in'}>
-        {orbitNodes}
-        {tileNodes}
+        <div className="quiz-scene flex w-full flex-col items-center">
+          {questionEl}
+          {answersEl}
+        </div>
       </div>
     </div>
   )

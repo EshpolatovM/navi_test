@@ -1,46 +1,12 @@
-// Centralized theme/color engine.
+// Centralized theme engine.
 //
-// Generates the full accent token family from a single user-chosen hex color
-// and applies it as CSS custom properties. Light/dark share the same token
-// names so every component uses one accent family — no scattered hardcoded
-// accents.
+// Applies the fixed QuizLab blue accent family as CSS custom properties.
+// Light/dark share the same token names so every component uses one accent
+// family — no scattered hardcoded accents.
 
 import { mix, rgba } from './tone'
 
 export type ThemeMode = 'light' | 'dark'
-
-export interface PaletteOption {
-  hex: string
-  name: string
-}
-
-// Curated, muted product palette — premium, never neon.
-export const ACCENT_PALETTE: PaletteOption[] = [
-  { hex: '#3B7BEC', name: 'Blue' },
-  { hex: '#7C6BF0', name: 'Violet' },
-  { hex: '#17A398', name: 'Teal' },
-  { hex: '#2FA86B', name: 'Green' },
-  { hex: '#E8904E', name: 'Orange' },
-  { hex: '#E0577E', name: 'Rose' },
-]
-
-// Extended muted set revealed behind "Ko'proq ranglar".
-export const ACCENT_EXTENDED: PaletteOption[] = [
-  { hex: '#5B7C9E', name: 'Slate' },
-  { hex: '#5E6BB8', name: 'Indigo' },
-  { hex: '#8E63B5', name: 'Purple' },
-  { hex: '#B85C87', name: 'Magenta' },
-  { hex: '#C9565E', name: 'Crimson' },
-  { hex: '#C2733D', name: 'Copper' },
-  { hex: '#C98F2E', name: 'Amber' },
-  { hex: '#86923F', name: 'Olive' },
-  { hex: '#4E8A5C', name: 'Forest' },
-  { hex: '#2E9E84', name: 'Sea' },
-  { hex: '#2E8FA3', name: 'Aqua' },
-  { hex: '#3E8FD0', name: 'Sky' },
-  { hex: '#3E5C9E', name: 'Navy' },
-  { hex: '#6D7187', name: 'Charcoal' },
-]
 
 // Roadmap stage identity → CSS stage token (muted, harmonious across themes).
 const STAGE_COLOR: Record<string, string> = {
