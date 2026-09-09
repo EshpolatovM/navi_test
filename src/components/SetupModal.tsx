@@ -1,8 +1,6 @@
-import { useState } from 'react'
 import type { ElementType } from 'react'
-import { Check, ChevronDown, Moon, Music2, Pause, Sparkles, Sun, Vibrate, Volume2, X } from 'lucide-react'
+import { Check, Moon, Music2, Pause, Sparkles, Sun, Vibrate, Volume2, X } from 'lucide-react'
 import { LANGS } from '../lib/i18n'
-import { ACCENT_EXTENDED, ACCENT_PALETTE } from '../lib/theme'
 import { useSettings } from './SettingsContext'
 import { useQuizAudio } from '../hooks/useQuizAudio'
 import { useHaptics } from '../hooks/useHaptics'
@@ -91,12 +89,10 @@ function ColorSwatch({
 }
 
 function SetupModal({ onClose }: { onClose: () => void }) {
-  const { lang, theme, accent, motionEnabled, t, setLang, setTheme, setAccent, setMotionEnabled } =
+  const { lang, theme, motionEnabled, t, setLang, setTheme, setMotionEnabled } =
     useSettings()
   const { soundEnabled, setSoundEnabled, musicEnabled, setMusicEnabled } = useQuizAudio()
   const { hapticsEnabled, setHapticsEnabled } = useHaptics()
-  const [showMore, setShowMore] = useState(false)
-  const all = showMore ? [...ACCENT_PALETTE, ...ACCENT_EXTENDED] : ACCENT_PALETTE
 
   return (
     <div
@@ -229,33 +225,6 @@ function SetupModal({ onClose }: { onClose: () => void }) {
                 onToggle={setMusicEnabled}
               />
             </div>
-          </div>
-
-          <div>
-            <SectionLabel>{t('settings.accent')}</SectionLabel>
-            <div className="grid grid-cols-6 justify-items-center gap-3">
-              {all.map((p) => (
-                <ColorSwatch
-                  key={p.hex}
-                  hex={p.hex}
-                  name={p.name}
-                  active={accent === p.hex}
-                  onPick={() => setAccent(p.hex)}
-                />
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowMore((v) => !v)}
-              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl px-3 py-2 text-[12px] font-bold text-slate-500 ring-1 transition-colors hover:text-slate-800"
-              style={{ borderColor: 'var(--border)' }}
-            >
-              {t('settings.more')}
-              <ChevronDown
-                className="size-3.5 transition-transform duration-200"
-                style={{ transform: showMore ? 'rotate(180deg)' : 'none' }}
-              />
-            </button>
           </div>
         </div>
       </div>

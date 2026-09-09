@@ -70,7 +70,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     () => ({
       lang,
       theme,
-      accent,
       onboarded,
       motionEnabled,
       setLang: (l) => {
@@ -85,14 +84,6 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         setThemeState(t)
         try {
           localStorage.setItem(K.theme, t)
-        } catch {
-          /* private mode */
-        }
-      },
-      setAccent: (a) => {
-        setAccentState(a)
-        try {
-          localStorage.setItem(K.accent, a)
         } catch {
           /* private mode */
         }
@@ -115,7 +106,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       },
       t: (key, vars) => translate(lang, key, vars),
     }),
-    [lang, theme, accent, onboarded, motionEnabled],
+    [lang, theme, onboarded, motionEnabled],
   )
 
   return <Ctx.Provider value={api}>{children}</Ctx.Provider>

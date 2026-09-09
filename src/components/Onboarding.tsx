@@ -1,10 +1,9 @@
 import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Check, ChevronDown, Moon, Sun } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Check, Moon, Sun } from 'lucide-react'
 import { LANGS } from '../lib/i18n'
-import { ACCENT_EXTENDED, ACCENT_PALETTE } from '../lib/theme'
 import { useSettings } from './SettingsContext'
 
-const STEPS = ['lang', 'theme', 'color'] as const
+const STEPS = ['lang', 'theme'] as const
 type Step = (typeof STEPS)[number]
 
 function ThemePreview({ dark }: { dark: boolean }) {
@@ -38,10 +37,8 @@ function ThemePreview({ dark }: { dark: boolean }) {
 }
 
 function Onboarding() {
-  const { lang, theme, accent, t, setLang, setTheme, setAccent, completeOnboarding } = useSettings()
+  const { lang, theme, t, setLang, setTheme, completeOnboarding } = useSettings()
   const [step, setStep] = useState<Step>('lang')
-  const [pickedColor, setPickedColor] = useState<string | null>(accent)
-  const [showMore, setShowMore] = useState(false)
   const stepIdx = STEPS.indexOf(step)
 
   const go = (next: Step) => setStep(next)
@@ -145,10 +142,7 @@ function Onboarding() {
                   <button
                     key={opt}
                     type="button"
-                    onClick={() => {
-                      setTheme(opt)
-                      go('color')
-                    }}
+                    onClick={() => setTheme(opt)}
                     className="flex flex-col items-start gap-3 rounded-2xl bg-[var(--surface-elevated)] p-3.5 text-left ring-1 transition-all duration-200 hover:-translate-y-0.5"
                     style={{ borderColor: active ? 'var(--accent)' : 'var(--border)', boxShadow: '0 10px 30px -18px rgba(30,41,59,0.4)' }}
                   >
