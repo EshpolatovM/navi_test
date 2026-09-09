@@ -6,7 +6,6 @@ import { applyTheme, type ThemeMode } from '../lib/theme'
 interface Settings {
   lang: Lang
   theme: ThemeMode
-  accent: string
   onboarded: boolean
   motionEnabled: boolean
 }
@@ -14,7 +13,6 @@ interface Settings {
 interface SettingsApi extends Settings {
   setLang: (l: Lang) => void
   setTheme: (t: ThemeMode) => void
-  setAccent: (a: string) => void
   setMotionEnabled: (on: boolean) => void
   completeOnboarding: () => void
   t: (key: string, vars?: Record<string, string | number>) => string
@@ -23,7 +21,6 @@ interface SettingsApi extends Settings {
 const K = {
   lang: 'selectedLanguage',
   theme: 'selectedTheme',
-  accent: 'selectedAccentColor',
   onboarded: 'onboardingCompleted',
   motion: 'motionEnabled',
 }
@@ -49,13 +46,21 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeMode>(() =>
     read<ThemeMode>(K.theme, 'light') === 'dark' ? 'dark' : 'light',
   )
-  const [accent, setAccentState] = useState<string>(() => read(K.accent, DEFAULT_ACCENT))
   const [onboarded, setOnboarded] = useState<boolean>(() => read<string>(K.onboarded, '0') === '1')
   const [motionEnabled, setMotionEnabledState] = useState<boolean>(() => read<string>(K.motion, '1') === '1')
 
   useEffect(() => {
-    applyTheme(theme, accent)
-  }, [theme, accent])
+    applyTheme(theme, DEFAULT_ACCENT)
+  }, [theme])
+
+  // One-time cleanup of the retired accent-color preference.
+  useEffect(() => {
+    try {
+      localStorage.removeItem('selectedAccentColor')
+    } catch {
+      /* private mode */
+    }
+  }, [])
 
   useEffect(() => {
     document.documentElement.dataset.motion = motionEnabled ? 'on' : 'off'
