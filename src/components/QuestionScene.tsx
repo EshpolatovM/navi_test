@@ -104,11 +104,7 @@ function QuestionScene({
             style={{ width: 14, height: 14, color: tone.soft }}
             strokeWidth={2.2}
           />
-<<<<<<< HEAD
-          <p className={`${textSize} pt-2.5 font-bold tracking-[-0.01em] text-slate-800 md:pt-5`}>
-=======
-          <p className="pt-2.5 text-[1.12rem] leading-[1.3] font-bold tracking-[-0.01em] text-slate-800 md:pt-5 md:text-[1.5625rem] md:leading-[1.32] max-md:text-[18px] max-[359px]:max-md:text-[16px]">
->>>>>>> 187aae7 (f)
+<p className={`${textSize} pt-2.5 font-bold tracking-[-0.01em] text-slate-800 md:pt-5`}>
             {question.q}
           </p>
           <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-400 md:mt-3 md:text-[10px] max-[359px]:hidden">

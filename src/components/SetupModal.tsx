@@ -59,35 +59,6 @@ function ToggleRow({
   )
 }
 
-function ColorSwatch({
-  hex,
-  name,
-  active,
-  onPick,
-}: {
-  hex: string
-  name: string
-  active: boolean
-  onPick: () => void
-}) {
-  return (
-    <button
-      type="button"
-      aria-label={`color-${name.toLowerCase()}`}
-      onClick={onPick}
-      className="relative grid size-10 place-items-center rounded-full transition-transform duration-200 hover:scale-110 active:scale-95"
-      style={{
-        background: hex,
-        boxShadow: active
-          ? `0 0 0 2px var(--surface-elevated), 0 0 0 5px ${hex}88`
-          : '0 6px 14px -6px rgba(0,0,0,0.35)',
-      }}
-    >
-      {active && <Check className="size-4 text-white" strokeWidth={3.2} />}
-    </button>
-  )
-}
-
 function SetupModal({ onClose }: { onClose: () => void }) {
   const { lang, theme, motionEnabled, t, setLang, setTheme, setMotionEnabled } =
     useSettings()
