@@ -33,12 +33,12 @@ export function SectionHeading({
           <p className="mt-1 text-[12px] text-[var(--text-muted)]">{hint}</p>
         )}
       </div>
-      {to && (
+      {to && action && (
         <Link
           to={to}
           className="group flex shrink-0 items-center gap-0.5 pb-1 text-[12px] font-bold text-[var(--accent)]"
         >
-          {action ?? ''}
+          {action}
           <ChevronRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
         </Link>
       )}

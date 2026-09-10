@@ -174,7 +174,7 @@ function RoadmapPage() {
                 size="icon"
                 arrow={false}
                 icon={<Send className="size-4" />}
-                aria-label="Telegram"
+                aria-label={t('share.telegram')}
                 onClick={() => openInTab(telegramUrl({ title: t('result.share.nativeTitle'), text: t('roadmap.share.text'), url: shareConfig.resultUrl }))}
                 style={{ '--accent': '#0EA5E9' } as React.CSSProperties}
               />

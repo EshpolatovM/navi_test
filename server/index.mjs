@@ -161,9 +161,14 @@ async function handleRoadmap(req, body) {
     return { status: 503, json: { ok: false, error: 'no_keys' } }
   }
 
+  const userMessages = {
+    uz: "Men testlarni yakunladim. Yuqoridagi natijalarim asosida menga shaxsiy career roadmap'ni tuzib ber, yuqoridagi barcha talablarga rioya qilgan holda (10 bo'lim + 5 bosqich marker).",
+    ru: "Я прошёл тесты. На основе моих результатов составь мне персональный план карьерного развития (career roadmap), соблюдая все требования выше (10 разделов + маркер из 5 шагов).",
+    en: "I have completed the tests. Based on my results, create a personalized career roadmap following all the requirements above (10 sections + 5-step marker).",
+  }
   const messages = [
     { role: 'system', content: systemPrompt(lang, parsed.result) },
-    { role: 'user', content: "Men testlarni yakunladim. Yuqoridagi natijalarim asosida menga shaxsiy career roadmap'ni tuzib ber, yuqoridagi barcha talablarga rioya qilgan holda (10 bo'lim + 5 bosqich marker)." },
+    { role: 'user', content: userMessages[lang] },
   ]
 
   const lastRetriable = API_KEYS.length - 1

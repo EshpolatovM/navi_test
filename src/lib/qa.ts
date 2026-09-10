@@ -7,12 +7,7 @@
 import type { QuizQuestion } from '../data'
 import { CAREER_META, CAREER_QA, INTEREST_QA } from '../locales/qa'
 import type { Lang } from './i18n'
-
-function primaryDim(w: readonly number[]): number {
-  let best = 0
-  for (let i = 1; i < w.length; i++) if (w[i] > w[best]) best = i
-  return best
-}
+import { primaryDim } from './utils'
 
 export function localizeCareer(question: QuizQuestion, lang: Lang): QuizQuestion {
   const map = CAREER_QA[question.id]

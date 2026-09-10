@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { ChevronRight } from 'lucide-react'
 import { useSettings } from '../../SettingsContext'
@@ -21,6 +22,14 @@ function ResultOverviewPage() {
   const { data, query, tryCareerTest } = useResultStore()
   const navigate = useNavigate()
 
+  const MORE_SECTIONS = useMemo(() => [
+    { path: '/result/character', label: t('nav.character') },
+    { path: '/result/archetype', label: t('nav.archetype') },
+    { path: '/result/growth', label: t('nav.growth') },
+    { path: '/result/advice', label: t('nav.advice') },
+    { path: '/result/roadmap', label: t('roadmap.title') },
+  ], [t])
+
   if (!data) return <Navigate to="/result" replace />
 
   const direction = data.directionScores[0]
@@ -35,14 +44,6 @@ function ResultOverviewPage() {
     if (data.nextStep.target === 'career') navigate('/result/careers')
     else if (data.nextStep.target === 'directions') navigate('/result/interests')
   }
-
-  const MORE_SECTIONS = [
-    { path: '/result/character', label: t('nav.character') },
-    { path: '/result/archetype', label: t('nav.archetype') },
-    { path: '/result/growth', label: t('nav.growth') },
-    { path: '/result/advice', label: t('nav.advice') },
-    { path: '/result/roadmap', label: t('roadmap.title') },
-  ]
 
   return (
     <div className="flex flex-col gap-8 md:gap-10">

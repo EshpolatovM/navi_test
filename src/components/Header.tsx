@@ -6,11 +6,11 @@ import { InteractiveHoverButton } from './ui/interactive-hover-button'
 import BlindPullToggle from './ui/blind-pull-toggle'
 
 function Header({ onOpenSettings, hideBrand }: { onOpenSettings?: () => void; hideBrand?: boolean }) {
-  useSettings()
+  const { t } = useSettings()
   return (
     <header className="relative z-10 flex items-center justify-between px-4 py-2.5 md:px-8 md:py-3.5">
       {!hideBrand && (
-        <Link to="/" aria-label="Navigatsiya" className="motion-ui flex items-center">
+        <Link to="/" aria-label={t('settings.title')} className="motion-ui flex items-center">
           <NaviLogo width={116} className="shrink-0" />
         </Link>
       )}
@@ -25,7 +25,7 @@ function Header({ onOpenSettings, hideBrand }: { onOpenSettings?: () => void; hi
             variant="ghost"
             arrow={false}
             icon={<Settings className="size-4.5" strokeWidth={2.2} />}
-            aria-label="Sozlamalar"
+            aria-label={t('settings.title')}
             onClick={onOpenSettings}
           />
         )}

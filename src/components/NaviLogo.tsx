@@ -1,8 +1,11 @@
+import { cn } from '../lib/utils'
+
 export interface NaviLogoProps {
   className?: string
   style?: React.CSSProperties
   width?: number | string
   height?: number | string
+  ariaLabel?: string
 }
 
 /** Raw SVG path data for the NAVI wordmark (viewBox 1998x437). */
@@ -13,7 +16,7 @@ export const NAVI_LOGO_PATHS = [
   'M1925.77 436.932C1884.59 437.726 1850.88 403.016 1850.88 361.812V75.1724C1850.88 33.9678 1884.59 -0.712194 1925.77 0.0519427C1965.68 0.816079 1997.83 33.4094 1997.83 73.5266V363.487C1997.8 403.575 1965.68 436.197 1925.77 436.932Z',
 ] as const
 
-function NaviLogo({ className, style, width = 140, height }: NaviLogoProps) {
+function NaviLogo({ className, style, width = 140, height, ariaLabel = 'QuizLab' }: NaviLogoProps) {
   return (
     <svg
       viewBox="0 0 1998 437"
@@ -21,10 +24,10 @@ function NaviLogo({ className, style, width = 140, height }: NaviLogoProps) {
       height={height}
       fill="currentColor"
       role="img"
-      aria-label="Navigatsiya"
+      aria-label={ariaLabel}
       xmlns="http://www.w3.org/2000/svg"
       preserveAspectRatio="xMidYMid meet"
-      className={['navi-logo', className].filter(Boolean).join(' ')}
+      className={cn('navi-logo', className)}
       style={style}
     >
       {NAVI_LOGO_PATHS.map((d, i) => (

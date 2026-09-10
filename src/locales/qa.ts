@@ -6,7 +6,7 @@
 // Career options are keyed by RAW dimension order [R, I, A, S, E, C] so every
 // rotated/subset export can be looked up by each option's w vector.
 
-export type Lang = 'uz' | 'ru' | 'en'
+export type { Lang } from '../lib/i18n'
 export interface QAText {
   uz: string
   ru: string

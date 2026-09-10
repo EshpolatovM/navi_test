@@ -26,6 +26,7 @@ export function ResultProgress({
   segmented = true,
   segments = 20,
   className,
+  ariaLabel,
 }: {
   value: number
   accent: string
@@ -34,6 +35,7 @@ export function ResultProgress({
   segmented?: boolean
   segments?: number
   className?: string
+  ariaLabel?: string
 }) {
   const v = clampScore(value)
 
@@ -44,6 +46,7 @@ export function ResultProgress({
         className={cn('flex w-full gap-[3px]', className)}
         style={{ height: thickness }}
         role="meter"
+        aria-label={ariaLabel}
         aria-valuenow={v}
         aria-valuemin={0}
         aria-valuemax={100}
@@ -60,7 +63,7 @@ export function ResultProgress({
                   : 'var(--surface-elevated-2)',
               }}
               initial={{ scaleX: 0, opacity: active ? 0.4 : 1 }}
-              animate={{ scaleX: 1, opacity: active ? 1 : 1 }}
+              animate={{ scaleX: 1, opacity: 1 }}
               transition={{ duration: 0.55, delay: delay + i * 0.012, ease: [0.22, 1, 0.36, 1] }}
             />
           )
@@ -74,6 +77,7 @@ export function ResultProgress({
       className={cn('w-full overflow-hidden rounded-full', className)}
       style={{ height: thickness, background: 'var(--surface-elevated-2)', boxShadow: 'inset 0 0 0 1px var(--border)' }}
       role="meter"
+      aria-label={ariaLabel}
       aria-valuenow={v}
       aria-valuemin={0}
       aria-valuemax={100}

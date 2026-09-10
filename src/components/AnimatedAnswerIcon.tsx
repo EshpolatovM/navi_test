@@ -89,8 +89,6 @@ export const ANIMATED_ANSWER_ICONS: Record<string, LucideIcon> = {
   compass: Compass,
 }
 
-const ANIMATED_NAMES = new Set(Object.keys(ANIMATED_ANSWER_ICONS))
-
 interface AnimatedAnswerIconProps {
   name: string
   size?: number
@@ -113,4 +111,3 @@ function AnimatedAnswerIcon({ name, size = 20, className }: AnimatedAnswerIconPr
 }
 
 export default AnimatedAnswerIcon
-export { ANIMATED_NAMES }

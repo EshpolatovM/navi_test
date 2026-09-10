@@ -102,7 +102,7 @@ export async function buildSharePreview(
     ctx.fillText(`${Math.round(hero.score)}%`, 200, cardTop + 104)
     ctx.fillStyle = C.muted
     ctx.font = `500 20px ${FONT}`
-    const matchWord = lang === 'uz' ? 'moslik' : lang === 'ru' ? 'совпадение' : 'match'
+    const matchWord = t('rc.match')
     ctx.fillText(matchWord, 200 + ctx.measureText(`${Math.round(hero.score)}%`).width + 14, cardTop + 99)
 
     ctx.fillStyle = '#E5ECF6'

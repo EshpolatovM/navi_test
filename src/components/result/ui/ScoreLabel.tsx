@@ -1,3 +1,4 @@
+import { cn } from '../../../lib/utils'
 import { useSettings } from '../../SettingsContext'
 
 /**
@@ -25,7 +26,7 @@ export function ScoreLabel({
   const color = accent ?? 'var(--accent)'
   return (
     <span
-      className={`inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold tracking-[0.06em] uppercase ${className ?? ''}`}
+      className={cn('inline-flex w-fit items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold tracking-[0.06em] uppercase', className)}
       style={{ color, background: `color-mix(in srgb, ${color} 12%, transparent)` }}
     >
       <span aria-hidden className="size-1 rounded-full" style={{ background: color }} />

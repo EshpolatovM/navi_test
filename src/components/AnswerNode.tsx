@@ -1,14 +1,9 @@
-import type { Option, Riaset } from '../data'
+import type { Option } from '../data'
+import { primaryDim } from '../lib/utils'
 import { playAnswerSound } from '../lib/sound'
 import AnimatedAnswerIcon from './AnimatedAnswerIcon'
 
 const DIM_ICON_NAMES: string[] = ['hammer', 'flask', 'palette', 'heart', 'rocket', 'list']
-
-function primaryDim(w: Riaset): number {
-  let best = 0
-  for (let i = 1; i < w.length; i++) if (w[i] > w[best]) best = i
-  return best
-}
 
 export interface NodePosition {
   x: number
