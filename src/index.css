@@ -1,50 +1,39 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 @import "tailwindcss";
 
+/* Self-hosted Manrope variable font (wght 400–800). Latin, Latin-Ext and
+   Cyrillic subsets cover Uzbek (o‘/g‘), Russian and English with zero
+   network requests at runtime. */
 @font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("/src/assets/fonts/PlusJakartaSans-400.woff2") format("woff2");
-  font-weight: 400;
+  font-family: "Manrope";
   font-style: normal;
+  font-weight: 400 800;
   font-display: swap;
+  src: url("/src/assets/fonts/Manrope-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("/src/assets/fonts/PlusJakartaSans-500.woff2") format("woff2");
-  font-weight: 500;
+  font-family: "Manrope";
   font-style: normal;
+  font-weight: 400 800;
   font-display: swap;
+  src: url("/src/assets/fonts/Manrope-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
 }
 
 @font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("/src/assets/fonts/PlusJakartaSans-600.woff2") format("woff2");
-  font-weight: 600;
+  font-family: "Manrope";
   font-style: normal;
+  font-weight: 400 800;
   font-display: swap;
-}
-
-@font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("/src/assets/fonts/PlusJakartaSans-700.woff2") format("woff2");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Plus Jakarta Sans";
-  src: url("/src/assets/fonts/PlusJakartaSans-800.woff2") format("woff2");
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
+  src: url("/src/assets/fonts/Manrope-cyrillic.woff2") format("woff2");
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
 }
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system,
+  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, sans-serif;
-  --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
 
 /* ---------- Design tokens ----------
@@ -52,17 +41,17 @@
    user's chosen color. Surface/text/border tokens switch with data-theme.
    Stage palette (--stage-*) gives each roadmap step its own muted identity. */
 :root {
-  /* Light mode — warm off-white base, calm and premium */
-  --surface: #f4f3ef;
-  --surface-elevated: #fdfdfa;
-  --surface-elevated-2: #eeebe4;
-  --surface-soft: rgba(253, 253, 250, 0.82);
+  /* Light mode — soft gray-white, calm and minimal (never pure white) */
+  --surface: #f7f7f7;
+  --surface-elevated: #ffffff;
+  --surface-elevated-2: #efefef;
+  --surface-soft: rgba(255, 255, 255, 0.85);
   --text-primary: #20232b;
   --text-secondary: #565b66;
   --text-muted: #8a929f;
   --border: rgba(30, 34, 43, 0.1);
   --border-strong: rgba(30, 34, 43, 0.18);
-  --shadow: 0 18px 50px -20px rgba(35, 38, 48, 0.24);
+  --shadow: 0 8px 24px -16px rgba(35, 38, 48, 0.16);
 
   /* Stage identity palette (muted, harmonious blush of accent-world) */
   --stage-violet: #7a6be8;
@@ -93,17 +82,17 @@
 }
 
 [data-theme='dark'] {
-  /* Dark mode — deep charcoal navy, never pure black */
-  --surface: #141820;
-  --surface-elevated: #1b2130;
-  --surface-elevated-2: #242b3c;
-  --surface-soft: rgba(27, 33, 48, 0.85);
+  /* Dark mode — solid neutral charcoal, no blue/purple tint anywhere */
+  --surface: #121212;
+  --surface-elevated: #1f1f1f;
+  --surface-elevated-2: #2a2a2a;
+  --surface-soft: rgba(30, 30, 30, 0.85);
   --text-primary: #ececf2;
   --text-secondary: #a6adbc;
   --text-muted: #7e889b;
   --border: rgba(255, 255, 255, 0.09);
   --border-strong: rgba(255, 255, 255, 0.17);
-  --shadow: 0 22px 56px -22px rgba(0, 0, 0, 0.6);
+  --shadow: 0 10px 26px -18px rgba(0, 0, 0, 0.55);
 
   --stage-violet: #9a8bf6;
   --stage-blue: #6ca1f3;
@@ -111,6 +100,20 @@
   --stage-green: #65ba88;
   --stage-orange: #efa76e;
   --stage-rose: #ef7f9b;
+}
+
+/* Official NAVI wordmark — exact four-path SVG, colored via currentColor */
+.navi-logo {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  color: #0043ff;
+  transition: color 0.25s ease;
+}
+
+[data-theme='dark'] .navi-logo {
+  color: #ffffff;
 }
 
 body {
@@ -214,7 +217,7 @@ body {
 
 .surface-card:hover {
   border-color: var(--accent-ring);
-  box-shadow: 0 26px 64px -24px var(--accent-glow), var(--shadow);
+  box-shadow: var(--shadow);
 }
 
 h1,
@@ -390,40 +393,6 @@ h3 {
   }
 }
 
-@keyframes blob {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(3rem, -2.5rem) scale(1.08);
-  }
-  66% {
-    transform: translate(-2.5rem, 2rem) scale(0.94);
-  }
-}
-
-@keyframes drift {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(4rem, 3rem);
-  }
-}
-
-/* Soft breathing for the central atmosphere glow */
-@keyframes aura {
-  0%,
-  100% {
-    opacity: 0.6;
-  }
-  50% {
-    opacity: 0.95;
-  }
-}
-
 @keyframes bubble-in {
   from {
     opacity: 0;
@@ -578,29 +547,6 @@ h3 {
   }
 }
 
-/* Accent background blob cross-fade */
-@keyframes bg-blob-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.7);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes bg-blob-out {
-  0% {
-    opacity: 1;
-    transform: scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: scale(1.15);
-  }
-}
-
 /* Shake "to'kilib ketish": options scatter out, then settle back in place */
 @keyframes tumble-out {
   0% {
@@ -675,18 +621,6 @@ h3 {
   animation: pop-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 
-.animate-blob {
-  animation: blob 18s ease-in-out infinite;
-}
-
-.animate-drift {
-  animation: drift 14s ease-in-out infinite;
-}
-
-.animate-aura {
-  animation: aura 9s ease-in-out infinite;
-}
-
 .animate-bubble-in {
   animation: bubble-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
@@ -727,14 +661,6 @@ h3 {
 
 .animate-node-float {
   animation: node-float 6s ease-in-out infinite;
-}
-
-.animate-bg-blob-in {
-  animation: bg-blob-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-.animate-bg-blob-out {
-  animation: bg-blob-out 0.9s ease-out both;
 }
 
 .animate-progress-glow {
@@ -781,11 +707,6 @@ h3 {
 .motion-ui {
   transform: translate3d(calc(var(--mx) * 1.5px), calc(var(--my) * 1.2px), 0)
     rotateX(calc(var(--roty) * 0.5deg)) rotateY(calc(var(--rotx) * 0.5deg));
-}
-
-/* Background atmospheric glow — reacts just a little, edges stay clean */
-.motion-glow {
-  transform: translate3d(calc(var(--mx) * 5px), calc(var(--my) * 6px), 0);
 }
 
 /* Pan-only via the individual translate property — safe on elements whose
@@ -847,24 +768,96 @@ h3 {
   animation: fade-in 0.4s ease both;
 }
 
-/* Theme toggle: existing Sun/Moon icons crossfade + rotate on theme switch.
-   Smooth, short (~450ms), subtle. Disabled below for reduced motion / Motion OFF. */
-.theme-toggle-sun,
-.theme-toggle-moon {
-  transition:
-    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+/* Premium first-visit brand intro — near-black canvas, one centered logo,
+   calm scale+opacity in, soft fade out, no glow/pulse. Unmounts after play. */
+.navi-intro-overlay {
+  background-color: #121212;
+  animation: fade-in 0.3s ease both;
+}
+
+.navi-intro-logo {
+  width: min(200px, 72vw);
+  height: auto;
+}
+
+.navi-intro-logo-in {
+  animation: navi-intro-in 0.56s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.navi-intro-logo-out {
+  animation: navi-intro-out 0.48s ease-in-out both;
+}
+
+@keyframes navi-intro-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes navi-intro-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
+/* Short viewports (laptops + compact phones): tighten the quiz column so the
+   whole test screen stays inside the viewport without page scroll or clipping. */
+@media (max-height: 720px) {
+  .quiz-scene {
+    row-gap: clamp(10px, 1.6vw, 22px);
+  }
+  .answers-grid {
+    row-gap: clamp(10px, 1.4vw, 22px);
+    column-gap: clamp(10px, 1.4vw, 22px);
+  }
+  .question-bubble {
+    min-height: 104px;
+    padding: 14px 14px 16px;
+  }
+  .answer-shape {
+    min-height: 54px;
+  }
+}
+
+@media (max-height: 580px) {
+  .quiz-scene {
+    row-gap: 10px;
+  }
+  .question-bubble {
+    min-height: 90px;
+    padding: 12px 12px 14px;
+  }
+  .answers-grid {
+    row-gap: 9px;
+    column-gap: 9px;
+  }
+  .answer-shape {
+    min-height: 46px;
+    padding: 8px 10px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .reveal-section {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
   .animate-card-in,
   .animate-question-in,
   .animate-option-in,
   .animate-shake,
   .animate-pop-in,
-  .animate-blob,
-  .animate-drift,
-  .animate-aura,
   .animate-bubble-in,
   .animate-slide-up,
   .animate-grow-x,
@@ -877,19 +870,14 @@ h3 {
   .animate-bubble-float,
   .animate-node-in,
   .animate-node-float,
-  .animate-bg-blob-in,
-  .animate-bg-blob-out,
   .animate-progress-glow,
-  .animate-ring-pulse {
+  .animate-ring-pulse,
+  .navi-intro-overlay,
+  .navi-intro-logo-in,
+  .navi-intro-logo-out {
     animation: none;
   }
 
-  .theme-toggle-sun,
-  .theme-toggle-moon {
-    transition: none;
-  }
-
-  .motion-glow,
   .motion-edge,
   .motion-ui,
   .motion-tray,
@@ -914,10 +902,7 @@ html[data-motion='off'] .animate-question-in,
 html[data-motion='off'] .animate-option-in,
 html[data-motion='off'] .animate-shake,
 html[data-motion='off'] .animate-pop-in,
-html[data-motion='off'] .animate-blob,
-html[data-motion='off'] .animate-drift,
-html[data-motion='off'] .animate-aura,
-html[data-motion='off'] .animate-bubble-in,
+  html[data-motion='off'] .animate-bubble-in,
 html[data-motion='off'] .animate-slide-up,
 html[data-motion='off'] .animate-grow-x,
 html[data-motion='off'] .animate-fade-in,
@@ -929,21 +914,16 @@ html[data-motion='off'] .animate-bubble-pop,
 html[data-motion='off'] .animate-bubble-float,
 html[data-motion='off'] .animate-node-in,
 html[data-motion='off'] .animate-node-float,
-html[data-motion='off'] .animate-bg-blob-in,
-html[data-motion='off'] .animate-bg-blob-out,
 html[data-motion='off'] .animate-progress-glow,
-html[data-motion='off'] .animate-ring-pulse {
+html[data-motion='off'] .animate-ring-pulse,
+html[data-motion='off'] .navi-intro-overlay,
+html[data-motion='off'] .navi-intro-logo-in,
+html[data-motion='off'] .navi-intro-logo-out {
   animation: none;
 }
 
-html[data-motion='off'] .theme-toggle-sun,
-html[data-motion='off'] .theme-toggle-moon {
-  transition: none;
-}
-
-html[data-motion='off'] .motion-glow,
 html[data-motion='off'] .motion-edge,
-html[data-motion='off'] .motion-ui,
+  html[data-motion='off'] .motion-ui,
 html[data-motion='off'] .motion-tray,
 html[data-motion='off'] .motion-pan-m,
 html[data-motion='off'] .motion-pan-s,
@@ -956,4 +936,28 @@ html[data-motion='off'] .float-road {
   transform: none !important;
   translate: none !important;
   animation: none !important;
+}
+/* ── Result: reveal-on-scroll + mobile nav scrollbar ───────────────────────── */
+.reveal-section {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-section.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+html[data-motion='off'] .reveal-section {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }

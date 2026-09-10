@@ -10,7 +10,7 @@ export {
   type StageModel,
 } from './stages'
 export { CAREERS, type CareerProfile, type Riaset } from './careers'
-export { computeResult, type CareerMatch } from './engine'
+export { computeResult, centeredCosine, type CareerMatch } from './engine'
 export {
   INTEREST_ITEMS,
   INTEREST_COUNT,

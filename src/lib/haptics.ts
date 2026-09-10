@@ -43,6 +43,12 @@ export function isHapticsEnabled() {
   return hapticsEnabled
 }
 
+/** Restore the default haptics state (used after an account delete). */
+export function resetHaptics() {
+  hapticsEnabled = true
+  emit()
+}
+
 export function setHapticsEnabled(on: boolean) {
   hapticsEnabled = on
   writeFlag(on)

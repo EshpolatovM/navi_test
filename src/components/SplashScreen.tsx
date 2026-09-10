@@ -1,5 +1,7 @@
-import { ArrowRight, Compass, RotateCcw } from 'lucide-react'
+import { Compass, RotateCcw, Target } from 'lucide-react'
 import { useSettings } from './SettingsContext'
+import NaviLogo from './NaviLogo'
+import { InteractiveHoverButton } from './ui/interactive-hover-button'
 
 export type AssessmentMode = 'interest' | 'career'
 
@@ -66,18 +68,15 @@ function ModeCard({
       </div>
 
       <div className="mt-auto pt-6">
-        <button
+        <InteractiveHoverButton
           type="button"
+          variant="primary"
+          size="md"
+          full
+          text={isResume ? badge : cta}
           onClick={onSelect}
-          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-full text-sm font-bold uppercase tracking-[0.06em] text-[var(--accent-contrast)] transition-all duration-200 ease-out select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]"
-          style={{
-            background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
-            boxShadow: '0 12px 28px -8px var(--accent-shadow)',
-          }}
-        >
-          {isResume ? badge : cta}
-          <ArrowRight className="size-4" />
-        </button>
+          aria-label={isResume ? badge : cta}
+        />
       </div>
     </div>
   )
@@ -97,14 +96,7 @@ function SplashScreen({
   return (
     <div className="animate-question-in mx-auto w-full max-w-[1040px] px-1">
       <div className="mb-7 text-center">
-        <div
-          className="animate-bubble-in float-road mx-auto mb-4 grid size-14 place-items-center rounded-2xl bg-[var(--surface-elevated)] text-slate-900 shadow-[0_12px_28px_-10px_rgba(30,41,59,0.4)] ring-1 backdrop-blur md:size-16"
-          style={{ borderColor: 'var(--border)' }}
-        >
-          <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18" />
-          </svg>
-        </div>
+        <NaviLogo width={200} height={43.75} className="float-road mx-auto mb-4" />
         <h1 className="text-2xl font-extrabold tracking-[-0.01em] text-slate-900 md:text-[2rem]">
           {t('splash.hello.a')} <span style={{ color: 'var(--accent)' }}>{t('splash.hello.b')}</span>?
         </h1>
@@ -129,11 +121,7 @@ function SplashScreen({
           title={t('card.career.title')}
           subtitle={t('card.career.sub')}
           badge={career?.finished ? t('card.result') : career ? t('card.resume', { n: career.answered, total: career.total }) : t('card.career.badge')}
-          icon={
-            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 9h16M4 15h16M10 3 8 21M16 3l-2 18" />
-            </svg>
-          }
+          icon={<Target style={{ width: 30, height: 30 }} strokeWidth={2.1} />}
           cta={t('card.cta')}
           onSelect={() => onSelect('career')}
           delay={220}

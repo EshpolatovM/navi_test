@@ -1,9 +1,12 @@
 import type { ElementType } from 'react'
-import { Check, Moon, Music2, Pause, Sparkles, Sun, Vibrate, Volume2, X } from 'lucide-react'
+import { useState } from 'react'
+import { Check, Music2, Pause, Sparkles, Trash2, Vibrate, Volume2, X } from 'lucide-react'
 import { LANGS } from '../lib/i18n'
 import { useSettings } from './SettingsContext'
 import { useQuizAudio } from '../hooks/useQuizAudio'
 import { useHaptics } from '../hooks/useHaptics'
+import { InteractiveHoverButton } from './ui/interactive-hover-button'
+import BlindPullToggle from './ui/blind-pull-toggle'
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -59,16 +62,17 @@ function ToggleRow({
   )
 }
 
-function SetupModal({ onClose }: { onClose: () => void }) {
-  const { lang, theme, motionEnabled, t, setLang, setTheme, setMotionEnabled } =
+function SetupModal({ onClose, onDeleteAccount }: { onClose: () => void; onDeleteAccount: () => void }) {
+  const { lang, theme, motionEnabled, t, setLang, setMotionEnabled } =
     useSettings()
   const { soundEnabled, setSoundEnabled, musicEnabled, setMusicEnabled } = useQuizAudio()
   const { hapticsEnabled, setHapticsEnabled } = useHaptics()
+  const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ background: 'var(--accent-glow)', backdropFilter: 'blur(8px)' }}
+      style={{ background: 'rgba(15, 17, 22, 0.45)', backdropFilter: 'blur(8px)' }}
       onClick={onClose}
     >
       <div
@@ -82,14 +86,15 @@ function SetupModal({ onClose }: { onClose: () => void }) {
           <h2 className="text-lg font-extrabold tracking-[-0.01em] text-slate-900">
             {t('settings.title')}
           </h2>
-          <button
+          <InteractiveHoverButton
             type="button"
+            size="sm"
+            variant="ghost"
+            arrow={false}
+            icon={<X className="size-4" />}
             aria-label={t('settings.close')}
             onClick={onClose}
-            className="grid size-8 place-items-center rounded-full text-slate-500 ring-1 ring-slate-200/80 transition-all duration-200 hover:text-slate-900 active:scale-90"
-          >
-            <X className="size-4" />
-          </button>
+          />
         </div>
 
         <div className="flex flex-col gap-5">
@@ -121,27 +126,18 @@ function SetupModal({ onClose }: { onClose: () => void }) {
 
           <div>
             <SectionLabel>{t('settings.theme')}</SectionLabel>
-            <div className="grid grid-cols-2 gap-2">
-              {(['light', 'dark'] as const).map((opt) => {
-                const active = theme === opt
-                const light = opt === 'light'
-                return (
-                  <button
-                    key={opt}
-                    type="button"
-                    onClick={() => setTheme(opt)}
-                    className="flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-bold text-slate-800 ring-1 transition-colors"
-                    style={{ borderColor: active ? 'var(--accent)' : 'var(--border)', background: active ? 'var(--accent-tint)' : 'transparent' }}
-                  >
-                    {light ? (
-                      <Sun style={{ width: 16, height: 16 }} strokeWidth={2.4} />
-                    ) : (
-                      <Moon style={{ width: 16, height: 16 }} strokeWidth={2.4} />
-                    )}
-                    {t(light ? 'settings.theme.light' : 'settings.theme.dark')}
-                  </button>
-                )
-              })}
+            <div className="flex items-center gap-4 rounded-2xl px-3 py-2">
+              <BlindPullToggle />
+              <div className="min-w-0 flex-1">
+                <p className="text-[13px] font-bold text-slate-800">{t('settings.theme.mode')}</p>
+                <p className="mt-0.5 text-[11px] leading-snug text-slate-400">{t('settings.theme.control')}</p>
+              </div>
+              <span
+                className="shrink-0 rounded-lg px-2.5 py-1 text-[11px] font-bold tracking-[0.04em]"
+                style={{ background: 'var(--accent-soft)', color: 'var(--accent)' }}
+              >
+                {t(theme === 'dark' ? 'theme.dark' : 'theme.light')}
+              </span>
             </div>
           </div>
 
@@ -197,8 +193,72 @@ function SetupModal({ onClose }: { onClose: () => void }) {
               />
             </div>
           </div>
+
+          {/* Danger zone — intentionally quieter than the settings above */}
+          <div className="border-t pt-5" style={{ borderColor: 'var(--border)' }}>
+            <InteractiveHoverButton
+              type="button"
+              variant="destructive"
+              size="md"
+              full
+              arrow={false}
+              icon={<Trash2 className="size-4" />}
+              text={t('settings.deleteAccount')}
+              aria-label={t('settings.deleteAccount')}
+              onClick={() => setConfirmDeleteOpen(true)}
+            />
+            <p className="mt-2 px-1 text-[11px] leading-snug text-slate-400">{t('settings.deleteAccount.sub')}</p>
+          </div>
         </div>
       </div>
+
+      {/* Delete-account confirmation */}
+      {confirmDeleteOpen && (
+        <div
+          className="fixed inset-0 z-[80] flex items-center justify-center p-4"
+          style={{ background: 'rgba(15, 17, 22, 0.5)', backdropFilter: 'blur(8px)' }}
+          onClick={() => setConfirmDeleteOpen(false)}
+        >
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            onClick={(e) => e.stopPropagation()}
+            className="motion-pan-m animate-bubble-in w-full max-w-sm rounded-3xl bg-[var(--surface-elevated)] p-6 text-center shadow-[var(--shadow)] ring-1"
+            style={{ borderColor: 'rgba(225,29,72,0.18)' }}
+          >
+            <span className="mx-auto grid size-12 place-items-center rounded-2xl" style={{ background: 'rgba(225,29,72,0.12)', color: '#E11D48' }}>
+              <Trash2 className="size-5" strokeWidth={2.2} />
+            </span>
+            <h3 className="mt-4 text-[16px] leading-snug font-extrabold tracking-[-0.01em] text-slate-900">
+              {t('delete.confirmTitle')}
+            </h3>
+            <p className="mx-auto mt-2 max-w-[260px] text-[12.5px] leading-relaxed text-slate-500">
+              {t('delete.confirmDesc')}
+            </p>
+            <div className="mt-6 grid grid-cols-2 gap-2.5">
+              <InteractiveHoverButton
+                type="button"
+                variant="ghost"
+                size="md"
+                arrow={false}
+                text={t('delete.cancel')}
+                onClick={() => setConfirmDeleteOpen(false)}
+              />
+              <InteractiveHoverButton
+                type="button"
+                variant="destructive"
+                size="md"
+                arrow={false}
+                text={t('delete.confirm')}
+                onClick={() => {
+                  setConfirmDeleteOpen(false)
+                  onDeleteAccount()
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

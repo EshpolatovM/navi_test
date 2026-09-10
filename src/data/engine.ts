@@ -26,7 +26,7 @@ function mean(v: Riaset): number {
 // Centered cosine (Pearson-style): each vector is shifted by its own mean so a
 // flat "no strong preference" profile scores near zero instead of matching
 // everything. High score only when the profile's PEAKS match the career's PEAKS.
-function centeredCosine(a: Riaset, b: Riaset): number {
+export function centeredCosine(a: Riaset, b: Riaset): number {
   const ma = mean(a)
   const mb = mean(b)
   const p = a.map((x) => x - ma)
@@ -103,14 +103,21 @@ export function computeResult(
     }
   }
 
-  // Score every career using centered cosine similarity, converted to a 0-100%.
-  const ranked = CAREERS.map((career) => {
-    const cos = centeredCosine(profile, career.riasec)
-    const score = clamp(Math.round(100 * cos), 3, 99)
-    const reasons = generateReasons(career, profile, lang)
-    return { career, score, reasons }
-  })
-    .sort((a, b) => b.score - a.score || a.career.name.localeCompare(b.career.name))
+  // Score every career using centered cosine similarity, reported honestly as
+  // a percentage of the true maximum (perfect shape match = cosine of 1.0).
+  // No artificial compression, caps or shaping — the number reflects the
+  // actual alignment between the user's answer profile and the career profile.
+  // Ties are broken by original catalog order (data order is the stable,
+  // deterministic final tie-breaker).
+  const ranked = CAREERS
+    .map((career, idx) => {
+      const cos = centeredCosine(profile, career.riasec)
+      const score = clamp(Math.round(Math.max(0, cos) * 100), 0, 100)
+      const reasons = generateReasons(career, profile, lang)
+      return { career, score, reasons, idx }
+    })
+    .sort((a, b) => b.score - a.score || a.idx - b.idx)
+    .map(({ career, score, reasons }) => ({ career, score, reasons }))
 
   return { profile, ranked, best: ranked[0] }
 }

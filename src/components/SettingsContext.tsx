@@ -15,6 +15,7 @@ interface SettingsApi extends Settings {
   setTheme: (t: ThemeMode) => void
   setMotionEnabled: (on: boolean) => void
   completeOnboarding: () => void
+  resetData: () => void
   t: (key: string, vars?: Record<string, string | number>) => string
 }
 
@@ -103,6 +104,14 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
         } catch {
           /* private mode */
         }
+      },
+      resetData: () => {
+        // Used after an account delete: persistent keys are already removed
+        // from localStorage externally, so only the in-memory state resets.
+        setLangState('uz')
+        setThemeState('light')
+        setOnboarded(false)
+        setMotionEnabledState(true)
       },
       t: (key, vars) => translate(lang, key, vars),
     }),

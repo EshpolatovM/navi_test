@@ -56,6 +56,14 @@ export function isSoundEnabled() {
   return soundEnabled
 }
 
+/** Restore the default audio state (used after an account delete). */
+export function resetAudio() {
+  soundEnabled = true
+  musicEnabled = true
+  stopBackgroundMusic()
+  emit()
+}
+
 export function isMusicEnabled() {
   return musicEnabled
 }

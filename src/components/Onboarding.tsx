@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { ArrowLeft, ArrowRight, Check, Moon, Sun } from 'lucide-react'
+import { ArrowLeft, Check, Moon, Sun } from 'lucide-react'
 import { LANGS } from '../lib/i18n'
 import { useSettings } from './SettingsContext'
+import { InteractiveHoverButton } from './ui/interactive-hover-button'
 
 const STEPS = ['lang', 'theme'] as const
 type Step = (typeof STEPS)[number]
@@ -9,15 +10,15 @@ type Step = (typeof STEPS)[number]
 function ThemePreview({ dark }: { dark: boolean }) {
   const vars = dark
     ? {
-        '--surface': '#141820',
-        '--surface-elevated': '#1b2130',
+        '--surface': '#121212',
+        '--surface-elevated': '#1f1f1f',
         '--text-primary': '#ececf2',
         '--text-secondary': '#a6adbc',
         '--border': 'rgba(255,255,255,0.09)',
       }
     : {
-        '--surface': '#f4f3ef',
-        '--surface-elevated': '#fdfdfa',
+        '--surface': '#f7f7f7',
+        '--surface-elevated': '#ffffff',
         '--text-primary': '#20232b',
         '--text-secondary': '#565b66',
         '--border': 'rgba(30,34,43,0.1)',
@@ -50,15 +51,17 @@ function Onboarding() {
     <div className="motion-pan-m animate-question-in relative mx-auto flex w-full max-w-[560px] flex-1 flex-col px-4 py-6">
       {/* back control */}
       {stepIdx > 0 && (
-        <button
+        <InteractiveHoverButton
           type="button"
+          variant="ghost"
+          size="sm"
+          arrow={false}
+          icon={<ArrowLeft className="size-3.5" />}
+          text={t('app.back')}
           aria-label={t('app.back')}
           onClick={back}
-          className="absolute top-6 left-0 inline-flex items-center gap-1 rounded-full bg-[var(--surface-elevated)] px-3 py-1.5 text-[12px] font-bold text-slate-600 shadow-[0_8px_20px_-10px_rgba(30,41,59,0.4)] ring-1 ring-slate-200/80 transition-colors hover:text-slate-900"
-        >
-          <ArrowLeft className="size-3.5" />
-          {t('app.back')}
-        </button>
+          className="absolute top-6 left-0"
+        />
       )}
 
       {/* step indicator */}
@@ -171,18 +174,14 @@ function Onboarding() {
             </div>
 
             <div className="mt-auto pt-8">
-              <button
+              <InteractiveHoverButton
                 type="button"
+                variant="primary"
+                size="lg"
+                full
+                text={t('onb.start')}
                 onClick={completeOnboarding}
-                className="inline-flex h-13 w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-bold tracking-[0.06em] uppercase text-[var(--accent-contrast)] transition-all duration-200 ease-out select-none hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99]"
-                style={{
-                  background: 'linear-gradient(135deg, var(--accent), var(--accent-dark))',
-                  boxShadow: '0 12px 28px -8px var(--accent-shadow)',
-                }}
-              >
-                {t('onb.start')}
-                <ArrowRight className="size-4" />
-              </button>
+              />
               <p className="mt-2.5 text-center text-[11px] text-slate-400">{t('onb.hint')}</p>
             </div>
           </>
