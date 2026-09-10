@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Sparkles } from 'lucide-react'
 import type { QuizQuestion, StageModel } from '../data'
 import { toneFor } from '../lib/tone'
 import { useSettings } from './SettingsContext'
@@ -91,24 +90,8 @@ function QuestionScene({
             transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         >
-          <span
-            aria-hidden
-            className="absolute left-5 top-3.5 font-display text-[9px] font-semibold uppercase tracking-[0.28em] md:top-4 md:text-[10px]"
-            style={{ color: tone.deep }}
-          >
-            {t(`stage.${boundary.def.key}`)}
-          </span>
-          <Sparkles
-            aria-hidden
-            className="absolute right-5 top-3.5 mark-float md:top-4"
-            style={{ width: 14, height: 14, color: tone.soft }}
-            strokeWidth={2.2}
-          />
-<p className={`${textSize} pt-2.5 font-bold tracking-[-0.01em] text-slate-800 md:pt-5`}>
+          <p className={`${textSize} font-bold tracking-[-0.01em] text-slate-800`}>
             {question.q}
-          </p>
-          <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.18em] text-slate-400 md:mt-3 md:text-[10px] max-[359px]:hidden">
-            {t('scene.hint')}
           </p>
         </div>
         {/* Centered speech-bubble notch — fuses into the card body */}
@@ -178,7 +161,6 @@ function QuestionScene({
                 option={opt}
                 accent={tone.main}
                 index={i}
-                letter={String(i + 1)}
                 style={{ x: 50, y: 50 }}
                 center={{ x: 50, y: 44 }}
                 rotation={rot}
@@ -202,14 +184,16 @@ function QuestionScene({
 
   return (
     <div className="w-full">
-      <JourneyProgress
-        current={index + 1}
-        total={total}
-        stages={stageModel.boundaries.map((s) => s.def)}
-        stageKey={boundary.def.key}
-        stageCurrent={stageCurrent}
-        stageTotal={stageTotal}
-      />
+      <div className="mb-5 md:mb-1.5">
+        <JourneyProgress
+          current={index + 1}
+          total={total}
+          stages={stageModel.boundaries.map((s) => s.def)}
+          stageKey={boundary.def.key}
+          stageCurrent={stageCurrent}
+          stageTotal={stageTotal}
+        />
+      </div>
 
       <div className={phase === 'out' ? 'animate-scene-out' : 'animate-scene-in'}>
         <div className="quiz-scene flex w-full flex-col items-center">

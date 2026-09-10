@@ -14,7 +14,6 @@ function AnswerNode({
   option,
   accent,
   index,
-  letter,
   style,
   center,
   rotation,
@@ -32,7 +31,6 @@ function AnswerNode({
   option: Option
   accent: string
   index: number
-  letter: string
   style: NodePosition
   center: NodePosition
   rotation: number
@@ -118,32 +116,21 @@ function AnswerNode({
     >
       <span
         style={innerStyle}
-        className={`answer-shape flex w-full cursor-pointer items-center gap-2 px-2.5 py-2.5 text-left min-h-[48px] md:min-h-[72px] md:gap-4 md:px-4 md:py-3`}
+        className={`answer-shape flex w-full cursor-pointer items-center gap-3 px-3.5 py-2.5 text-left min-h-[48px] md:min-h-[72px] md:gap-4 md:px-4 md:py-3`}
       >
-        <span className="relative shrink-0">
-          <span
-            aria-hidden
-            className="grid size-[34px] place-items-center rounded-full md:size-10"
-            style={{
-              background: isPicked ? 'color-mix(in srgb, var(--accent-contrast) 22%, transparent)' : `${accent}12`,
-              color: isPicked ? 'var(--accent-contrast)' : accent,
-              transform: isHover ? 'scale(1.1) rotate(-5deg)' : isPicked ? 'scale(1.05)' : 'scale(1)',
-              transition: 'transform 0.32s cubic-bezier(0.34,1.56,0.64,1)',
-            }}
-          >
-            <span className="answer-icon-float grid place-items-center">
-              <AnimatedAnswerIcon name={iconName} size={20} />
-            </span>
-          </span>
-          <span
-            aria-hidden
-            className="absolute -top-1.5 -right-1.5 grid size-6 place-items-center rounded-full font-display text-[10.5px] font-bold"
-            style={{ background: isPicked ? 'var(--accent-contrast)' : 'var(--surface-elevated)', color: isPicked ? 'var(--accent)' : 'var(--text-muted)', boxShadow: `0 2px 6px ${accent}33` }}
-          >
-            {letter}
+        <span className="grid size-[34px] shrink-0 place-items-center rounded-full md:size-10"
+          style={{
+            background: isPicked ? 'color-mix(in srgb, var(--accent-contrast) 22%, transparent)' : `${accent}12`,
+            color: isPicked ? 'var(--accent-contrast)' : accent,
+            transform: isHover ? 'scale(1.1) rotate(-5deg)' : isPicked ? 'scale(1.05)' : 'scale(1)',
+            transition: 'transform 0.32s cubic-bezier(0.34,1.56,0.64,1)',
+          }}
+        >
+          <span className="answer-icon-float grid place-items-center">
+            <AnimatedAnswerIcon name={iconName} size={20} />
           </span>
         </span>
-        <span className="min-w-0 flex-1 break-words text-[12.5px] leading-[1.25] font-semibold md:text-[16px] md:leading-[1.3] line-clamp-2">{option.text}</span>
+        <span className="min-w-0 flex-1 break-words text-[12.5px] leading-[1.25] font-semibold md:text-[16px] md:leading-[1.3]">{option.text}</span>
       </span>
     </button>
   )

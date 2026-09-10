@@ -236,7 +236,7 @@ h3 {
    Only the SCALE changes with the viewport (clamp), never the structure.
    No absolute/constellation/orbit positioning; everything lives in flow. */
 .quiz-scene {
-  row-gap: clamp(18px, 2.4vw, 34px);
+  row-gap: clamp(24px, 3vw, 34px);
 }
 
 .quiz-scene-question {
@@ -249,8 +249,8 @@ h3 {
 
 .answers-grid {
   width: min(100%, clamp(460px, 52vw, 720px));
-  column-gap: clamp(10px, 1.5vw, 26px);
-  row-gap: clamp(12px, 1.6vw, 28px);
+  column-gap: clamp(16px, 2vw, 26px);
+  row-gap: clamp(16px, 2.2vw, 28px);
 }
 
 /* Answer cards — ONE shared soft-organic silhouette for every answer. Same
@@ -268,18 +268,29 @@ h3 {
    comfortable tap targets. */
 .question-bubble {
   border-radius: 34px 42px 40px 28px / 40px 36px 34px 44px;
-  padding: clamp(14px, 1.9vw, 27px) clamp(16px, 2.6vw, 38px) clamp(20px, 2.3vw, 32px);
+  padding: clamp(16px, 2vw, 24px) clamp(18px, 2.6vw, 32px);
 }
 
-/* Mobile (<=768px): same structure, compact scale. */
+/* Mobile (<=768px): same structure, compact scale.
+   16px uniform grid gap gives each card its own visible space —
+   shadows never collide, gyro motion never closes the gap to zero,
+   and every answer reads as an independent tap target. */
 @media (max-width: 768px) {
+  .quiz-scene {
+    row-gap: 24px;
+  }
+
   .answer-shape {
     border-radius: 18px 21px 19px 22px;
   }
 
   .question-bubble {
-    min-height: 120px;
-    padding: 18px 18px 22px;
+    padding: 18px;
+  }
+
+  .answers-grid {
+    column-gap: 16px;
+    row-gap: 16px;
   }
 }
 
@@ -811,14 +822,15 @@ h3 {
 }
 
 /* Short viewports (laptops + compact phones): tighten the quiz column so the
-   whole test screen stays inside the viewport without page scroll or clipping. */
+   whole test screen stays inside the viewport without page scroll or clipping.
+   Minimum 14px gap keeps cards visually distinct even at compressed scale. */
 @media (max-height: 720px) {
   .quiz-scene {
-    row-gap: clamp(10px, 1.6vw, 22px);
+    row-gap: 16px;
   }
   .answers-grid {
-    row-gap: clamp(10px, 1.4vw, 22px);
-    column-gap: clamp(10px, 1.4vw, 22px);
+    row-gap: 14px;
+    column-gap: 14px;
   }
   .question-bubble {
     min-height: 104px;
@@ -831,15 +843,15 @@ h3 {
 
 @media (max-height: 580px) {
   .quiz-scene {
-    row-gap: 10px;
+    row-gap: 12px;
   }
   .question-bubble {
     min-height: 90px;
     padding: 12px 12px 14px;
   }
   .answers-grid {
-    row-gap: 9px;
-    column-gap: 9px;
+    row-gap: 12px;
+    column-gap: 12px;
   }
   .answer-shape {
     min-height: 46px;

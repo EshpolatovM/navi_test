@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
 import Header from './components/Header'
 import NaviIntro from './components/NaviIntro'
 import QuestionScene from './components/QuestionScene'
@@ -8,7 +7,6 @@ import Roadmap from './components/Roadmap'
 import SplashScreen, { type AssessmentMode } from './components/SplashScreen'
 import Onboarding from './components/Onboarding'
 import SetupModal from './components/SetupModal'
-import { InteractiveHoverButton } from './components/ui/interactive-hover-button'
 import ResultLayout from './components/result/ResultLayout'
 import { ResultProvider } from './components/result/resultStore'
 import { RoadmapProvider } from './components/result/RoadmapContext'
@@ -292,21 +290,6 @@ function App() {
         }
       >
         <div className="relative w-full max-w-[640px] lg:max-w-[1080px] xl:max-w-[1240px] 2xl:max-w-[1340px] [perspective:1600px]">
-          {mode !== null && !screenDone && (
-            <div className="motion-ui mb-1.5 flex justify-start">
-              <InteractiveHoverButton
-                type="button"
-                variant="ghost"
-                size="sm"
-                arrow={false}
-                icon={<ArrowLeft className="size-3.5" />}
-                text={t('app.back')}
-                aria-label={t('app.back')}
-                onClick={handleBack}
-              />
-            </div>
-          )}
-
           {cheated && mode === 'career' && (
             <div className="animate-pop-in absolute left-1/2 top-0 z-30 -translate-x-1/2 rounded-full bg-slate-900 px-3.5 py-1 text-[11px] font-bold uppercase tracking-[0.14em] text-amber-300 shadow-lg">
               {t('app.cheat')}

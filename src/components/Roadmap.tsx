@@ -85,42 +85,6 @@ function Roadmap({
 
   return (
     <>
-      {/* Compact horizontal bar — visible below xl */}
-      <div className="w-full xl:hidden" aria-label={t('road.aside')}>
-        <div
-          className="flex items-center gap-3 rounded-2xl bg-[var(--surface-soft)] px-4 py-3 backdrop-blur-md"
-          style={{ border: '1px solid var(--border)' }}
-        >
-          <span className="relative z-10 grid size-[18px] shrink-0 place-items-center rounded-full text-white" style={dotStyle(activeStep)}>
-            {activeStep.status === 'done' ? (
-              <Check style={{ width: 12, height: 12 }} strokeWidth={3.5} />
-            ) : activeStep.key === 'BOSHLASH' ? (
-              <Compass style={{ width: 12, height: 12 }} strokeWidth={2.4} />
-            ) : (
-              <activeStep.icon style={{ width: 12, height: 12 }} strokeWidth={2.4} />
-            )}
-          </span>
-          <div className="min-w-0 flex-1">
-            <span className="block truncate text-[11px] font-bold uppercase tracking-[0.12em]" style={labelStyle(activeStep)}>
-              {t(`stage.${activeStep.key}`)}
-            </span>
-            <span className="block text-[10px] font-medium tabular-nums text-[var(--text-muted)]">
-              {activeStep.meta}
-            </span>
-          </div>
-          <div className="flex items-center gap-[3px]">
-            {steps.map((s) => (
-              <span
-                key={s.key}
-                aria-hidden
-                className="h-1.5 w-3 rounded-full sm:w-4"
-                style={dotStyle(s)}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* Full sidebar — visible on xl+ */}
       <aside className="motion-edge float-road hidden w-[176px] shrink-0 xl:block" aria-label={t('road.aside')}>
         <div
