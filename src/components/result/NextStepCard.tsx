@@ -1,4 +1,4 @@
-import { Rocket, Compass, RotateCcw } from 'lucide-react'
+import { CompassOne, Rocket, RotateOne } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import { InteractiveHoverButton } from '../ui/interactive-hover-button'
 import { ResultCard } from './ui/ResultCard'
@@ -12,9 +12,9 @@ interface NextStep {
 }
 
 const ICONS: Record<string, React.ReactNode> = {
-  rocket: <Rocket className="size-6" strokeWidth={2.2} />,
-  compass: <Compass className="size-6" strokeWidth={2.2} />,
-  rotate: <RotateCcw className="size-6" strokeWidth={2.2} />,
+  rocket: <Rocket className="size-6" strokeWidth={4.4} />,
+  compass: <CompassOne className="size-6" strokeWidth={4.4} />,
+  rotate: <RotateOne className="size-6" strokeWidth={4.4} />,
 }
 
 interface Props {
@@ -32,7 +32,7 @@ function NextStepCard({ nextStep, onAction }: Props) {
           className="grid size-14 place-items-center rounded-2xl text-[var(--accent)]"
           style={{ background: 'var(--accent-soft)' }}
         >
-          {ICONS[nextStep.icon] ?? <Rocket className="size-6" strokeWidth={2.2} />}
+          {ICONS[nextStep.icon] ?? <Rocket className="size-6" strokeWidth={4.4} />}
         </span>
         <h2 className="mt-5 font-display text-[22px] font-bold text-[var(--text-primary)]">
           {t(nextStep.titleKey)}

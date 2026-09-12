@@ -102,7 +102,7 @@ function AnswerNode({
       onMouseEnter={() => onHover(index)}
       onMouseLeave={() => onHover(null)}
       onClick={() => {
-        playAnswerSound(option.sound)
+        playAnswerSound()
         onSelect(index)
       }}
       tabIndex={selected === null ? 0 : -1}
@@ -110,8 +110,8 @@ function AnswerNode({
       style={styleBase}
       className={
         variant === 'orbit'
-          ? 'absolute z-10 select-none outline-none focus-visible:opacity-100'
-          : `w-full select-none outline-none ${full ? 'col-span-2' : ''}`
+          ? 'answer-node absolute z-10 select-none focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-[var(--accent)] focus-visible:outline-offset-2'
+          : `answer-node w-full select-none ${full ? 'col-span-2' : ''} focus-visible:opacity-100 focus-visible:outline-2 focus-visible:outline-[var(--accent)] focus-visible:outline-offset-2`
       }
     >
       <span

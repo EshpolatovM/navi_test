@@ -1,15 +1,17 @@
 import { useState } from 'react'
-import { Share2, Copy, Check } from 'lucide-react'
+import { Check, Copy, Share } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import { InteractiveHoverButton } from '../ui/interactive-hover-button'
+import type { ResultData } from './useResultData'
+import { resultShareSummary } from './shareSummary'
 
-function ShareResult() {
+function ShareResult({ data }: { data: ResultData }) {
   const { t } = useSettings()
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href)
+      await navigator.clipboard.writeText(`${resultShareSummary(data, t)}\n${window.location.href}`)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -18,14 +20,14 @@ function ShareResult() {
   }
 
   const handleTelegram = () => {
-    const text = encodeURIComponent(`${t('share.hashtag')} — ${window.location.origin}`)
+    const text = encodeURIComponent(resultShareSummary(data, t))
     window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${text}`, '_blank')
   }
 
   return (
     <section id="share" className="animate-fade-in">
       <div className="mx-auto max-w-[560px] rounded-[2rem] bg-[var(--surface-elevated)] px-6 py-6 text-center ring-1 backdrop-blur">
-        <Share2 className="mx-auto size-6 text-[var(--text-muted)]" strokeWidth={2} />
+        <Share className="mx-auto size-6 text-[var(--text-muted)]" strokeWidth={4} />
         <h2 className="mt-3 font-display text-[18px] font-bold text-[var(--text-primary)]">
           {t('share.title')}
         </h2>

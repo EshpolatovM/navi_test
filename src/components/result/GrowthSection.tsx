@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react'
+import { Right } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import { ResultCard, ResultTag } from './ui/ResultCard'
 import { RankNum } from './ui/Score'
@@ -32,7 +32,7 @@ function GrowthSection({ growthAreas }: { growthAreas: GrowthItem[] }) {
 
             <div className="mt-3.5">
               <ResultTag color={g.color}>
-                <ArrowRight className="size-3" />
+                <Right className="size-3" />
                 {t(g.actionKey)}
               </ResultTag>
             </div>

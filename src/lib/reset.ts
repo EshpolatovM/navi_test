@@ -10,7 +10,6 @@ const LOCAL_STORAGE_KEYS = [
   'onboardingCompleted',
   'selectedLanguage',
   'selectedTheme',
-  'motionEnabled',
   'selectedAccentColor',
   'quizlab_intro_seen',
   'quizlab.sound.enabled',

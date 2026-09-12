@@ -107,10 +107,9 @@ function playSfx(el: HTMLAudioElement, volume: number) {
 
 let answerEl: HTMLAudioElement | null = null
 
-// Plays the single global answer-select sound and a light vibration. The
-// optional `sound` parameter is accepted for caller compatibility but the
-// sound is always the same global one.
-export function playAnswerSound(_sound?: unknown) {
+// Plays the single global answer-select sound and a light vibration. There is
+// intentionally one answer sound for the whole quiz (no per-option variants).
+export function playAnswerSound() {
   triggerHaptic()
   if (!soundEnabled) return
   try {

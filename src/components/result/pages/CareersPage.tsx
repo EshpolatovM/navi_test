@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import { Briefcase } from 'lucide-react'
+import { Briefcase } from '@icon-park/react'
 import { motion } from 'framer-motion'
 import { useSettings } from '../../SettingsContext'
 import { useResultStore } from '../resultStore'
@@ -36,7 +36,7 @@ function CareersPage() {
             className="inline-flex size-11 items-center justify-center rounded-xl text-white"
             style={{ background: 'var(--accent)' }}
           >
-            <Briefcase className="size-5" strokeWidth={2.2} />
+            <Briefcase className="size-5" strokeWidth={4.4} />
           </span>
           <p className="mx-auto mt-4 text-[13.5px] leading-relaxed text-[var(--text-secondary)]">
             {t('catalog.careerTestFirst')}

@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react'
 import { Navigate } from 'react-router-dom'
-import { Check, Copy, FileDown, MessageCircle, RefreshCw, Send, Sparkles } from 'lucide-react'
+import { Check, Copy, Download, Magic, Message, Refresh, Send } from '@icon-park/react'
 import { useSettings } from '../../SettingsContext'
 import { useResultStore } from '../resultStore'
 import { useRoadmap } from '../RoadmapContext'
@@ -8,6 +8,7 @@ import { buildRoadmapPdf, ROADMAP_PDF_FILENAME } from '../../../lib/pdf'
 import { copyShare, openInTab, shareConfig, telegramUrl, whatsappUrl } from '../../../lib/share'
 import { InteractiveHoverButton } from '../../ui/interactive-hover-button'
 import { ResultCard } from '../ui/ResultCard'
+import { roadmapShareSummary } from '../shareSummary'
 
 const PHASE_KEYS = ['roadmap.step.start', 'roadmap.step.project', 'roadmap.step.skills', 'roadmap.step.portfolio', 'roadmap.step.next']
 
@@ -48,7 +49,7 @@ function RoadmapPage() {
   if (!data) return <Navigate to="/result" replace />
 
   const doCopy = async () => {
-    const ok = await copyShare({ title: t('result.share.nativeTitle'), text: t('roadmap.share.text'), url: shareConfig.resultUrl })
+    const ok = await copyShare({ title: t('result.share.nativeTitle'), text: roadmapShareSummary(data, t), url: shareConfig.resultUrl })
     if (ok) {
       setCopied(true)
       window.setTimeout(() => setCopied(false), 1800)
@@ -84,7 +85,7 @@ function RoadmapPage() {
       <ResultCard delay={0} className="px-6 py-7 text-center!">
         <span className="absolute inset-x-0 top-0 h-[3px] rounded-b-full" style={{ background: 'var(--accent)', opacity: 0.55 }} />
         <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--accent)]" style={{ background: 'var(--accent-soft)' }}>
-          <Sparkles className="size-3.5" />
+          <Magic className="size-3.5" />
           {t('roadmap.heroKicker')}
         </span>
         <h2 className="mt-4 font-display text-[24px] leading-tight font-bold text-[var(--text-primary)] md:text-[28px]">
@@ -107,7 +108,7 @@ function RoadmapPage() {
       {roadmap === null && (
         <ResultCard delay={0} className="flex-col items-center px-6 py-12 text-center!">
           <span className="grid size-14 place-items-center rounded-2xl text-white" style={{ background: 'var(--accent)', boxShadow: '0 14px 28px -14px rgba(15,18,25,0.35)' }}>
-            <Sparkles className="size-6" />
+            <Magic className="size-6" />
           </span>
           <h3 className="mt-4 text-[16px] font-bold text-[var(--text-primary)]">{t('roadmap.emptyTitle')}</h3>
           <p className="mt-1 max-w-sm text-[13px] leading-relaxed text-[var(--text-secondary)]">{t('roadmap.emptyDesc')}</p>
@@ -154,7 +155,7 @@ function RoadmapPage() {
                   pdfBusy ? (
                     <span aria-hidden className="size-3.5 animate-spin rounded-full border-2 border-[var(--border-strong)] border-t-[var(--text-secondary)]" />
                   ) : (
-                    <FileDown className="size-4" />
+                    <Download className="size-4" />
                   )
                 }
                 onClick={() => void downloadPdf()}
@@ -164,7 +165,7 @@ function RoadmapPage() {
                 variant="ghost"
                 size="sm"
                 arrow={false}
-                icon={<RefreshCw className="size-4" />}
+                icon={<Refresh className="size-4" />}
                 text={t('roadmap.regenerate')}
                 onClick={() => setConfirming((v) => !v)}
               />
@@ -175,7 +176,7 @@ function RoadmapPage() {
                 arrow={false}
                 icon={<Send className="size-4" />}
                 aria-label={t('share.telegram')}
-                onClick={() => openInTab(telegramUrl({ title: t('result.share.nativeTitle'), text: t('roadmap.share.text'), url: shareConfig.resultUrl }))}
+                onClick={() => openInTab(telegramUrl({ title: t('result.share.nativeTitle'), text: roadmapShareSummary(data, t), url: shareConfig.resultUrl }))}
                 style={{ '--accent': '#0EA5E9' } as React.CSSProperties}
               />
               <InteractiveHoverButton
@@ -183,9 +184,9 @@ function RoadmapPage() {
                 variant="ghost"
                 size="icon"
                 arrow={false}
-                icon={<MessageCircle className="size-4" />}
+                icon={<Message className="size-4" />}
                 aria-label="WhatsApp"
-                onClick={() => openInTab(whatsappUrl({ title: t('result.share.nativeTitle'), text: t('roadmap.share.text'), url: shareConfig.resultUrl }))}
+                onClick={() => openInTab(whatsappUrl({ title: t('result.share.nativeTitle'), text: roadmapShareSummary(data, t), url: shareConfig.resultUrl }))}
                 style={{ '--accent': '#10B981' } as React.CSSProperties}
               />
               <InteractiveHoverButton

@@ -1,4 +1,4 @@
-import { Check } from 'lucide-react'
+import { Check } from '@icon-park/react'
 import { RESULT_STAGE, type StageDef } from '../data'
 import { stageVar } from '../lib/theme'
 import { useSettings } from './SettingsContext'
@@ -14,7 +14,7 @@ function StepBadge({ step, state }: { step: StageDef; state: StepState }) {
         className="relative z-10 grid size-5 place-items-center rounded-full text-white transition-all duration-300"
         style={{ background: sv, boxShadow: `0 4px 10px -3px color-mix(in srgb, ${sv} 45%, transparent)` }}
       >
-        <Check className="size-3" strokeWidth={3.5} />
+        <Check className="size-3" strokeWidth={7} />
       </span>
     )
   }
@@ -27,7 +27,7 @@ function StepBadge({ step, state }: { step: StageDef; state: StepState }) {
           boxShadow: '0 0 0 3px var(--accent-ring), 0 5px 14px -4px var(--accent-shadow)',
         }}
       >
-        <Icon className="size-3" strokeWidth={2.4} />
+        <Icon className="size-3" strokeWidth={4.8} />
       </span>
     )
   }
@@ -36,7 +36,7 @@ function StepBadge({ step, state }: { step: StageDef; state: StepState }) {
       className="relative z-10 grid size-5 place-items-center rounded-full transition-all duration-300"
       style={{ background: `color-mix(in srgb, ${sv} 24%, transparent)`, color: 'var(--text-muted)' }}
     >
-      <Icon className="size-2.5" strokeWidth={2.2} />
+      <Icon className="size-2.5" strokeWidth={4.4} />
     </span>
   )
 }
@@ -74,7 +74,7 @@ function JourneyProgress({
             className="flex items-center gap-1.5 font-display text-[11px] font-bold uppercase tracking-[0.2em]"
             style={{ color: 'var(--accent)' }}
           >
-            <ActiveIcon style={{ width: 13, height: 13 }} strokeWidth={2.4} />
+            <ActiveIcon style={{ width: 13, height: 13 }} strokeWidth={4.8} />
             {t(`stage.${stageKey}`)}
           </span>
           <span className="font-display text-[14px] font-semibold tracking-[0.12em] text-slate-500">

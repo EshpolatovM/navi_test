@@ -1,13 +1,13 @@
-import { Compass, Palette, Heart, Shield, Rocket, Users, TrendingUp } from 'lucide-react'
+import { ColorCard, CompassOne, Heart, People, Rocket, Shield, TrendingUp } from '@icon-park/react'
 
 export const VALUE_ICONS: Record<string, React.ReactNode> = {
-  independence: <Compass className="size-4.5" strokeWidth={2.2} />,
-  creativity: <Palette className="size-4.5" strokeWidth={2.2} />,
-  helping: <Heart className="size-4.5" strokeWidth={2.2} />,
-  stability: <Shield className="size-4.5" strokeWidth={2.2} />,
-  growth: <Rocket className="size-4.5" strokeWidth={2.2} />,
-  teamwork: <Users className="size-4.5" strokeWidth={2.2} />,
-  opportunity: <TrendingUp className="size-4.5" strokeWidth={2.2} />,
+  independence: <CompassOne className="size-4.5" strokeWidth={4.4} />,
+  creativity: <ColorCard className="size-4.5" strokeWidth={4.4} />,
+  helping: <Heart className="size-4.5" strokeWidth={4.4} />,
+  stability: <Shield className="size-4.5" strokeWidth={4.4} />,
+  growth: <Rocket className="size-4.5" strokeWidth={4.4} />,
+  teamwork: <People className="size-4.5" strokeWidth={4.4} />,
+  opportunity: <TrendingUp className="size-4.5" strokeWidth={4.4} />,
 }
 
 export const VALUE_COLORS: Record<string, string> = {

@@ -112,11 +112,15 @@ export function computeResult(
   const ranked = CAREERS
     .map((career, idx) => {
       const cos = centeredCosine(profile, career.riasec)
-      const score = clamp(Math.round(Math.max(0, cos) * 100), 0, 100)
+      const precise = Math.max(0, cos) * 100
+      const score = clamp(Math.round(precise), 0, 100)
       const reasons = generateReasons(career, profile, lang)
-      return { career, score, reasons, idx }
+      return { career, score, precise, reasons, idx }
     })
-    .sort((a, b) => b.score - a.score || a.idx - b.idx)
+    // Sort by the full-precision score so careers that display the same
+    // rounded score still rank by their underlying similarity. The rounded
+    // score remains the final tie-breaker, then original catalog order.
+    .sort((a, b) => b.precise - a.precise || b.score - a.score || a.idx - b.idx)
     .map(({ career, score, reasons }) => ({ career, score, reasons }))
 
   return { profile, ranked, best: ranked[0] }

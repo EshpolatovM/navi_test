@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { FileDown, Share2 } from 'lucide-react'
+import { Download, Share } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import { useResultStore } from './resultStore'
 import { buildResultPdf, RESULT_PDF_FILENAME } from '../../lib/pdf'
@@ -46,7 +46,7 @@ function ResultHeaderActions() {
             pdfBusy ? (
               <span aria-hidden className="size-4 animate-spin rounded-full border-2 border-[var(--border-strong)] border-t-[var(--text-secondary)]" />
             ) : (
-              <FileDown className="size-4.5" strokeWidth={2.2} />
+              <Download className="size-4.5" strokeWidth={4.4} />
             )
           }
         />
@@ -55,7 +55,7 @@ function ResultHeaderActions() {
           size="icon"
           variant="primary"
           arrow={false}
-          icon={<Share2 className="size-4.5" strokeWidth={2.2} />}
+          icon={<Share className="size-4.5" strokeWidth={4.4} />}
           aria-label={t('result.tools.share')}
           onClick={() => setShareOpen(true)}
         />

@@ -1,4 +1,4 @@
-import { Settings } from 'lucide-react'
+import { Setting } from '@icon-park/react'
 import { Link } from 'react-router-dom'
 import { useSettings } from './SettingsContext'
 import NaviLogo from './NaviLogo'
@@ -10,7 +10,7 @@ function Header({ onOpenSettings, hideBrand }: { onOpenSettings?: () => void; hi
   return (
     <header className="relative z-10 flex items-center justify-between px-4 py-1.5 md:px-8 md:py-3.5">
       {!hideBrand && (
-        <Link to="/" aria-label={t('settings.title')} className="motion-ui flex items-center">
+        <Link to="/" aria-label="QuizLab" className="motion-ui flex items-center">
           <NaviLogo width={116} className="shrink-0" />
         </Link>
       )}
@@ -24,7 +24,7 @@ function Header({ onOpenSettings, hideBrand }: { onOpenSettings?: () => void; hi
             size="icon"
             variant="ghost"
             arrow={false}
-            icon={<Settings className="size-4.5" strokeWidth={2.2} />}
+            icon={<Setting className="size-4.5" strokeWidth={4.4} />}
             aria-label={t('settings.title')}
             onClick={onOpenSettings}
           />

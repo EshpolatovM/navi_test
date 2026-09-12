@@ -1,12 +1,13 @@
 import type { ElementType } from 'react'
-import { useState } from 'react'
-import { Check, Music2, Pause, Sparkles, Trash2, Vibrate, Volume2, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { Check, Close, Delete, MusicOne, Shake, VolumeUp } from '@icon-park/react'
 import { LANGS } from '../lib/i18n'
 import { useSettings } from './SettingsContext'
 import { useQuizAudio } from '../hooks/useQuizAudio'
 import { useHaptics } from '../hooks/useHaptics'
 import { InteractiveHoverButton } from './ui/interactive-hover-button'
 import BlindPullToggle from './ui/blind-pull-toggle'
+import { useDialogFocus } from '../hooks/useDialogFocus'
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
@@ -35,14 +36,14 @@ function ToggleRow({
       role="switch"
       aria-checked={on}
       onClick={() => onToggle(!on)}
-      className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left ring-1 transition-colors"
+      className="flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors"
       style={{ borderColor: on ? 'var(--accent)' : 'var(--border)', background: on ? 'var(--accent-tint)' : 'transparent' }}
     >
       <span
         className="grid size-9 shrink-0 place-items-center rounded-lg transition-colors"
         style={{ background: on ? 'var(--accent-soft)' : 'rgba(0,0,0,0.03)', color: on ? 'var(--accent)' : 'var(--text-secondary)' }}
       >
-        <Icon style={{ width: 17, height: 17 }} strokeWidth={2.4} />
+        <Icon style={{ width: 17, height: 17 }} strokeWidth={4.8} />
       </span>
       <span className="min-w-0 flex-1">
         <span className="block text-[13px] font-bold text-slate-800">{title}</span>
@@ -63,11 +64,27 @@ function ToggleRow({
 }
 
 function SetupModal({ onClose, onDeleteAccount }: { onClose: () => void; onDeleteAccount: () => void }) {
-  const { lang, theme, motionEnabled, t, setLang, setMotionEnabled } =
-    useSettings()
+  const { lang, theme, t, setLang } = useSettings()
   const { soundEnabled, setSoundEnabled, musicEnabled, setMusicEnabled } = useQuizAudio()
   const { hapticsEnabled, setHapticsEnabled } = useHaptics()
   const [confirmDeleteOpen, setConfirmDeleteOpen] = useState(false)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const confirmRef = useRef<HTMLDivElement>(null)
+
+  useDialogFocus(true, panelRef)
+  useDialogFocus(confirmDeleteOpen, confirmRef)
+
+  // Escape closes the top-most dialog: the delete confirmation first, then the
+  // settings panel itself.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      if (confirmDeleteOpen) setConfirmDeleteOpen(false)
+      else onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [confirmDeleteOpen, onClose])
 
   return (
     <div
@@ -76,10 +93,12 @@ function SetupModal({ onClose, onDeleteAccount }: { onClose: () => void; onDelet
       onClick={onClose}
     >
       <div
+        ref={panelRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         onClick={(e) => e.stopPropagation()}
-        className="motion-pan-m animate-bubble-in max-h-[88dvh] w-full max-w-md overflow-y-auto rounded-3xl bg-[var(--surface-elevated)] p-6 shadow-[var(--shadow)] ring-1 transition-colors"
+        className="motion-pan-m animate-bubble-in max-h-[88dvh] w-full max-w-md overflow-y-auto rounded-3xl bg-[var(--surface-elevated)] p-6 shadow-[var(--shadow)] ring-1 transition-colors focus:outline-none"
         style={{ borderColor: 'var(--border)' }}
       >
         <div className="mb-5 flex items-center justify-between">
@@ -91,7 +110,7 @@ function SetupModal({ onClose, onDeleteAccount }: { onClose: () => void; onDelet
             size="sm"
             variant="ghost"
             arrow={false}
-            icon={<X className="size-4" />}
+            icon={<Close className="size-4" />}
             aria-label={t('settings.close')}
             onClick={onClose}
           />
@@ -108,14 +127,14 @@ function SetupModal({ onClose, onDeleteAccount }: { onClose: () => void; onDelet
                     key={l.code}
                     type="button"
                     onClick={() => setLang(l.code)}
-                    className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-left ring-1 transition-colors"
+                    className="flex items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors"
                     style={{ borderColor: active ? 'var(--accent)' : 'var(--border)', background: active ? 'var(--accent-tint)' : 'transparent' }}
                   >
                     <span className="grid size-9 shrink-0 place-items-center rounded-lg text-[11px] font-extrabold tracking-[0.06em]" style={{ background: active ? 'var(--accent-soft)' : 'rgba(0,0,0,0.03)', color: active ? 'var(--accent)' : 'var(--text-secondary)' }}>{l.badge}</span>
                     <span className="flex-1 text-[13px] font-bold text-slate-800">{l.label}</span>
                     {active && (
                       <span className="grid size-5 place-items-center rounded-full text-white" style={{ background: 'var(--accent)' }}>
-                        <Check className="size-3" strokeWidth={3.2} />
+                        <Check className="size-3" strokeWidth={6.4} />
                       </span>
                     )}
                   </button>
@@ -142,50 +161,24 @@ function SetupModal({ onClose, onDeleteAccount }: { onClose: () => void; onDelet
           </div>
 
           <div>
-            <SectionLabel>{t('settings.motion')}</SectionLabel>
-            <div className="grid grid-cols-2 gap-2">
-              {['on', 'off'].map((opt) => {
-                const on = opt === 'on'
-                const active = motionEnabled === on
-                return (
-                  <button
-                    key={opt}
-                    type="button"
-                    onClick={() => setMotionEnabled(on)}
-                    className="flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-[13px] font-bold text-slate-800 ring-1 transition-colors"
-                    style={{ borderColor: active ? 'var(--accent)' : 'var(--border)', background: active ? 'var(--accent-tint)' : 'transparent' }}
-                  >
-                    {on ? (
-                      <Sparkles style={{ width: 16, height: 16 }} strokeWidth={2.4} />
-                    ) : (
-                      <Pause style={{ width: 16, height: 16 }} strokeWidth={2.4} />
-                    )}
-                    {t(on ? 'settings.motion.on' : 'settings.motion.off')}
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          <div>
             <SectionLabel>{t('settings.audio')}</SectionLabel>
             <div className="flex flex-col gap-2">
               <ToggleRow
-                icon={Volume2}
+                icon={VolumeUp}
                 title={t('settings.sound')}
                 sub={t('settings.sound.sub')}
                 on={soundEnabled}
                 onToggle={setSoundEnabled}
               />
               <ToggleRow
-                icon={Vibrate}
+                icon={Shake}
                 title={t('settings.haptics')}
                 sub={t('settings.haptics.sub')}
                 on={hapticsEnabled}
                 onToggle={setHapticsEnabled}
               />
               <ToggleRow
-                icon={Music2}
+                icon={MusicOne}
                 title={t('settings.music')}
                 sub={t('settings.music.sub')}
                 on={musicEnabled}
@@ -202,7 +195,7 @@ function SetupModal({ onClose, onDeleteAccount }: { onClose: () => void; onDelet
               size="md"
               full
               arrow={false}
-              icon={<Trash2 className="size-4" />}
+              icon={<Delete className="size-4" />}
               text={t('settings.deleteAccount')}
               aria-label={t('settings.deleteAccount')}
               onClick={() => setConfirmDeleteOpen(true)}
@@ -220,14 +213,16 @@ function SetupModal({ onClose, onDeleteAccount }: { onClose: () => void; onDelet
           onClick={() => setConfirmDeleteOpen(false)}
         >
           <div
+            ref={confirmRef}
+            tabIndex={-1}
             role="alertdialog"
             aria-modal="true"
             onClick={(e) => e.stopPropagation()}
-            className="motion-pan-m animate-bubble-in w-full max-w-sm rounded-3xl bg-[var(--surface-elevated)] p-6 text-center shadow-[var(--shadow)] ring-1"
+            className="motion-pan-m animate-bubble-in w-full max-w-sm rounded-3xl bg-[var(--surface-elevated)] p-6 text-center shadow-[var(--shadow)] ring-1 focus:outline-none"
             style={{ borderColor: 'rgba(225,29,72,0.18)' }}
           >
             <span className="mx-auto grid size-12 place-items-center rounded-2xl" style={{ background: 'rgba(225,29,72,0.12)', color: '#E11D48' }}>
-              <Trash2 className="size-5" strokeWidth={2.2} />
+              <Delete className="size-5" strokeWidth={4.4} />
             </span>
             <h3 className="mt-4 text-[16px] leading-snug font-extrabold tracking-[-0.01em] text-slate-900">
               {t('delete.confirmTitle')}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { Down, Up } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import { DIMS } from '../../data'
 import { ResultCard } from './ui/ResultCard'
@@ -147,7 +147,7 @@ function ArchetypeSection({ archetype }: { archetype: ArchetypeData }) {
             variant="ghost"
             arrow={false}
             text={t('ovr.archLevels')}
-            icon={showLevels ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+            icon={showLevels ? <Up className="size-3.5" /> : <Down className="size-3.5" />}
             onClick={() => setShowLevels((v) => !v)}
           />
           {showLevels && (

@@ -20,6 +20,28 @@ export interface SharePayload {
   url: string
 }
 
+/**
+ * Portable plain-text share body. Senders can't rely on the deep link (the
+ * result only exists in the sender's local session), so the actual numbers and
+ * names are embedded here for the recipient.
+ */
+export interface ShareSummaryInput {
+  lead: string
+  direction: string | null
+  careers: { name: string; score: number }[]
+  hashtag: string
+}
+
+export function buildShareText(input: ShareSummaryInput): string {
+  const lines: string[] = [input.lead]
+  if (input.direction) lines.push(input.direction)
+  input.careers.forEach((c, i) => {
+    lines.push(`${i + 1}. ${c.name} — ${c.score}%`)
+  })
+  lines.push(input.hashtag)
+  return lines.join('\n')
+}
+
 export function encodeShare(text: string): string {
   return encodeURIComponent(text)
 }

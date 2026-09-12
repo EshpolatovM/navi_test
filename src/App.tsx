@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
+import { Navigate, Route, Routes, useNavigate } from 'react-router-dom'
 import Header from './components/Header'
 import NaviIntro from './components/NaviIntro'
 import QuestionScene from './components/QuestionScene'
@@ -7,20 +7,6 @@ import Roadmap from './components/Roadmap'
 import SplashScreen, { type AssessmentMode } from './components/SplashScreen'
 import Onboarding from './components/Onboarding'
 import SetupModal from './components/SetupModal'
-import ResultLayout from './components/result/ResultLayout'
-import { ResultProvider } from './components/result/resultStore'
-import { RoadmapProvider } from './components/result/RoadmapContext'
-import OverviewPage from './components/result/pages/OverviewPage'
-import CareersPage from './components/result/pages/CareersPage'
-import InterestsPage from './components/result/pages/InterestsPage'
-import CharacterPage from './components/result/pages/CharacterPage'
-import ValuesPage from './components/result/pages/ValuesPage'
-import ArchetypePage from './components/result/pages/ArchetypePage'
-import StrengthsPage from './components/result/pages/StrengthsPage'
-import GrowthPage from './components/result/pages/GrowthPage'
-import AdvicePage from './components/result/pages/AdvicePage'
-import NextStepPage from './components/result/pages/NextStepPage'
-import RoadmapPage from './components/result/pages/RoadmapPage'
 import { useSettings } from './components/SettingsContext'
 import { useGyroParallax } from './hooks/useGyroParallax'
 import { localizeCareer, localizeInterest } from './lib/qa'
@@ -29,6 +15,10 @@ import { resetAudio, startBackgroundMusic } from './lib/audio'
 import { resetHaptics } from './lib/haptics'
 import { clearQuizLabData } from './lib/reset'
 import { INTEREST_COUNT, INTEREST_QUESTIONS, QUESTIONS, buildStageModel } from './data'
+
+// The result subtree (11 report pages, share, roadmap, PDF) is loaded lazily —
+// it is not needed until a test is finished, so initial startup stays lean.
+const ResultApp = lazy(() => import('./components/result/ResultApp'))
 
 /**
  * Loading rules:
@@ -97,9 +87,8 @@ function readSession(): SessionState {
 }
 
 function App() {
-  const { t, onboarded, lang, motionEnabled, resetData } = useSettings()
+  const { t, onboarded, lang, resetData } = useSettings()
   const navigate = useNavigate()
-  const location = useLocation()
   const [settingsOpen, setSettingsOpen] = useState(false)
 
   const session = useMemo(() => readSession(), [])
@@ -144,8 +133,8 @@ function App() {
   }, [mode, careerAnswers, careerFinished, interestAnswers, interestFinished])
 
   useEffect(() => {
-    gyro.setMotion(motionEnabled)
-  }, [motionEnabled, gyro])
+    gyro.setMotion(true)
+  }, [gyro])
 
   // Background music starts once; it never restarts between questions, stages or
   // on the result screen. Browser autoplay is handled internally.
@@ -154,6 +143,7 @@ function App() {
   }, [])
 
   useEffect(() => {
+    if (!import.meta.env.DEV) return
     const onKey = (e: KeyboardEvent) => {
       if (!(e.ctrlKey && e.altKey && (e.key === 'b' || e.key === 'B'))) return
       e.preventDefault()
@@ -200,11 +190,6 @@ function App() {
     playUiSound('select')
     void gyro.enable()
     setMode(m)
-  }
-
-  const handleBack = () => {
-    playUiSound('back')
-    setMode(null)
   }
 
   // Post-QIZIQISH invite → start the REAL KASB TANLASH test at question 1.
@@ -366,35 +351,40 @@ function App() {
     >
       {settingsOpen && <SetupModal onClose={() => setSettingsOpen(false)} onDeleteAccount={handleDeleteAccount} />}
 
-      {hasResult ? (
-        <ResultProvider query={resultQuery} tryCareerTest={handleTryCareerTest}>
-          <RoadmapProvider>
-            <Routes>
-              <Route path="/" element={<>{homeView}</>} />
-              <Route path="/result" element={<ResultLayout onOpenSettings={() => setSettingsOpen(true)} />}>
-                <Route index element={<OverviewPage />} />
-                <Route path="careers" element={<CareersPage />} />
-                <Route path="interests" element={<InterestsPage />} />
-                <Route path="character" element={<CharacterPage />} />
-                <Route path="values" element={<ValuesPage />} />
-                <Route path="archetype" element={<ArchetypePage />} />
-                <Route path="strengths" element={<StrengthsPage />} />
-                <Route path="growth" element={<GrowthPage />} />
-                <Route path="advice" element={<AdvicePage />} />
-                <Route path="next-step" element={<NextStepPage />} />
-                <Route path="roadmap" element={<RoadmapPage />} />
-                <Route path="*" element={<Navigate to="/result" replace />} />
-              </Route>
-              <Route path="*" element={<Navigate to="/result" replace />} />
-            </Routes>
-          </RoadmapProvider>
-        </ResultProvider>
-      ) : (
-        <>
-          {location.pathname.startsWith('/result') && <Navigate to="/" replace />}
-          {homeView}
-        </>
-      )}
+      {/* Home shell at "/" always; the result subtree is a lazy descendant at
+          /result/* (only registered once a test has been finished). */}
+      <Routes>
+        <Route path="/" element={<>{homeView}</>} />
+        {hasResult && (
+          <Route
+            path="/result/*"
+            element={
+              <Suspense
+                fallback={
+                  <div
+                    role="status"
+                    aria-label={t('app.loading')}
+                    className="relative flex min-h-dvh items-center justify-center bg-[var(--surface)]"
+                  >
+                    <span
+                      aria-hidden
+                      className="size-10 animate-pulse rounded-full ring-1 ring-[var(--border-strong)]"
+                      style={{ background: 'var(--surface-elevated)' }}
+                    />
+                  </div>
+                }
+              >
+                <ResultApp
+                  query={resultQuery}
+                  tryCareerTest={handleTryCareerTest}
+                  onOpenSettings={() => setSettingsOpen(true)}
+                />
+              </Suspense>
+            }
+          />
+        )}
+        <Route path="*" element={<Navigate to={hasResult ? '/result' : '/'} replace />} />
+      </Routes>
     </div>
   )
 }

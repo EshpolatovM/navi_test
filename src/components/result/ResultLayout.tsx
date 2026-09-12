@@ -1,5 +1,6 @@
+import { useEffect, useRef } from 'react'
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Settings } from 'lucide-react'
+import { ArrowLeft, Setting } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import NaviLogo from '../NaviLogo'
 import ResultHeaderActions from './ResultHeaderActions'
@@ -32,6 +33,13 @@ function ResultLayout({ onOpenSettings }: { onOpenSettings: () => void }) {
   const { t } = useSettings()
   const { pathname } = useLocation()
   const navigate = useNavigate()
+  const titleRef = useRef<HTMLHeadingElement>(null)
+
+  // Move keyboard/screen-reader focus to the section heading on navigation so
+  // users never get stranded on the previous section's content.
+  useEffect(() => {
+    titleRef.current?.focus({ preventScroll: true })
+  }, [pathname])
 
   const meta = RESULT_SECTIONS.find((s) => pathname === s.path) ?? RESULT_SECTIONS[0]
 
@@ -50,7 +58,7 @@ function ResultLayout({ onOpenSettings }: { onOpenSettings: () => void }) {
             size="icon"
             variant="ghost"
             arrow={false}
-            icon={<Settings className="size-4.5" strokeWidth={2.2} />}
+            icon={<Setting className="size-4.5" strokeWidth={4.4} />}
             aria-label="Sozlamalar"
             onClick={onOpenSettings}
           />
@@ -64,7 +72,7 @@ function ResultLayout({ onOpenSettings }: { onOpenSettings: () => void }) {
           size="sm"
           variant="ghost"
           arrow={false}
-          icon={<ArrowLeft className="size-3.5" strokeWidth={2.4} />}
+          icon={<ArrowLeft className="size-3.5" strokeWidth={4.8} />}
           text={t('result.pages.back')}
           onClick={() => navigate(meta.prev!)}
           className="animate-slide-up mb-4 min-w-0"
@@ -73,7 +81,7 @@ function ResultLayout({ onOpenSettings }: { onOpenSettings: () => void }) {
 
       {/* Page title + short description */}
       <div className="animate-slide-up" style={{ animationDelay: '60ms' }}>
-        <h1 className="font-display text-[28px] leading-tight font-bold tracking-[-0.02em] text-[var(--text-primary)] md:text-[34px]">
+        <h1 ref={titleRef} tabIndex={-1} className="font-display text-[28px] leading-tight font-bold tracking-[-0.02em] text-[var(--text-primary)] md:text-[34px]">
           {t(meta.labelKey)}
         </h1>
         <p className="mt-2 max-w-xl text-[13.5px] leading-relaxed text-[var(--text-secondary)]">
@@ -93,7 +101,7 @@ function ResultLayout({ onOpenSettings }: { onOpenSettings: () => void }) {
             size="md"
             variant="ghost"
             arrow={false}
-            icon={<ArrowLeft className="size-4" strokeWidth={2.4} />}
+            icon={<ArrowLeft className="size-4" strokeWidth={4.8} />}
             text={t('result.pages.back')}
             onClick={() => navigate(meta.prev!)}
             className="min-w-0! w-full sm:w-auto"

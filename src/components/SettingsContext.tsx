@@ -7,13 +7,11 @@ interface Settings {
   lang: Lang
   theme: ThemeMode
   onboarded: boolean
-  motionEnabled: boolean
 }
 
 interface SettingsApi extends Settings {
   setLang: (l: Lang) => void
   setTheme: (t: ThemeMode) => void
-  setMotionEnabled: (on: boolean) => void
   completeOnboarding: () => void
   resetData: () => void
   t: (key: string, vars?: Record<string, string | number>) => string
@@ -23,7 +21,6 @@ const K = {
   lang: 'selectedLanguage',
   theme: 'selectedTheme',
   onboarded: 'onboardingCompleted',
-  motion: 'motionEnabled',
 }
 
 const DEFAULT_ACCENT = '#3B7BEC'
@@ -48,31 +45,26 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     read<ThemeMode>(K.theme, 'light') === 'dark' ? 'dark' : 'light',
   )
   const [onboarded, setOnboarded] = useState<boolean>(() => read<string>(K.onboarded, '0') === '1')
-  const [motionEnabled, setMotionEnabledState] = useState<boolean>(() => read<string>(K.motion, '1') === '1')
 
   useEffect(() => {
     applyTheme(theme, DEFAULT_ACCENT)
   }, [theme])
 
-  // One-time cleanup of the retired accent-color preference.
+  // One-time cleanup of retired preferences.
   useEffect(() => {
     try {
       localStorage.removeItem('selectedAccentColor')
+      localStorage.removeItem('motionEnabled')
     } catch {
       /* private mode */
     }
   }, [])
-
-  useEffect(() => {
-    document.documentElement.dataset.motion = motionEnabled ? 'on' : 'off'
-  }, [motionEnabled])
 
   const api = useMemo<SettingsApi>(
     () => ({
       lang,
       theme,
       onboarded,
-      motionEnabled,
       setLang: (l) => {
         setLangState(l)
         try {
@@ -97,25 +89,16 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
           /* private mode */
         }
       },
-      setMotionEnabled: (on) => {
-        setMotionEnabledState(on)
-        try {
-          localStorage.setItem(K.motion, on ? '1' : '0')
-        } catch {
-          /* private mode */
-        }
-      },
       resetData: () => {
         // Used after an account delete: persistent keys are already removed
         // from localStorage externally, so only the in-memory state resets.
         setLangState('uz')
         setThemeState('light')
         setOnboarded(false)
-        setMotionEnabledState(true)
       },
       t: (key, vars) => translate(lang, key, vars),
     }),
-    [lang, theme, onboarded, motionEnabled],
+    [lang, theme, onboarded],
   )
 
   return <Ctx.Provider value={api}>{children}</Ctx.Provider>

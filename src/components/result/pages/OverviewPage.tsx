@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
-import { ChevronRight } from 'lucide-react'
+import { Right } from '@icon-park/react'
 import { useSettings } from '../../SettingsContext'
 import QuizIcon from '../../QuizIcon'
 import { useResultStore } from '../resultStore'
@@ -235,7 +235,7 @@ function ResultOverviewPage() {
               className="group inline-flex items-center gap-0.5 text-[12.5px] font-semibold text-[var(--text-secondary)] transition-colors duration-200 hover:text-[var(--accent)]"
             >
               {s.label}
-              <ChevronRight className="size-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+              <Right className="size-3 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
             </button>
           ))}
         </div>
@@ -253,7 +253,7 @@ function ResultOverviewPage() {
         />
       )}
 
-      <ShareResult />
+      <ShareResult data={data} />
 
       {showCareerInvite && <InviteCareerCard onTry={tryCareerTest} topDirections={data.directionScores} />}
     </div>

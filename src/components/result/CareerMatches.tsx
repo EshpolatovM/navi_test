@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { Down, Up } from '@icon-park/react'
 import { motion } from 'framer-motion'
 import { useSettings } from '../SettingsContext'
 import QuizIcon from '../QuizIcon'
@@ -153,7 +153,7 @@ function CareerMatches({ topCareers, allCareers, onCareerClick }: Props) {
                 variant="ghost"
                 arrow={false}
                 text={expanded ? t('result.careers.more') : t('result.careers.moreWithCount', { count: rest.length })}
-                icon={expanded ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
+                icon={expanded ? <Up className="size-3.5" /> : <Down className="size-3.5" />}
                 onClick={() => setExpanded((v) => !v)}
               />
             </div>

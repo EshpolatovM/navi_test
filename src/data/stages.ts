@@ -1,5 +1,5 @@
-import { Building2, Layers, Lightbulb, SlidersHorizontal, Trophy } from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
+import { Adjustment, BuildingTwo, Layers, Lamp, Trophy } from '@icon-park/react'
+import type { IconType } from '../lib/icon'
 
 // The 60-item instrument is split into 4 career-discovery stages
 // (O*NET-flavored: Interests, Activities, Work Styles, Work Context).
@@ -11,7 +11,7 @@ export interface StageDef {
   from: number
   to: number
   accent: string
-  icon: LucideIcon
+  icon: IconType
 }
 
 export const PER_STAGE = 15
@@ -23,7 +23,7 @@ export const STAGES: StageDef[] = [
     from: 1,
     to: 15,
     accent: '#4F46E5',
-    icon: Lightbulb,
+    icon: Lamp,
   },
   {
     key: 'FAOLIYATLAR',
@@ -39,7 +39,7 @@ export const STAGES: StageDef[] = [
     from: 31,
     to: 45,
     accent: '#F59E0B',
-    icon: SlidersHorizontal,
+    icon: Adjustment,
   },
   {
     key: 'ISH MUHITI',
@@ -47,7 +47,7 @@ export const STAGES: StageDef[] = [
     from: 46,
     to: 60,
     accent: '#10B981',
-    icon: Building2,
+    icon: BuildingTwo,
   },
 ]
 

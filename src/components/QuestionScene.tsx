@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type { QuizQuestion, StageModel } from '../data'
 import { toneFor } from '../lib/tone'
-import { useSettings } from './SettingsContext'
 import AnswerNode from './AnswerNode'
 import JourneyProgress from './JourneyProgress'
+import { useSettings } from './SettingsContext'
 
 function QuestionScene({
   question,
@@ -18,10 +18,19 @@ function QuestionScene({
   stageModel: StageModel
   onAnswer: (optionIndex: number) => void
 }) {
+  const { t } = useSettings()
   const [selected, setSelected] = useState<number | null>(null)
   const [hovered, setHovered] = useState<number | null>(null)
   const [phase, setPhase] = useState<'in' | 'out'>('in')
   const [tumbling, setTumbling] = useState(false)
+  const questionTextRef = useRef<HTMLParagraphElement>(null)
+
+  // Move keyboard/screen-reader focus to the new question when it appears
+  // (each question re-mounts via the `key` prop). The bubble is announced with
+  // its position so SR users never stay anchored to the previous question.
+  useEffect(() => {
+    questionTextRef.current?.focus({ preventScroll: true })
+  }, [])
   useEffect(() => {
     let timer = 0
     const onShake = () => {
@@ -47,7 +56,6 @@ function QuestionScene({
   }, [selected, onAnswer])
 
   const accent = question.accent
-  const { t } = useSettings()
   // Difficulty-tuned tone: easy → soft & airy, hard → rich & defined.
   const tone = toneFor(accent, question.difficulty)
 
@@ -90,7 +98,10 @@ function QuestionScene({
             transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
           }}
         >
-          <p className={`${textSize} font-bold tracking-[-0.01em] text-slate-800`}>
+          <p ref={questionTextRef} tabIndex={-1} className={`${textSize} font-bold tracking-[-0.01em] text-slate-800`}>
+            <span className="sr-only">
+              {t('prog.savol')} {index + 1} / {total}.{' '}
+            </span>
             {question.q}
           </p>
         </div>

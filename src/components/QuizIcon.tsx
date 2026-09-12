@@ -1,110 +1,99 @@
 import {
+  ActivitySource,
+  Airplane,
+  Announcement,
+  BachelorCap,
+  Balance,
   Brain,
-  Monitor,
-  Share2,
-  Megaphone,
-  Palette,
-  Video,
-  Smartphone,
-  Gamepad2,
-  Stethoscope,
-  PenTool,
-  Hammer,
-  FlaskConical,
-  Rocket,
-  HeartHandshake,
-  ListChecks,
-  Sun,
-  Moon,
-  Wind,
-  Compass,
-  Code2,
-  BarChart3,
-  Music,
-  GraduationCap,
-  Wrench,
-  Zap,
-  ChefHat,
-  Scale,
-  Shield,
-  Wheat,
-  Plane,
-  Languages,
-  Leaf,
-  Users,
-  Activity,
-  TrendingUp,
   Calculator,
-  LineChart,
-  PencilRuler,
-  PenLine,
-  type LucideIcon,
-} from 'lucide-react'
+  ChartHistogram,
+  ChartLine,
+  ChefHat,
+  Code,
+  CodeComputer,
+  ColorCard,
+  CompassOne,
+  CooperativeHandshake,
+  ElectronicPen,
+  Flask,
+  Gamepad,
+  HammerAndAnvil,
+  Iphone,
+  Leaf,
+  Lightning,
+  ListSuccess,
+  Monitor,
+  Moon,
+  Music,
+  People,
+  Pencil,
+  Robot,
+  Rocket,
+  Seedling,
+  Share,
+  Shield,
+  Sketch,
+  Stethoscope,
+  Sun,
+  Tool,
+  Translate,
+  TrendingUp,
+  TriangleRuler,
+  VideoOne,
+  Wind,
+} from '@icon-park/react'
+import type { IconType } from '../lib/icon'
 
-import aiSvg from '../assets/images/a-single-rounded-line-ui-icon-representing-artific.svg'
-import itSvg from '../assets/images/a-single-icon-representing-it--abstract-computer-a.svg'
-import smmSvg from '../assets/images/a-single-icon-representing-smm--social-media-marke.svg'
-import marketingSvg from '../assets/images/a-single-icon-representing-marketing--abstract-meg.svg'
-import uiuxSvg from '../assets/images/a-single-icon-representing-ui-ux-design--abstract-.svg'
-import videoSvg from '../assets/images/a-single-icon-representing-a-video-editor--abstrac.svg'
-import mobileSvg from '../assets/images/a-single-icon-representing-a-mobile-developer--abs.svg'
-import gameSvg from '../assets/images/a-single-icon-representing-a-game-developer--abstr.svg'
-import doctorSvg from '../assets/images/a-single-icon-representing-a-doctor--abstract-simp.svg'
-import designSvg from '../assets/images/a-single-icon-representing-graphic-design-and-mobi.svg'
-
-const SVG_ICONS: Record<string, string> = {
-  ai: aiSvg,
-  it: itSvg,
-  smm: smmSvg,
-  marketing: marketingSvg,
-  uiux: uiuxSvg,
-  video: videoSvg,
-  mobile: mobileSvg,
-  game: gameSvg,
-  doctor: doctorSvg,
-  design: designSvg,
-}
-
-const LUCIDE_ICONS: Record<string, LucideIcon> = {
+const LUCIDE_ICONS: Record<string, IconType> = {
+  ai: Robot,
+  it: CodeComputer,
+  smm: Share,
+  marketing: Announcement,
+  uiux: Sketch,
+  video: VideoOne,
+  mobile: Iphone,
+  game: Gamepad,
+  doctor: Stethoscope,
+  design: ColorCard,
   brain: Brain,
   monitor: Monitor,
-  share: Share2,
-  megaphone: Megaphone,
-  palette: Palette,
-  video_icon: Video,
-  smartphone: Smartphone,
-  gamepad: Gamepad2,
+  share: Share,
+  megaphone: Announcement,
+  palette: ColorCard,
+  video_icon: VideoOne,
+  smartphone: Iphone,
+  gamepad: Gamepad,
   stethoscope: Stethoscope,
-  pen_tool: PenTool,
-  hammer: Hammer,
-  flask: FlaskConical,
+  pen_tool: ElectronicPen,
+  hammer: HammerAndAnvil,
+  flask: Flask,
   rocket: Rocket,
-  heart: HeartHandshake,
-  list: ListChecks,
+  heart: CooperativeHandshake,
+  list: ListSuccess,
   sun: Sun,
   moon: Moon,
   wind: Wind,
-  compass: Compass,
-  code: Code2,
-  chart: BarChart3,
+  compass: CompassOne,
+  code: Code,
+  chart: ChartHistogram,
   music: Music,
-  graduation: GraduationCap,
-  wrench: Wrench,
-  zap: Zap,
+  graduation: BachelorCap,
+  wrench: Tool,
+  zap: Lightning,
   chef: ChefHat,
-  scale: Scale,
+  scale: Balance,
   shield: Shield,
-  wheat: Wheat,
-  plane: Plane,
-  languages: Languages,
+  wheat: Seedling,
+  plane: Airplane,
+  languages: Translate,
   leaf: Leaf,
-  users: Users,
-  activity: Activity,
+  users: People,
+  activity: ActivitySource,
   trending: TrendingUp,
   calculator: Calculator,
-  line_chart: LineChart,
-  pencil_ruler: PencilRuler,
-  pen: PenLine,
+  line_chart: ChartLine,
+  pencil_ruler: TriangleRuler,
+  pen: Pencil,
 }
 
 export type QuizIconName = string
@@ -117,28 +106,13 @@ interface QuizIconProps {
 }
 
 function QuizIcon({ name, size = 21, className, style }: QuizIconProps) {
-  const svgSrc = SVG_ICONS[name]
-
-  if (svgSrc) {
+  const Icon = LUCIDE_ICONS[name]
+  if (Icon) {
     return (
-      <img
-        src={svgSrc}
-        alt=""
-        width={size}
-        height={size}
-        className={className}
-        style={{ display: 'block', ...style }}
-      />
-    )
-  }
-
-  const LucideComp = LUCIDE_ICONS[name]
-  if (LucideComp) {
-    return (
-      <LucideComp
+      <Icon
         style={{ width: size, height: size, ...style }}
         className={className}
-        strokeWidth={2.1}
+        strokeWidth={4}
       />
     )
   }
@@ -147,4 +121,4 @@ function QuizIcon({ name, size = 21, className, style }: QuizIconProps) {
 }
 
 export default QuizIcon
-export { SVG_ICONS, LUCIDE_ICONS }
+export { LUCIDE_ICONS }

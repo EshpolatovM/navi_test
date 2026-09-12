@@ -323,7 +323,7 @@ async function drawCover(rep: Report, data: ResultData, lang: Lang, t: PdfTransl
   const typeLabel = `${t('pdf.testType')} ${testTypeLabel(data, t)}`
   const typeW = rep.chip(typeLabel, PAGE.w / 2 - rep.width(typeLabel) / 2 - 5, PDF_COLORS.muted)
   void typeW
-  const dateLabel = `${t('pdf.completedOn')} ${formatDate(lang)}`
+  const dateLabel = `${t('pdf.generatedOn')} ${formatDate(lang)}`
   const dateW = rep.width(dateLabel)
   rep.y += 8.5
   rep.chip(dateLabel, PAGE.w / 2 - dateW / 2 - 5, PDF_COLORS.muted)
@@ -973,7 +973,7 @@ function drawRoadmapCover(rep: Report, logo: string, t: PdfTranslate, lang: Lang
   }
 
   rep.y += 4
-  const dateLabel = `${t('pdf.completedOn')} ${formatDate(lang)}`
+  const dateLabel = `${t('pdf.generatedOn')} ${formatDate(lang)}`
   const dateW = rep.width(dateLabel)
   rep.strokeColor(PDF_COLORS.border)
   rep.doc.setLineWidth(0.4)
@@ -1029,7 +1029,7 @@ function drawRoadmapIntro(rep: Report, t: PdfTranslate, lang: Lang): void {
   rep.y += 4
   rep.textColor(PDF_COLORS.accent)
   rep.font(false, 8.5)
-  rep.text(`${t('pdf.completedOn')} ${formatDate(lang)}`, M.l, rep.y)
+  rep.text(`${t('pdf.generatedOn')} ${formatDate(lang)}`, M.l, rep.y)
   rep.y += 8
 }
 

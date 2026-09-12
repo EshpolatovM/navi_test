@@ -1,5 +1,5 @@
 import React from 'react'
-import { ArrowRight } from 'lucide-react'
+import { Right } from '@icon-park/react'
 import { cn } from '@/lib/utils'
 
 export type ButtonVariant = 'primary' | 'ghost' | 'destructive'
@@ -107,7 +107,7 @@ const InteractiveHoverButton = React.forwardRef<HTMLButtonElement, InteractiveHo
             )}
           >
             {content}
-            {showArrow && <ArrowRight className="size-3.5" strokeWidth={2.6} />}
+            {showArrow && <Right className="size-3.5" strokeWidth={5.2} />}
           </span>
         )}
 

@@ -1,14 +1,16 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useNavigate } from 'react-router-dom'
-import { Check, Copy, Link2, MessageCircle, Send, Share2, Sparkles, X } from 'lucide-react'
+import { Check, Close, Copy, Link, Magic, Message, Send, Share } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import { useRoadmap } from './RoadmapContext'
 import { translate, type Lang } from '../../lib/i18n'
 import { buildSharePreview } from '../../lib/shareImage'
 import { copyShare, dataUrlToFile, nativeShare, openInTab, shareConfig, telegramUrl, whatsappUrl } from '../../lib/share'
 import type { ResultData } from './useResultData'
+import { resultShareSummary } from './shareSummary'
 import { InteractiveHoverButton } from '../ui/interactive-hover-button'
+import { useDialogFocus } from '../../hooks/useDialogFocus'
 
 function ShareModal({ open, onClose, data }: { open: boolean; onClose: () => void; data: ResultData }) {
   const { lang } = useSettings()
@@ -17,6 +19,9 @@ function ShareModal({ open, onClose, data }: { open: boolean; onClose: () => voi
   const [preview, setPreview] = useState<string | null>(null)
   const [copied, setCopied] = useState(false)
   const [error, setError] = useState(false)
+  const panelRef = useRef<HTMLDivElement>(null)
+
+  useDialogFocus(open, panelRef)
 
   const t = useMemo(
     () => (key: string, vars?: Record<string, string | number>) => translate(lang as Lang, key, vars),
@@ -49,7 +54,7 @@ function ShareModal({ open, onClose, data }: { open: boolean; onClose: () => voi
 
   const payload = {
     title: t('result.share.nativeTitle'),
-    text: t('result.share.nativeText'),
+    text: resultShareSummary(data, t),
     url: shareConfig.resultUrl,
   }
 
@@ -90,10 +95,12 @@ function ShareModal({ open, onClose, data }: { open: boolean; onClose: () => voi
         className="absolute inset-0 bg-slate-900/45 backdrop-blur-sm"
       />
       <div
+        ref={panelRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label={t('result.tools.share')}
-        className="animate-slide-up relative z-10 flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-[var(--surface)] ring-1 ring-[var(--border)] shadow-2xl sm:max-w-md sm:rounded-3xl"
+        className="animate-slide-up relative z-10 flex max-h-[92dvh] w-full flex-col overflow-hidden rounded-t-3xl bg-[var(--surface)] ring-1 ring-[var(--border)] shadow-2xl focus:outline-none sm:max-w-md sm:rounded-3xl"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 pt-5">
@@ -103,7 +110,7 @@ function ShareModal({ open, onClose, data }: { open: boolean; onClose: () => voi
             size="icon"
             variant="ghost"
             arrow={false}
-            icon={<X className="size-4.5" strokeWidth={2.2} />}
+            icon={<Close className="size-4.5" strokeWidth={4.4} />}
             aria-label={t('result.share.close')}
             onClick={onClose}
           />
@@ -128,7 +135,7 @@ function ShareModal({ open, onClose, data }: { open: boolean; onClose: () => voi
           {/* AI career roadmap CTA */}
           <div className="rounded-2xl bg-[var(--surface-elevated)] p-4 ring-1 ring-[var(--border)]">
             <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[var(--accent)]" style={{ background: 'var(--accent-soft)' }}>
-              <Sparkles className="size-3.5" />
+              <Magic className="size-3.5" />
               AI CAREER ROADMAP
             </span>
             <h3 className="mt-3 text-[15px] leading-snug font-bold text-[var(--text-primary)]">{t('roadmap.shareCta')}</h3>
@@ -210,7 +217,7 @@ function ShareModal({ open, onClose, data }: { open: boolean; onClose: () => voi
               size="md"
               full
               arrow={false}
-              icon={<MessageCircle style={{ color: 'var(--accent)' }} className="size-4" />}
+              icon={<Message style={{ color: 'var(--accent)' }} className="size-4" />}
               text="WhatsApp"
               onClick={() => openInTab(whatsappUrl(payload))}
               style={{ '--accent': '#10B981' } as React.CSSProperties}
@@ -232,7 +239,7 @@ function ShareModal({ open, onClose, data }: { open: boolean; onClose: () => voi
               size="md"
               full
               arrow={false}
-              icon={<Share2 style={{ color: 'var(--accent)' }} className="size-4" />}
+              icon={<Share style={{ color: 'var(--accent)' }} className="size-4" />}
               text={t('result.share.system')}
               onClick={() => void doSystem()}
             />
@@ -244,7 +251,7 @@ function ShareModal({ open, onClose, data }: { open: boolean; onClose: () => voi
                 size="md"
                 full
                 arrow={false}
-                icon={<Link2 style={{ color: 'var(--accent)' }} className="size-4" />}
+                icon={<Link style={{ color: 'var(--accent)' }} className="size-4" />}
                 text={shareConfig.resultUrl.replace(/^https?:\/\//, '')}
                 onClick={() => openInTab(payload.url)}
                 style={{ '--accent': '#64748B' } as React.CSSProperties}

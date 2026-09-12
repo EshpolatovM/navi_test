@@ -4,9 +4,8 @@ import type { CareerProfile, Riaset } from './types'
 // The shape matches the O*NET SOC dataset, so the full occupation database
 // can be swapped in later without changing the engine.
 //
-// `icon` is a semantic icon name resolved by the QuizIcon component — SVG
-// assets from src/assets/images/ are used wherever a matching direction
-// exists, otherwise a Lucide fallback name is used.
+// `icon` is a semantic icon name resolved by the QuizIcon component into a
+// matching IconPark icon.
 export const CAREERS: CareerProfile[] = [
   {
     id: 'dev',

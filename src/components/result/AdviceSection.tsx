@@ -1,15 +1,15 @@
-import { Compass, PenTool, Search, FlaskConical, Zap } from 'lucide-react'
+import { CompassOne, ElectronicPen, Flask, Lightning, Search } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import { ResultCard } from './ui/ResultCard'
 import { RankNum } from './ui/Score'
 import type { AdviceItem } from './useResultData'
 
 const ICON_MAP: Record<string, React.ReactNode> = {
-  compass: <Compass className="size-4.5" strokeWidth={2.2} />,
-  pen_tool: <PenTool className="size-4.5" strokeWidth={2.2} />,
-  search: <Search className="size-4.5" strokeWidth={2.2} />,
-  flask: <FlaskConical className="size-4.5" strokeWidth={2.2} />,
-  zap: <Zap className="size-4.5" strokeWidth={2.2} />,
+  compass: <CompassOne className="size-4.5" strokeWidth={4.4} />,
+  pen_tool: <ElectronicPen className="size-4.5" strokeWidth={4.4} />,
+  search: <Search className="size-4.5" strokeWidth={4.4} />,
+  flask: <Flask className="size-4.5" strokeWidth={4.4} />,
+  zap: <Lightning className="size-4.5" strokeWidth={4.4} />,
 }
 
 function AdviceSection({ advice }: { advice: AdviceItem[] }) {
@@ -32,7 +32,7 @@ function AdviceSection({ advice }: { advice: AdviceItem[] }) {
                   className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-[0.7rem] text-[var(--accent)]"
                   style={{ background: 'var(--accent-soft)' }}
                 >
-                  {ICON_MAP[item.icon] ?? <Zap className="size-4.5" strokeWidth={2.2} />}
+                  {ICON_MAP[item.icon] ?? <Lightning className="size-4.5" strokeWidth={4.4} />}
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-baseline gap-2">

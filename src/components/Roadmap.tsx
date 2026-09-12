@@ -1,4 +1,4 @@
-import { Check, Compass } from 'lucide-react'
+import { Check, Compass } from '@icon-park/react'
 import { RESULT_STAGE, type StageBoundary, type StageDef } from '../data'
 import { stageVar } from '../lib/theme'
 import { useSettings } from './SettingsContext'
@@ -59,8 +59,6 @@ function Roadmap({
     },
   ]
 
-  const activeStep = steps.find((s) => s.status === 'active') ?? steps[0]
-
   const dotStyle = (s: Step): React.CSSProperties => {
     const sv = stageVar(s.key)
     if (s.status === 'done')
@@ -116,11 +114,11 @@ function Roadmap({
 
                   <span className="relative z-10 mt-0.5 grid size-[15px] shrink-0 place-items-center rounded-full text-white" style={dotStyle(s)}>
                     {s.status === 'done' ? (
-                      <Check style={{ width: 11, height: 11 }} strokeWidth={3.5} />
+                      <Check style={{ width: 11, height: 11 }} strokeWidth={7} />
                     ) : s.status === 'active' && s.key === 'BOSHLASH' ? (
-                      <Compass style={{ width: 11, height: 11 }} strokeWidth={2.4} />
+                      <Compass style={{ width: 11, height: 11 }} strokeWidth={4.8} />
                     ) : (
-                      <Icon style={{ width: 11, height: 11 }} strokeWidth={2.4} />
+                      <Icon style={{ width: 11, height: 11 }} strokeWidth={4.8} />
                     )}
                   </span>
 

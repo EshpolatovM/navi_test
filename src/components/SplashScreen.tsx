@@ -1,4 +1,4 @@
-import { Compass, RotateCcw, Target } from 'lucide-react'
+import { CompassOne, RotateOne, Target } from '@icon-park/react'
 import { useSettings } from './SettingsContext'
 import NaviLogo from './NaviLogo'
 import { InteractiveHoverButton } from './ui/interactive-hover-button'
@@ -43,7 +43,7 @@ function ModeCard({
             : { background: 'var(--border)', color: 'var(--text-secondary)' }
         }
       >
-        {isResume ? <RotateCcw style={{ width: 10, height: 10 }} /> : null}
+        {isResume ? <RotateOne style={{ width: 10, height: 10 }} /> : null}
         {badge}
       </span>
 
@@ -110,7 +110,7 @@ function SplashScreen({
           title={t('card.interest.title')}
           subtitle={t('card.interest.sub')}
           badge={interest?.finished ? t('card.result') : interest ? t('card.resume', { n: interest.answered, total: interest.total }) : t('card.interest.badge')}
-          icon={<Compass style={{ width: 30, height: 30 }} strokeWidth={2.1} />}
+          icon={<CompassOne style={{ width: 30, height: 30 }} strokeWidth={4.2} />}
           cta={t('card.cta')}
           onSelect={() => onSelect('interest')}
           delay={150}
@@ -121,7 +121,7 @@ function SplashScreen({
           title={t('card.career.title')}
           subtitle={t('card.career.sub')}
           badge={career?.finished ? t('card.result') : career ? t('card.resume', { n: career.answered, total: career.total }) : t('card.career.badge')}
-          icon={<Target style={{ width: 30, height: 30 }} strokeWidth={2.1} />}
+          icon={<Target style={{ width: 30, height: 30 }} strokeWidth={4.2} />}
           cta={t('card.cta')}
           onSelect={() => onSelect('career')}
           delay={220}

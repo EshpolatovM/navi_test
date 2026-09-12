@@ -1,4 +1,4 @@
-import { FileText, ChevronRight } from 'lucide-react'
+import { FileTxt, Right } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import { ResultCard } from './ui/ResultCard'
 import type { ReportItem } from './useResultData'
@@ -33,7 +33,7 @@ function ReportsSection({ reports, onReportClick }: { reports: ReportItem[]; onR
                   className="grid size-9 shrink-0 place-items-center rounded-[0.7rem]"
                   style={{ background: `color-mix(in srgb, ${color} 10%, transparent)`, color }}
                 >
-                  <FileText className="size-4.5" strokeWidth={2} />
+                  <FileTxt className="size-4.5" strokeWidth={4} />
                 </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-[13.5px] font-bold text-[var(--text-primary)]">
@@ -43,7 +43,7 @@ function ReportsSection({ reports, onReportClick }: { reports: ReportItem[]; onR
                     {t(r.descriptionKey)}
                   </span>
                 </span>
-                <ChevronRight className="size-4 shrink-0 text-[var(--text-muted)] transition-transform duration-200 group-hover:translate-x-0.5" />
+                <Right className="size-4 shrink-0 text-[var(--text-muted)] transition-transform duration-200 group-hover:translate-x-0.5" />
               </button>
             )
           })}

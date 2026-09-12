@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
-import { Sparkles, X } from 'lucide-react'
+import { Close, Magic } from '@icon-park/react'
 import { motion } from 'framer-motion'
 import { useSettings } from '../SettingsContext'
 import QuizIcon from '../QuizIcon'
 import { DIMS } from '../../data'
 import { InteractiveHoverButton } from '../ui/interactive-hover-button'
+import { useDialogFocus } from '../../hooks/useDialogFocus'
 import { ResultTag } from './ui/ResultCard'
 
 interface CareerMatchData {
@@ -23,6 +24,9 @@ interface CareerMatchData {
 function CareerDetail({ career, onClose }: { career: CareerMatchData | null; onClose: () => void }) {
   const { t } = useSettings()
   const overlayRef = useRef<HTMLDivElement>(null)
+  const dialogRef = useRef<HTMLDivElement>(null)
+
+  useDialogFocus(!!career, dialogRef)
 
   useEffect(() => {
     if (!career) return
@@ -57,13 +61,15 @@ function CareerDetail({ career, onClose }: { career: CareerMatchData | null; onC
       />
 
       <motion.div
+        ref={dialogRef}
+        tabIndex={-1}
         role="dialog"
         aria-modal="true"
         aria-label={career.name}
         initial={{ opacity: 0, y: 20, scale: 0.97 }}
         animate={{ opacity: 1, y: 0, scale: 1 }}
         transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        className="relative z-10 max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-[var(--surface-elevated)] p-6 md:p-8"
+        className="relative z-10 max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-[var(--surface-elevated)] p-6 focus:outline-none md:p-8"
         style={{ border: '1px solid var(--border)' }}
       >
         <InteractiveHoverButton
@@ -71,7 +77,7 @@ function CareerDetail({ career, onClose }: { career: CareerMatchData | null; onC
           variant="ghost"
           size="icon"
           arrow={false}
-          icon={<X className="size-4" />}
+          icon={<Close className="size-4" />}
           aria-label={t('settings.close')}
           onClick={onClose}
           className="absolute right-4 top-4"
@@ -143,7 +149,7 @@ function CareerDetail({ career, onClose }: { career: CareerMatchData | null; onC
 
         {/* How to start */}
         <div className="mt-6 flex items-start gap-2.5 rounded-xl p-3.5" style={{ background: 'var(--surface)' }}>
-          <Sparkles className="mt-0.5 size-4 shrink-0 text-[var(--text-muted)]" />
+          <Magic className="mt-0.5 size-4 shrink-0 text-[var(--text-muted)]" />
           <div>
             <h3 className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--text-muted)]">
               {t('detail.howStart')}

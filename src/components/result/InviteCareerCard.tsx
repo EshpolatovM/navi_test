@@ -1,4 +1,5 @@
-import { Briefcase, Check, Clock, ListChecks, Sparkles, Target } from 'lucide-react'
+import { useState } from 'react'
+import { AlarmClock, Briefcase, Check, ListSuccess, Magic, Target } from '@icon-park/react'
 import { useSettings } from '../SettingsContext'
 import type { DirectionScore } from './useResultData'
 import type { Lang } from '../../lib/i18n'
@@ -39,9 +40,9 @@ function buildInsight(topDirections: DirectionScore[], lang: Lang, t: (k: string
 }
 
 const META_CHIPS = [
-  { key: 'invite.career.metaQuestions', icon: <ListChecks className="size-3.5" strokeWidth={2.3} /> },
-  { key: 'invite.career.metaCareers', icon: <Briefcase className="size-3.5" strokeWidth={2.3} /> },
-  { key: 'invite.career.metaMinutes', icon: <Clock className="size-3.5" strokeWidth={2.3} /> },
+  { key: 'invite.career.metaQuestions', icon: <ListSuccess className="size-3.5" strokeWidth={4.6} /> },
+  { key: 'invite.career.metaCareers', icon: <Briefcase className="size-3.5" strokeWidth={4.6} /> },
+  { key: 'invite.career.metaMinutes', icon: <AlarmClock className="size-3.5" strokeWidth={4.6} /> },
 ] as const
 
 function InviteCareerCard({
@@ -52,6 +53,9 @@ function InviteCareerCard({
   topDirections: DirectionScore[]
 }) {
   const { t, lang } = useSettings()
+  const [dismissed, setDismissed] = useState(false)
+
+  if (dismissed) return null
 
   const insight = buildInsight(topDirections, lang as Lang, (k, v) => t(k, v))
 
@@ -72,14 +76,14 @@ function InviteCareerCard({
             className="answer-icon-float grid size-14 shrink-0 place-items-center rounded-[1.15rem] text-[var(--accent)]"
             style={{ background: 'var(--accent-soft)' }}
           >
-            <Target className="size-6" strokeWidth={2.2} />
+            <Target className="size-6" strokeWidth={4.4} />
           </span>
           {insight && (
             <p className="pt-1.5 text-[12.5px] leading-snug font-semibold text-[var(--text-secondary)]">
-              <Sparkles
+              <Magic
                 className="-mt-0.5 mr-1.5 inline size-3.5"
                 style={{ color: 'var(--accent)' }}
-                strokeWidth={2.4}
+                strokeWidth={4.8}
               />
               {insight}
             </p>
@@ -127,12 +131,12 @@ function InviteCareerCard({
             arrow={false}
             full
             text={t('invite.career.secondary')}
-            onClick={() => {}}
+            onClick={() => setDismissed(true)}
           />
         </div>
 
         <p className="mt-5 flex items-center gap-1.5 text-[11.5px] font-medium text-[var(--text-muted)]">
-          <Check className="size-3.5" style={{ color: 'var(--accent)' }} strokeWidth={2.6} />
+          <Check className="size-3.5" style={{ color: 'var(--accent)' }} strokeWidth={5.2} />
           {t('invite.career.bothResults')}
         </p>
       </div>

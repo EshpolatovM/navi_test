@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, Check, Moon, Sun } from 'lucide-react'
+import { ArrowLeft, Check, Moon, Sun } from '@icon-park/react'
 import { LANGS } from '../lib/i18n'
 import { useSettings } from './SettingsContext'
 import { InteractiveHoverButton } from './ui/interactive-hover-button'
@@ -99,7 +99,7 @@ function Onboarding() {
                       setLang(l.code)
                       go('theme')
                     }}
-                    className="flex w-full items-center gap-3.5 rounded-2xl bg-[var(--surface-elevated)] p-4 text-left shadow-[0_10px_30px_-18px_rgba(30,41,59,0.4)] ring-1 transition-all duration-200 hover:-translate-y-0.5"
+                    className="flex w-full items-center gap-3.5 rounded-2xl border bg-[var(--surface-elevated)] p-4 text-left shadow-[0_10px_30px_-18px_rgba(30,41,59,0.4)] transition-all duration-200 hover:-translate-y-0.5"
                     style={{ borderColor: active ? 'var(--accent)' : 'var(--border)' }}
                   >
                     <span
@@ -119,7 +119,7 @@ function Onboarding() {
                         className="grid size-6 place-items-center rounded-full text-white"
                         style={{ background: 'var(--accent)', boxShadow: '0 2px 10px var(--accent-shadow)' }}
                       >
-                        <Check className="size-3.5" strokeWidth={3.2} />
+                        <Check className="size-3.5" strokeWidth={6.4} />
                       </span>
                     )}
                   </button>
@@ -146,16 +146,16 @@ function Onboarding() {
                     key={opt}
                     type="button"
                     onClick={() => setTheme(opt)}
-                    className="flex flex-col items-start gap-3 rounded-2xl bg-[var(--surface-elevated)] p-3.5 text-left ring-1 transition-all duration-200 hover:-translate-y-0.5"
+                    className="flex flex-col items-start gap-3 rounded-2xl border bg-[var(--surface-elevated)] p-3.5 text-left transition-all duration-200 hover:-translate-y-0.5"
                     style={{ borderColor: active ? 'var(--accent)' : 'var(--border)', boxShadow: '0 10px 30px -18px rgba(30,41,59,0.4)' }}
                   >
                     <ThemePreview dark={opt === 'dark'} />
                     <span className="flex w-full items-center justify-between">
                       <span className="flex items-center gap-1.5 text-[13px] font-bold text-slate-900">
                         {opt === 'light' ? (
-                          <Sun style={{ width: 15, height: 15 }} strokeWidth={2.4} />
+                          <Sun style={{ width: 15, height: 15 }} strokeWidth={4.8} />
                         ) : (
-                          <Moon style={{ width: 15, height: 15 }} strokeWidth={2.4} />
+                          <Moon style={{ width: 15, height: 15 }} strokeWidth={4.8} />
                         )}
                         {t(opt === 'light' ? 'onb.theme.light' : 'onb.theme.dark')}
                       </span>
@@ -164,7 +164,7 @@ function Onboarding() {
                           className="grid size-5 place-items-center rounded-full text-white"
                           style={{ background: 'var(--accent)' }}
                         >
-                          <Check className="size-3" strokeWidth={3.2} />
+                          <Check className="size-3" strokeWidth={6.4} />
                         </span>
                       )}
                     </span>

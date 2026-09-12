@@ -1,92 +1,92 @@
 import {
-  Hammer,
-  Repeat,
-  FlaskConical,
-  Lightbulb,
-  CircleMinus,
-  Wrench,
-  Blocks,
-  Users,
-  PenTool,
-  Cpu,
-  Search,
-  Sparkles,
-  Puzzle,
-  Star,
+  Announcement,
   BookOpen,
-  Video,
-  Palette,
-  PenLine,
-  PaintRoller,
-  MessagesSquare,
-  MessageCircle,
-  HeartHandshake,
-  MessageCircleHeart,
-  UserRound,
-  Crown,
-  Megaphone,
-  Store,
-  Rocket,
-  Trophy,
-  Flag,
-  ListChecks,
-  ClipboardList,
-  CalendarCheck,
-  Timer,
   Calculator,
-  Hash,
-  Compass,
-  type LucideIcon,
-} from 'lucide-react'
+  Checklist,
+  Chip,
+  ColorCard,
+  CompassOne,
+  CooperativeHandshake,
+  Crown,
+  CubeFour,
+  ElectronicPen,
+  Flag,
+  Flask,
+  HammerAndAnvil,
+  HashtagKey,
+  Lamp,
+  ListSuccess,
+  Magic,
+  Message,
+  MessageEmoji,
+  Messages,
+  Minus,
+  Paint,
+  Pencil,
+  People,
+  Puzzle,
+  RefreshOne,
+  Rocket,
+  Schedule,
+  Search,
+  Shop,
+  Star,
+  Stopwatch,
+  Tool,
+  Trophy,
+  User,
+  VideoOne,
+} from '@icon-park/react'
+import type { IconType } from '../lib/icon'
 import QuizIcon from './QuizIcon'
 
 /**
  * Answer-option icon system for the QIZIQISH (interest) assessment.
  *
  * Every interest answer carries a semantic icon name in its data. That name is
- * resolved here into a single, consistent Lucide set — same stroke weight,
+ * resolved here into a single, consistent IconPark set — same stroke weight,
  * same optical size, same container — so all answer icons share one visual
  * language. Names not present in this map (e.g. the career test) fall back to
  * the existing QuizIcon resolution, leaving those tests untouched.
  */
-export const ANIMATED_ANSWER_ICONS: Record<string, LucideIcon> = {
-  hammer: Hammer,
-  repeat: Repeat,
-  flask: FlaskConical,
-  lightbulb: Lightbulb,
-  circle_minus: CircleMinus,
-  wrench: Wrench,
-  blocks: Blocks,
-  users: Users,
-  pen_tool: PenTool,
-  cpu: Cpu,
+export const ANIMATED_ANSWER_ICONS: Record<string, IconType> = {
+  hammer: HammerAndAnvil,
+  repeat: RefreshOne,
+  flask: Flask,
+  lightbulb: Lamp,
+  circle_minus: Minus,
+  wrench: Tool,
+  blocks: CubeFour,
+  users: People,
+  pen_tool: ElectronicPen,
+  cpu: Chip,
   search: Search,
-  sparkles: Sparkles,
+  sparkles: Magic,
   puzzle: Puzzle,
   star: Star,
   book_open: BookOpen,
-  video: Video,
-  palette: Palette,
-  pen_line: PenLine,
-  paint_roller: PaintRoller,
-  messages_square: MessagesSquare,
-  message_circle: MessageCircle,
-  heart_handshake: HeartHandshake,
-  message_circle_heart: MessageCircleHeart,
-  user_round: UserRound,
+  video: VideoOne,
+  palette: ColorCard,
+  pen_line: Pencil,
+  paint_roller: Paint,
+  messages_square: Messages,
+  message_circle: Message,
+  heart_handshake: CooperativeHandshake,
+  message_circle_heart: MessageEmoji,
+  user_round: User,
   crown: Crown,
-  megaphone: Megaphone,
-  store: Store,
+  megaphone: Announcement,
+  store: Shop,
   rocket: Rocket,
   trophy: Trophy,
   flag: Flag,
-  list_checks: ListChecks,
-  clipboard_list: ClipboardList,
-  calendar_check: CalendarCheck,
-  timer: Timer,
+  list_checks: ListSuccess,
+  clipboard_list: Checklist,
+  calendar_check: Schedule,
+  timer: Stopwatch,
   calculator: Calculator,
-  hash: Hash,
-  compass: Compass,
+  hash: HashtagKey,
+  compass: CompassOne,
 }
 
 interface AnimatedAnswerIconProps {
@@ -96,13 +96,13 @@ interface AnimatedAnswerIconProps {
 }
 
 function AnimatedAnswerIcon({ name, size = 20, className }: AnimatedAnswerIconProps) {
-  const Lucide = ANIMATED_ANSWER_ICONS[name]
-  if (Lucide) {
+  const Icon = ANIMATED_ANSWER_ICONS[name]
+  if (Icon) {
     return (
-      <Lucide
+      <Icon
         aria-hidden
         style={{ width: size, height: size }}
-        strokeWidth={2}
+        strokeWidth={4}
         className={className}
       />
     )

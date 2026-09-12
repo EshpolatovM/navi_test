@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Moon, Sun } from '@phosphor-icons/react'
+import { Moon, Sun } from '@icon-park/react'
 import { cn } from '../../lib/utils'
 import { useSettings } from '../SettingsContext'
 
@@ -60,7 +60,7 @@ export default function BlindPullToggle({ className, ariaLabel }: BlindPullToggl
           transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
           style={{ color: p.icon, display: 'grid', placeItems: 'center' }}
         >
-          {dark ? <Moon weight="regular" size={20} /> : <Sun weight="regular" size={20} />}
+          {dark ? <Moon size={20} strokeWidth={4} /> : <Sun size={20} strokeWidth={4} />}
         </motion.div>
       </AnimatePresence>
     </motion.button>

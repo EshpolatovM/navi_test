@@ -1,4 +1,6 @@
-import { SVG_ICONS } from '../components/QuizIcon'
+import { createElement } from 'react'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { LUCIDE_ICONS } from '../components/QuizIcon'
 import { NAVI_LOGO_PATHS } from '../components/NaviLogo'
 
 /** Brand accent used by the offline PDF / preview renderers. */
@@ -7,6 +9,9 @@ export const NAVI_BLUE = '#3B7BEC'
 export const NAVI_LOGO_VIEWBOX = { w: 1998, h: 437 } as const
 
 function ensureSvgSize(markup: string, size: number): string {
+  if (!/<svg[^>]*\bxmlns=/.test(markup)) {
+    markup = markup.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"')
+  }
   if (/<svg[^>]*\bwidth=/.test(markup)) return markup
   return markup.replace('<svg', `<svg width="${size}" height="${size}"`)
 }
@@ -36,23 +41,23 @@ async function renderSvgToPng(markup: string, width: number, height: number): Pr
 const iconCache = new Map<string, Promise<string | null>>()
 
 /**
- * Rasterizes one of the bundled brand SVG icons (ai, design, it, ...) to a
- * PNG data URL so it can be embedded into the PDF / share preview.
+ * Rasterizes one of the IconPark brand icons (ai, design, it, ...) to a PNG
+ * data URL so it can be embedded into the PDF / share preview.
  */
 export function getIconDataUrl(name: string, size = 64): Promise<string | null> {
   const key = `${name}:${size}`
   const cached = iconCache.get(key)
   if (cached) return cached
 
-  const url = SVG_ICONS[name]
-  if (!url) return Promise.resolve(null)
+  const Icon = LUCIDE_ICONS[name]
+  if (!Icon) return Promise.resolve(null)
 
   const job = (async () => {
     try {
-      const res = await fetch(url)
-      if (!res.ok) return null
-      const markup = ensureSvgSize(await res.text(), size)
-      return await renderSvgToPng(markup, size, size)
+      const markup = renderToStaticMarkup(createElement(Icon, { size, strokeWidth: 4 }))
+      const svg = markup.match(/<svg[\s\S]*?<\/svg>/)?.[0]
+      if (!svg) return null
+      return await renderSvgToPng(ensureSvgSize(svg, size), size, size)
     } catch {
       return null
     }

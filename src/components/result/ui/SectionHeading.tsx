@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ChevronRight } from 'lucide-react'
+import { Right } from '@icon-park/react'
 import { cn } from '../../../lib/utils'
 
 /**
@@ -39,7 +39,7 @@ export function SectionHeading({
           className="group flex shrink-0 items-center gap-0.5 pb-1 text-[12px] font-bold text-[var(--accent)]"
         >
           {action}
-          <ChevronRight className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
+          <Right className="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
         </Link>
       )}
     </div>
