@@ -33,7 +33,7 @@ function ResultApp({
     <ResultProvider query={query} tryCareerTest={tryCareerTest}>
       <RoadmapProvider>
         <Routes>
-          <Route path="result" element={<ResultLayout onOpenSettings={onOpenSettings} />}>
+          <Route element={<ResultLayout onOpenSettings={onOpenSettings} />}>
             <Route index element={<OverviewPage />} />
             <Route path="careers" element={<CareersPage />} />
             <Route path="interests" element={<InterestsPage />} />

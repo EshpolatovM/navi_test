@@ -174,7 +174,7 @@ function fadeTo(el: HTMLAudioElement, target: number, duration: number) {
   const t0 = performance.now()
   const step = (t: number) => {
     const p = Math.min(1, (t - t0) / duration)
-    el.volume = from + (target - from) * p
+    el.volume = Math.min(1, Math.max(0, from + (target - from) * p))
     if (p < 1) fadeRaf = requestAnimationFrame(step)
   }
   fadeRaf = requestAnimationFrame(step)
